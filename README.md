@@ -21,9 +21,9 @@ and equivalence relations. The course was designed by Martin Liebeck
 and it is based on his book "A Concise Introduction to Pure Mathematics",
 published by Chapman & Hall.
 
-Students sometimes like printed up course notes for a course, for various
+Students sometimes like typed up course notes for a course, for various
 reasons. One of the goals of this project is to type up notes for this course
-but in the Lean language. Once this is done, we could argue that, in some
+but in the Lean language. Once this is done, one could argue that, in some
 sense, Xena will understand that course. 
 
 Another goal is to type up solutions to all of the example sheet questions
@@ -32,7 +32,7 @@ Xena has done all the example sheets for the course.
 
 A really cool goal would be to get Xena to pass the M1F final exam! In
 some sense, at least. Could she pass any other exams? How much will be
-actually be able to teach Xena?
+actually be able to teach Xena? Can we get her a degree?
 
 # Current short term goal: 
 
