@@ -8,7 +8,7 @@ TODO (KMB) : Replace topology.real with more user-friendly real numbers.
            : figure out how to use x^2 instead of x*x
            : figure out how to make 3 mean 3:R rather than 3:nat
            : remove some of those stupid brackets! 
-           : This is actually the 2016-17 example sheet question, which is the best
+           : This is actually the 2016-17 example sheet question; update later.
 -/
 
 import topology.real
