@@ -34,7 +34,10 @@ A really cool goal would be to get Xena to pass the M1F final exam! In
 some sense, at least. Could she pass any other exams? How much will be
 actually be able to teach Xena? Can we get her a degree?
 
+# Previous goal (achieved):
+
+Type up the statement of the first part of the first question of the first M1F example sheet.
+
 # Current short term goal: 
 
-Type up a proof of the first part of the first question of the first M1F example sheet.
-
+Type up the proof of the first part of the first question of the first M1F example sheet.
