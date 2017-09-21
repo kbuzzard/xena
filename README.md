@@ -1,4 +1,4 @@
-# xena
+# Xena
 Lean Library currently studying for a degree at Imperial College 
 
 This is a library of files written in a computer language called Lean.
