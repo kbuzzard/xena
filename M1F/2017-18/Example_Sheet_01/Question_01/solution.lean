@@ -58,5 +58,5 @@ cc,
 -- ...before we get there. TODO: make the ending more fluent.
 contradiction
 end
--- And there's the proof!
+-- And there's the proof! 
 
