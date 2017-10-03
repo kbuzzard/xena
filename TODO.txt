@@ -1,5 +1,5 @@
-* TODO [<= Monday 25th] Write new M1F sheet 1 and upload pdf
-* TODO Implement real number hack
+* TODO Implement real number hack for sheet 1 Q7
 ** Implement new type plus coercion from rationals
 ** Implement real number solver tactic from gitter hints
-* TODO [<= Monday 25th] Write all of M1F sheet 1 Question 1 in Lean
+* TODO Solve rest of M1F Sheet 1 Q1.
+
