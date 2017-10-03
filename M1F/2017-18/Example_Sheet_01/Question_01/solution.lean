@@ -90,7 +90,7 @@ end
 
 -- M1F Sheet 1 Q1 part (b) is true.
 
-theorem m1f_sheet01_q01b_is_T : ∀ x : ℤ, x=1 → x^2-3*x+2=0 := 
+theorem m1f_sheet01_q01b_is_T : ∀ x : ℤ, x=1 → x^2-3*x+2=0 :=
 -- This one is much easier.
 -- First we assume the hypothesis that x=1.
 begin
@@ -108,6 +108,7 @@ end
 -- M1F Sheet 1 Q1 part (c) is false and this follows from part (a)
 
 theorem m1f_sheet01_q01c_is_F : ¬ (∀ x : ℤ, x^2 - 3*x + 2 = 0 ↔ x=1) := 
+
 begin
 -- We prove it by contradiction.
 intro H, -- H is now the hypothesis that for all x, x^2-3x+2=0 iff x=1
@@ -234,3 +235,4 @@ let s:=(3:int)^2-3*3+2,
 contradiction,
 end
 
+-- End M1F Sheet 1 Q1 part (f)
