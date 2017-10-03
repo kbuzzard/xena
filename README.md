@@ -6,7 +6,7 @@ Lean Library currently studying for a degree at Imperial College
 This is a library of files written in a computer language called Lean.
 Lean is an automated proof checker. You can find more information about Lean at
 
-https://github.com/leanprover
+https://leanprover.github.io/
 
 Basically, Lean can understand mathematics, and can check that it
 doesn't have any mistakes in.
