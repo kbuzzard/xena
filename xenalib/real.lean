@@ -22,7 +22,11 @@ constant real : Type
 -- We might have to mention real_field, which is somehow
 -- the dictionary of all these facts.
 
-namespace real_field 
+ -- note to self -- how to make this a Q-algebra?
+ -- Oh! Can't do this because no Q or R!
+
+
+#check ((↑(2:nat)):real)
 
 example : ∀ a b : real, a * b = b * a := 
 begin
@@ -59,6 +63,6 @@ variable x : real
 
 #check real_field.add
 
-infix `^` := real_field.add
+infix `^` := λ x y, x*x
 
-#check (x^(2:real))
+#check (x^2)
