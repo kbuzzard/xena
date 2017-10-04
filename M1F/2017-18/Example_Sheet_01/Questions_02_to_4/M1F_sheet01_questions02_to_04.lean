@@ -6,6 +6,13 @@ This file should work with any version of lean -- whether you installed it yours
 or are running the version on https://leanprover.github.io/live/latest/
 
 -/
+-- We probably need the "law of the excluded middle" for this question -- every
+-- proposition is either true or false! Don't even ask me to explain what the
+-- other options are, but Lean does not come with this axiom by default (blame
+-- the computer scientists) and mathematicians have to add it themselves.
+-- It's easy to add though. "em" for excluded middle.
+
+axiom em (X : Prop) : X ∨ ¬ X
 
 
 variables P Q R S : Prop -- A "Prop" is a proposition, that is, a true/false statement.
