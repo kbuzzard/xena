@@ -63,6 +63,6 @@ variable x : real
 
 #check real_field.add
 
-infix `^` := λ x y, x*x
+
 
 #check (x^2)
