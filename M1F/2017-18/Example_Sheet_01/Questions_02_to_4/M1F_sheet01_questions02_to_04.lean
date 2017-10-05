@@ -24,8 +24,8 @@ theorem m1f_sheet01_q02_is_F (HQP : Q → P) (HnQnR : ¬ Q → ¬ R) : ¬ (R →
 
 -- Sheet 1 Q3. Prove one result and delete the other.
 
-theorem m1f_sheet01_q03_is_T (HP : P) (HnQ : ¬ Q) (HnR : R) (HS : S) : (R → S) → (P → Q) := sorry
-theorem m1f_sheet01_q03_is_F (HP : P) (HnQ : ¬ Q) (HnR : R) (HS : S) : ¬ ((R → S) → (P → Q)) := sorry
+theorem m1f_sheet01_q03_is_T (HP : P) (HnQ : ¬ Q) (HnR : ¬ R) (HS : S) : (R → S) → (P → Q) := sorry
+theorem m1f_sheet01_q03_is_F (HP : P) (HnQ : ¬ Q) (HnR : ¬ R) (HS : S) : ¬ ((R → S) → (P → Q)) := sorry
 
 -- Sheet 1 Q4. **Edit the question** until it corresponds to what you think the
 -- answer is, and then prove it.
@@ -33,7 +33,4 @@ theorem m1f_sheet01_q03_is_F (HP : P) (HnQ : ¬ Q) (HnR : R) (HS : S) : ¬ ((R �
 -- or P,Q,R are all false, then change the end of the question (after the iff) to
 -- ((P ∧ Q) ∨ (¬ P ∧ ¬ Q ∧ ¬ R))
 
-variable Ha : P → (Q ∨ R)
-variable Hb : ¬ Q → (R ∨ ¬ P)
-variable Hc : (Q ∧ R) → ¬ P
 theorem m1f_sheet01_q04 : (P → (Q ∨ R)) ∧ (¬ Q → (R ∨ ¬ P)) ∧ ((Q ∧ R) → ¬ P) ↔ ((P ∧ Q ∧ R) ∨ (P ∧ ¬ Q ∧ ¬ R)) := sorry
