@@ -19,8 +19,8 @@ variables P Q R S : Prop -- A "Prop" is a proposition, that is, a true/false sta
 
 -- Sheet 1 Q2 is true.
 
-theorem m1f_sheet01_q02_is_T (HQP : Q → P) (HnQnR : ¬ Q → ¬ R) : R → P := 
-begin 
+theorem m1f_sheet01_q02_is_T (HQP : Q → P) (HnQnR : ¬ Q → ¬ R) : R → P :=
+begin
 intro HR, -- hypothesis R
 cases em Q with HQ HnQ, -- Q is either true or false.
   -- Q is true in this branch.
@@ -40,9 +40,9 @@ end
 
 -- Sheet 1 Q3. Prove one result and delete the other.
 
--- theorem m1f_sheet01_q03_is_T (HP : P) (HnQ : ¬ Q) (HnR : ¬ R) (HS : S) : (R → S) → (P → Q) :=  
+-- theorem m1f_sheet01_q03_is_T (HP : P) (HnQ : ¬ Q) (HnR : ¬ R) (HS : S) : (R → S) → (P → Q) :=
 
-theorem m1f_sheet01_q03_is_F (HP : P) (HnQ : ¬ Q) (HnR : ¬ R) (HS : S) : ¬ ((R → S) → (P → Q)) := 
+theorem m1f_sheet01_q03_is_F (HP : P) (HnQ : ¬ Q) (HnR : ¬ R) (HS : S) : ¬ ((R → S) → (P → Q)) :=
 begin
 intro H,
 have HRS : R → S,
@@ -57,19 +57,60 @@ contradiction,
 end
 
 
--- Sheet 1 Q4. **Edit the question** until it corresponds to what you think the
--- answer is, and then prove it.
--- For example if you think that the answer is that either P and Q are both true
--- or P,Q,R are all false, then change the end of the question (after the iff) to
--- ((P ∧ Q) ∨ (¬ P ∧ ¬ Q ∧ ¬ R))
+-- Sheet 1 Q4. 
 
--- I haven't done this yet.
-theorem m1f_sheet01_q04 : (P → (Q ∨ R)) ∧ (¬ Q → (R ∨ ¬ P)) ∧ ((Q ∧ R) → ¬ P) ↔ ((P ∧ Q ∧ R) ∨ (P ∧ ¬ Q ∧ ¬ R)) := 
--- idea for a proof:
+-- Let me first make a tool which is capable of proving all three hypotheses
+-- when we have the right assumptions.
+
+meta def prove_hyps : tactic unit :=
+`[
+  { -- This tactic will try to prove
+    -- (P → Q ∨ R) ∧ (¬ Q → R ∨ ¬ P) ∧ (Q ∧ R → ¬ P)
+    apply and.intro, -- next goal is P → Q ∨ R
+      intro, -- now P is a hypothesis and Q ∨ R is the goal.
+      -- next line works if any of ¬ P or Q or R are true.
+      contradiction <|> {left,assumption} <|> {right,assumption}, 
+    apply and.intro, -- same story,
+      intro,contradiction <|> {left,assumption} <|> {right,assumption},
+    -- next line attempts to prove Q and R -> not P.
+    intro HQR, -- 
+    have Q, from HQR.left,
+    have R, from HQR.right,
+    -- now Q and R are assumptions and not P is the goal.
+    assumption <|> contradiction
+  }
+]
+
+-- I used that tool to figure out what the answer is.
+
+-- The answer to Q4 is that all three hypotheses are true if and only if either
+-- (i) P is false, or
+-- (ii) P is true, and exactly one of Q and R are true.
+
+-- It's possible to write a very long proof of this.
+-- But in this case I just did a brute force case by case check,
+-- using basic tactics joined together with glue I learnt about
+-- in section 5.5 of Theorem Proving In Lean.
+
+theorem m1f_sheet01_q04 : (P → (Q ∨ R)) ∧ (¬ Q → (R ∨ ¬ P)) ∧ ((Q ∧ R) → ¬ P) ↔
+  (¬ P) ∨ (P ∧ Q ∧ ¬ R) ∨ (P ∧ ¬ Q ∧ R) :=
 begin
-cases em P with HP HnP;cases em Q with HQ HnQ;cases em R with HR HnR;apply iff.intro;intro H;
--- PQR=TTT
--- apply H.right.right,
-trace_state,
-repeat {admit} -- I give in. For now.
-end 
+cases em P with HP HnP;cases em Q with HQ HnQ;cases em R with HR HnR;apply iff.intro,
+repeat {-- we'll do all eight cases automatically.
+  intro hyps,
+  cc, -- this does the case where hyps implies my solution
+  -- now check my solution implies hyps (possibly by contradiction)
+  intro hmypqr,
+  { prove_hyps } <|> {
+    cases hmypqr with h1 h2,
+    contradiction,
+    cases h2 with ha hb,
+    cases ha with h3 h4,
+    cases h4,
+    contradiction,
+    cases hb with h5 h6,
+    cases h6,
+    contradiction
+  } 
+},
+end
