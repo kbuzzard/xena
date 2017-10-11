@@ -1,0 +1,7 @@
+It's impossible to formulate Question 6 in Lean, as far as I know.
+Lean uses mathematical foundations which only allow you to make sets of
+things all of which have the same type. So for example if A is a set
+and 1 is in A, then all the other elements of A have to be numbers too.
+This does not cause a problem when doing normal mathematics, but it
+does mean that the (rather pathological) question 6 cannot be formulated
+within Lean.
