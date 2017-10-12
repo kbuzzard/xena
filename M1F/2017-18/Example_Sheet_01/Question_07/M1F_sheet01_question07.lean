@@ -1,8 +1,7 @@
-import analysis.real
--- real numbers live in here as of 1st Oct 2017.
--- NB you need the current mathlib installed to get this working.
-
--- of_rat is the injection from the rationals to the reals.#check
+import topology.real
+-- real numbers live in here in Lean 3.3.0 mathlib
+-- NB you need mathlib installed to get this working.
+-- of_rat is the injection from the rationals to the reals.
 
 def A : set ℝ := { x | x^2 < 3}
 def B : set ℝ := {x | (∃ y : ℤ, x = of_rat y) ∧ x^2 < 3}
