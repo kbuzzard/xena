@@ -140,22 +140,11 @@ theorem part_e : ¬ (C ⊆ A ∪ B) := -- not true as C contains -2
 begin
 let x:=(-2:real),
 have HC : x ∈ C,
-unfold has_mem.mem set.mem C pow_nat has_pow_nat.pow_nat monoid.pow set_of,
-change x with (-2:real),
-simp with real_simps,
-repeat {rewrite of_rat_mul},
-exact dec_trivial,
+  exact two_in_C,
 have HnA : x ∉ A,
-unfold has_mem.mem set.mem A pow_nat has_pow_nat.pow_nat monoid.pow set_of,
-change x with (-2:real),
-simp with real_simps,
-
+  exact two_not_in_A,
 have HnB : x ∉ B,
-unfold has_mem.mem set.mem B pow_nat has_pow_nat.pow_nat monoid.pow set_of,
-change x with (-2:real),
-simp with real_simps,
-intros y J,
-exact dec_trivial,
+  exact two_not_in_B,
 intro J,
 have J2 : x ∈ (A ∪ B),
 exact (@J x HC),
@@ -166,4 +155,23 @@ exact HnB HB,
 end
 
 
-theorem part_f : (A ∩ B) ∪ C = (A ∪ B) ∩ C := sorry
+theorem part_f : ¬ ((A ∩ B) ∪ C = (A ∪ B) ∩ C) := 
+begin
+let x:=(-2:real),
+have HC : x ∈ C,
+  exact two_in_C,
+have HnA : x ∉ A,
+  exact two_not_in_A,
+have HnB : x ∉ B,
+  exact two_not_in_B,
+intro H,
+have H1 : x ∈  (A ∩ B ∪ C),
+  right,exact HC,
+have H2 : x ∈ (A ∪ B) ∩ C,
+  exact eq.subst H H1,
+have H3 : x ∈ (A ∪ B),
+  exact H2.left,
+cases H3 with HA HB,
+  exact HnA HA,
+  exact HnB HB
+end
