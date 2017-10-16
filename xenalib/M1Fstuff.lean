@@ -1,17 +1,14 @@
 import analysis.real
 
--- Mario broke this proof so I'll add it as an axiom for now. 
-axiom of_rat_lt_of_rat {q₁ q₂ : ℚ} : of_rat q₁ < of_rat q₂ ↔ q₁ < q₂ 
--- := by simp [lt_iff_le_not_le, of_rat_le_of_rat]
+lemma of_rat_lt_of_rat {q₁ q₂ : ℚ} : of_rat q₁ < of_rat q₂ ↔ q₁ < q₂ := 
+begin
+simp [lt_iff_le_and_ne, of_rat_le_of_rat]
+end
+
+#check of_rat_inj
 
 namespace M1F
 
-lemma of_rat_inj (r₁ r₂: ℚ) : of_rat r₁ = of_rat r₂ ↔  r₁ = r₂ := 
-begin
-apply iff.intro,
-  apply uniform_embedding_of_rat.left,
-  apply congr_arg,
-end
 
 lemma rat.zero_eq_int_zero (z : int) : ↑ z = (0:rat) → z = 0 :=
 begin
@@ -75,11 +72,11 @@ apply exists.elim H,
 intro a,
 intro H3,
 existsi a,
-exact (of_rat_inj (1/2) (a:rat)).mp H3,
+exact (@of_rat_inj (1/2) (a:rat)).mp H3,
 exact rational_half_not_an_integer H2,
 end
 
-
+#check @of_rat_inj
 
 run_cmd mk_simp_attr `real_simps
 attribute [real_simps] of_rat_zero of_rat_one of_rat_neg of_rat_add of_rat_sub of_rat_mul

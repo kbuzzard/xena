@@ -115,6 +115,8 @@ end
 #check @eq.subst
 #check rat.coe_int_mul
 #check rat.coe_int_lt
+--  set_option pp.notation false
+
 
 lemma B_is_minus_one_zero_one (x:ℝ): x ∈ B → (x=of_rat(-1)) ∨ (x=of_rat(0)) ∨ (x=of_rat(1)) :=
 begin
@@ -142,13 +144,81 @@ rewrite rat.coe_int_lt at H6,
 -- y is an integer, H6 is y*y<3
 -- H4 is x=of_rat(y)=y:real,
 -- and we want to prove x=-1 or 0 or 1.
-have H2 : not (y ≥ 2),
-admit,
-admit
+cases y with y m1my,
+  rewrite eq.symm (int.of_nat_mul y y) at H6,
+  have H1:y*y < 3,
+    exact @int.lt_of_coe_nat_lt_coe_nat (y*y) 3 H6,
+  clear H6,
+  cases y with ys,
+    right,left,
+    exact H4,
+  cases ys with yss,
+    right,right,exact H4,
+  have H : 4<3,
+  exact calc
+  4 = 2*2 : dec_trivial
+  ...  ≤  2*(yss+2) : nat.mul_le_mul_left 2 (nat.le_add_left 2 yss)
+  ... ≤ (yss+2)*(yss+2) : nat.mul_le_mul_right (yss+2) (nat.le_add_left 2 yss)
+  ... < 3 : H1,
+  have H2 : ¬ (4<3),
+  exact dec_trivial,
+  exfalso,
+  contradiction,
+  cases m1my with y2,
+    left,exact H4,
+  exfalso,
+  have H1 : int.nat_abs (int.neg_succ_of_nat (nat.succ y2)) = y2+2,
+  refl,
+  have H2:↑((y2+2)*(y2+2))=(int.neg_succ_of_nat (nat.succ y2))*(int.neg_succ_of_nat (nat.succ y2)),
+    apply @int.nat_abs_mul_self (int.neg_succ_of_nat (nat.succ y2)),
+  have H3: ↑((y2+2)*(y2+2)) < (↑3:int),
+  exact H2 ▸ H6,
+  have H5 : (y2+2)*(y2+2) < 3,
+  exact @int.lt_of_coe_nat_lt_coe_nat ((y2+2)*(y2+2)) 3 H3,
+  have H : 4<3,
+  exact calc
+  4 = 2*2 : dec_trivial
+  ...  ≤  2*(y2+2) : nat.mul_le_mul_left 2 (nat.le_add_left 2 y2)
+  ... ≤ (y2+2)*(y2+2) : nat.mul_le_mul_right (y2+2) (nat.le_add_left 2 y2)
+  ... < 3 : H5,
+  have H2 : ¬ (4<3),
+  exact dec_trivial,
+  exfalso,
+  contradiction,
+--  have H3:(y2+2)*(y2+2)<3,
+--  simp [H1,H6,int.lt_of_coe_nat_lt_coe_nat,int.nat_abs_mul_self]  
 end
 
+-- set_option pp.notation false
+theorem part_d : B ⊆ C :=  -- B={-1,0,1} so this is true
+begin
+intro x,
+intro H,
+have H2 : (x=of_rat(-1)) ∨ (x=of_rat(0)) ∨ (x=of_rat(1)),
+exact B_is_minus_one_zero_one x H,
+unfold has_mem.mem set.mem C set_of,
+cases H2 with xm1 xrest,
+-- need to prove of_rat(-1)^3<3
+have H2 : of_rat(-1)^3 < 3,
+unfold pow_nat has_pow_nat.pow_nat monoid.pow,
+simp with real_simps,exact dec_trivial,
+-- apply (@eq.subst ℝ (λ x,x^3<3) x (of_rat(-1)) xm1),
+exact @eq.subst ℝ (λ t, t^3<3) (of_rat(-1)) x (eq.symm xm1) H2,
+cases xrest with x0 x1,
+have H2 : of_rat(0)^3 < 3,
+unfold pow_nat has_pow_nat.pow_nat monoid.pow,
+simp with real_simps,exact dec_trivial,
+-- apply (@eq.subst ℝ (λ x,x^3<3) x (of_rat(-1)) xm1),
+exact @eq.subst ℝ (λ t, t^3<3) (of_rat(0)) x (eq.symm x0) H2,
+have H2 : of_rat(1)^3 < 3,
+unfold pow_nat has_pow_nat.pow_nat monoid.pow,
+simp with real_simps,exact dec_trivial,
+-- apply (@eq.subst ℝ (λ x,x^3<3) x (of_rat(-1)) xm1),
+exact @eq.subst ℝ (λ t, t^3<3) (of_rat(1)) x (eq.symm x1) H2,
 
-theorem part_d : B ⊆ C := sorry -- B={-1,0,1} so this is true
+-- simp with real_simps,
+
+end
 
 -- To do parts e and f it's useful to note that -2 is in C but not A or B.
 
@@ -174,7 +244,6 @@ intros y J,
 exact dec_trivial,
 end
 
-
 theorem part_e : ¬ (C ⊆ A ∪ B) := -- not true as C contains -2
 begin
 let x:=(-2:real),
@@ -192,7 +261,6 @@ cases J2 with HA HB,
 exact HnA HA,
 exact HnB HB,
 end
-
 
 theorem part_f : ¬ ((A ∩ B) ∪ C = (A ∪ B) ∩ C) := 
 begin
