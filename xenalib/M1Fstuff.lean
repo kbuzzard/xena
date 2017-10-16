@@ -17,7 +17,6 @@ end
 lemma rat.of_int_inj (z₁ z₂ : int) : (z₁ : rat) = (z₂ : rat) → z₁ = z₂ :=
 begin
 intro H12,
-
 have H2 : ↑(z₁ - z₂) = (0:rat),
 exact calc
 ↑(z₁ - z₂) = (↑z₁ - ↑z₂ : ℚ)  : (rat.coe_int_sub z₁ z₂)
@@ -62,8 +61,6 @@ apply @eq.subst ℤ  (λ t, t%2 =0) _ _ H7 H8,
 have H10 : (1:int) % 2 ≠ 0,
 exact dec_trivial,
 contradiction,
--- simp [rat.coe_int_eq_mk x,rat.coe_int_eq_mk 2,rat.coe_int_eq_mk (2*x)],
-
 end
 
 lemma real_half_not_an_integer : ¬ (∃ y : ℤ, of_rat (1/2) = of_rat(y)) :=
@@ -75,20 +72,17 @@ intro a,
 intro H3,
 existsi a,
 exact (of_rat_inj (1/2) (a:rat)).mp H3,
-
 exact rational_half_not_an_integer H2,
-
 end
 
-
-attribute [simp] of_rat_zero of_rat_one of_rat_neg of_rat_add of_rat_sub of_rat_mul of_rat_inv of_rat_le_of_rat of_rat_lt_of_rat
-
-@[simp] lemma of_rat_bit0 (a : ℚ) : bit0 (of_rat a) = of_rat (bit0 a) := of_rat_add
-@[simp] lemma of_rat_bit1 (a : ℚ) : bit1 (of_rat a) = of_rat (bit1 a) :=
-by simp [bit1, bit0, of_rat_add]
-@[simp] lemma of_rat_div {r₁ r₂ : ℚ} : of_rat r₁ / of_rat r₂ = of_rat (r₁ / r₂) :=
-by simp [has_div.div, algebra.div]
-
+run_cmd mk_simp_attr `real_simps
+attribute [real_simps] of_rat_zero of_rat_one of_rat_neg of_rat_add of_rat_sub of_rat_mul
+attribute [real_simps] of_rat_inv of_rat_le_of_rat of_rat_lt_of_rat
+@[real_simps] lemma of_rat_bit0 (a : ℚ) : bit0 (of_rat a) = of_rat (bit0 a) := of_rat_add
+@[real_simps] lemma of_rat_bit1 (a : ℚ) : bit1 (of_rat a) = of_rat (bit1 a) :=
+by simp [bit1, bit0, of_rat_add,of_rat_one]
+@[real_simps] lemma of_rat_div {r₁ r₂ : ℚ} : of_rat r₁ / of_rat r₂ = of_rat (r₁ / r₂) :=
+by simp [has_div.div, algebra.div] with real_simps
 end M1F
 
 namespace tactic
