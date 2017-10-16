@@ -94,8 +94,8 @@ rewrite (of_rat_mul),
 rewrite (of_rat_mul),
 rewrite (of_rat_mul),
 simp,
-apply of_rat_le_of_rat.mpr,
-exact dec_trivial,
+-- apply of_rat_le_of_rat.mpr,
+-- exact dec_trivial,
 
 -- now have 3/2 in A not C
 -- trivial,
@@ -108,6 +108,45 @@ exact H3 J,
 -- apply of_rat_lt_of_rat.mpr,
 -- simp [M1F.of_rat_inj] with real_simps,
 end
+
+-- To do part (d) it's helpful to evaluate B completely.
+-- def B : set ℝ := {x | (∃ y : ℤ, x = of_rat y) ∧ x^2 < 3}
+
+#check @eq.subst
+#check rat.coe_int_mul
+#check rat.coe_int_lt
+
+lemma B_is_minus_one_zero_one (x:ℝ): x ∈ B → (x=of_rat(-1)) ∨ (x=of_rat(0)) ∨ (x=of_rat(1)) :=
+begin
+assume H : x ∈ B,
+have H2 : exists y : ℤ, x = of_rat y,
+  exact H.left,
+have H3 : x^2 < 3,
+  exact H.right,
+cases H2 with y H4,
+unfold pow_nat has_pow_nat.pow_nat monoid.pow at H3,
+simp at H3,
+have H5 : of_rat ↑ y * of_rat ↑ y < 3,
+  exact (@eq.subst ℝ (λ z, z*z<(3:real)) x (of_rat y) H4 H3),
+rewrite of_rat_mul at H5,
+have J : (3:real) = of_rat(3),
+simp with real_simps,
+have H6 : of_rat (↑ y * ↑ y) < of_rat 3,
+  exact eq.subst J H5,
+rewrite of_rat_lt_of_rat at H6,
+clear H3 H5 J,
+rewrite eq.symm (rat.coe_int_mul y y) at H6,
+change (3:rat) with ↑(3:int) at H6,
+rewrite rat.coe_int_lt at H6,
+-- Situation now:
+-- y is an integer, H6 is y*y<3
+-- H4 is x=of_rat(y)=y:real,
+-- and we want to prove x=-1 or 0 or 1.
+have H2 : not (y ≥ 2),
+admit,
+admit
+end
+
 
 theorem part_d : B ⊆ C := sorry -- B={-1,0,1} so this is true
 

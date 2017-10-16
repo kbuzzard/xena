@@ -4,5 +4,5 @@ version = "0.1"
 lean_version = "master"
 
 [dependencies]
-mathlib = {git = "https://github.com/leanprover/mathlib", rev = "e7b2a0f7a959ebab86d56f66761d5585280f460a"}
+mathlib = {git = "https://github.com/leanprover/mathlib", rev = "5ad8020f67eb13896a41cc7691d072c9331b1f76"}
 lean-protocol-support = {git = "https://github.com/GaloisInc/lean-protocol-support", rev = "cabfa3abedbdd6fdca6e2da6fbbf91a13ed48dda"}

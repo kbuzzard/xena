@@ -1,5 +1,9 @@
 import analysis.real
 
+-- Mario broke this proof so I'll add it as an axiom for now. 
+axiom of_rat_lt_of_rat {q₁ q₂ : ℚ} : of_rat q₁ < of_rat q₂ ↔ q₁ < q₂ 
+-- := by simp [lt_iff_le_not_le, of_rat_le_of_rat]
+
 namespace M1F
 
 lemma of_rat_inj (r₁ r₂: ℚ) : of_rat r₁ = of_rat r₂ ↔  r₁ = r₂ := 
@@ -75,6 +79,8 @@ exact (of_rat_inj (1/2) (a:rat)).mp H3,
 exact rational_half_not_an_integer H2,
 end
 
+
+
 run_cmd mk_simp_attr `real_simps
 attribute [real_simps] of_rat_zero of_rat_one of_rat_neg of_rat_add of_rat_sub of_rat_mul
 attribute [real_simps] of_rat_inv of_rat_le_of_rat of_rat_lt_of_rat
@@ -96,4 +102,9 @@ do t ← target,
 end tactic
 
 
+example : (((3:real)/4)-12)<6 := by simp with real_simps;exact dec_trivial
+example : (6:real) + 9 = 15 := by tactic.eval_num_tac
+example : (2:real) * 2 + 3 = 7 := by tactic.eval_num_tac
+example : (5:real) ≠ 8 := by simp with real_simps;exact dec_trivial
+example : (6:real) < 10 := by simp with real_simps;exact dec_trivial 
 
