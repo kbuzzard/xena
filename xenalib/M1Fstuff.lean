@@ -1,11 +1,87 @@
-import analysis.real
+import analysis.real init.classical
+instance coe_rat_real : has_coe rat real := ⟨of_rat⟩
+instance coe_int_real : has_coe int real := ⟨of_rat ∘ rat.of_int⟩
+instance coe_nat_real : has_coe nat real := ⟨of_rat ∘ rat.of_int ∘ int.of_nat⟩ 
 
 lemma of_rat_lt_of_rat {q₁ q₂ : ℚ} : of_rat q₁ < of_rat q₂ ↔ q₁ < q₂ := 
 begin
 simp [lt_iff_le_and_ne, of_rat_le_of_rat]
 end
+#check classical.indefinite_description 
 
 #check of_rat_inj
+#check exists.elim
+#check classical.some
+-- #check non_empty
+#print nonempty
+-- set_option pp.all true
+-- #print classical.choice,
+
+ -- set_option pp.notation false
+-- set_option pp.all true
+-- I want a floor function.
+#check exists_lt_of_rat_of_rat_gt
+-- exists_lt_of_rat_of_rat_gt : ?M_1 < ?M_2 → (∃ (q : ℚ), ?M_1 < of_rat q ∧ of_rat q < ?M_2)
+#check @exists_lt_of_rat_of_rat_gt
+-- exists_lt_of_rat_of_rat_gt : ∀ {r p : ℝ}, r < p → (∃ (q : ℚ), r < of_rat q ∧ of_rat q < p)
+
+variable α : Type
+
+-- example : set α = (α → Prop) := rfl
+
+#print nonempty 
+-- set_option pp.all true
+noncomputable def floor_with_proof : ℝ → ℤ  := λ x, 
+begin
+--  have H2 : 0+x < 1+x, by 
+--    apply add_lt_add_of_lt_of_le (zero_lt_one) (le_of_eq (rfl)),
+--  have H3 : x < x+1, by simp [H2],
+  let rat_in_interval := {q // x < of_rat q ∧ of_rat q < x + 1},
+  have H : ∃ (q : ℚ), x < of_rat q ∧ of_rat q < x + 1,
+  exact @exists_lt_of_rat_of_rat_gt x (x+1) (by simp [zero_lt_one]),
+  have H2 : ∃ (s : rat_in_interval), true,
+  simp [H],
+  have H3 : nonempty rat_in_interval,
+    apply exists.elim H2,
+    intro a,
+    intro Pa,
+    constructor,
+    exact a,
+  have qHq : rat_in_interval := classical.choice (H3),
+  cases qHq with q Hq,
+  exact (if (x < rat.floor q) then rat.floor q - 1  else rat.floor q ),
+end
+
+-- theorems need classical logic
+-- should it be 
+-- theorem floor_le : ∀ x, floor x ≤ x
+-- or
+-- theorem floor_ge : ∀ x, x ≥ floor x
+-- or any other combination of these ideas?
+-- How many? One? Four?
+noncomputable theorem floor_le (x : ℝ) : ↑(floor x) ≤ x :=
+begin
+unfold floor,
+simp,
+
+have n : ℤ := floor x,
+
+admit,
+end
+
+-- should I prove floor + 1 or 1 + floor?
+theorem lt_floor_add_one (x : ℝ) : x < 1 + floor x := sorry
+
+-- set_option pp.notation false
+variables x y : ℝ 
+#check x ≤ y
+let H : (x≤ y)
+
+constant C : (x ≤ y)
+#check C x y
+example (H : C x y) : C x y := sorry,
+
+
 
 namespace M1F
 
