@@ -1,50 +1,96 @@
-import data.set -- handy for proofs.
+-- ignore this part: we are building the notion of a set
+-- go to line 36
 
-definition A : set ℕ := {1,2,3,4,5}
+inductive zfc : Type
+| empty  : zfc
+| insert : zfc → zfc → zfc
 
--- part (a) -- prove one, delete the other.
+instance : has_emptyc zfc := ⟨zfc.empty⟩
+instance : has_insert zfc zfc := ⟨zfc.insert⟩
 
-theorem M1F_Sheet01_Q05a_is_true : 1 ∈ A := sorry
-theorem M1F_Sheet01_Q05a_is_false : ¬ (1 ∈ A) := sorry
+instance : has_zero zfc := ⟨{}⟩
+instance : has_one zfc := ⟨{0}⟩
 
--- part (b) does not even typecheck.
+def succ (a : zfc) : zfc := has_insert.insert a a
 
--- theorem M1F_Sheet01_Q05b_doesnt_make_sense : {1} ∈ A := [type error]
+def zfc_add : zfc → zfc → zfc
+| m 0 := m
+| m (zfc.insert n p) := succ (zfc_add m n)
 
--- part (c) -- prove one, delete the other.
+instance : has_add zfc := ⟨zfc_add⟩
 
-theorem M1F_Sheet01_Q05c_is_true : {1} ⊆ A := sorry
-theorem M1F_Sheet01_Q05c_is_false : ¬ ({1} ⊆ A) := sorry
+inductive member : zfc → zfc → Prop
+| left {a b c : zfc} : member a c → member a (has_insert.insert b c)
+| right {a b : zfc} : member a (has_insert.insert a b)
 
--- part (d) -- prove one etc etc
+instance : has_mem zfc zfc := ⟨member⟩
+instance : has_subset zfc := ⟨(λ a b:zfc, (∀ z:zfc, z ∈ a → z ∈ b))⟩
+infix `⊈`:50 := (λ a b, ¬(a ⊆ b))
+infix `⊉`:50 := (λ a b, ¬(b ⊆ a))
 
-theorem M1F_Sheet01_Q05d_is_true : {1,2} ⊆ A := sorry
-theorem M1F_Sheet01_Q05d_is_false : ¬ ({1,2} ⊆ A) := sorry
+axiom member.ext (a b : zfc) : (∀ x, x ∈ a ↔ x ∈ b) ↔ a=b
 
--- part (e)
+export zfc
+export member
 
-theorem M1F_Sheet01_Q05e_is_true : {1,2,1} ⊆ A := sorry
-theorem M1F_Sheet01_Q05e_is_false : ¬ ({1,2,1} ⊆ A) := sorry
+-- start here
 
--- part (f) doesn't typecheck
+/-
 
--- theorem M1F_Sheet01_Q05f_doesnt_make_sense : {1,1} ∈ A := [type error]
+USAGE:
+1. ¬P is shorthand of (P → false).
+2. A ∉ B is shorthand of ¬(A ∈ B), which is shorthand of (A ∈ B → false) per 1.
+3. A ⊆ B is shorthand of (∀ z, z ∈ A → z ∈ B).
+4. A ⊈ B is shorthand of ¬(A ⊆ B), and then use 1 and 3.
+5. A ⊇ B is shorthand of B ⊆ A.
+6. If the current goal is x ∈ {a,b,c,d,e}, then using "left" or "apply left"
+   will make the goal x ∈ {a,b,c,d}.
+7. If the current goal is x ∈ {a,b,c,d,x}, then using "right" or "apply right"
+   or "exact right" will prove the goal.
+8. If one wishes to disprove (i.e. derive false from) one of the current hypotheses
+   of the form h : x ∈ {a,b,c,d,e}, using "cases h" will replace the current hypothesis
+   with a_1 : x ∈ {a,b,c,d}, provided that x and e are not equal. When the set is empty,
+   "cases h" will directly prove false.
 
--- part (g) doesn't either
+HINT: To prove a statement of the form "P → P", use "exact id". 
 
--- theorem M1F_Sheet01_Q05g_doesnt_make_sense : A ∈ A := [type error]
+RECAP:
+1. To prove a statement of the form "∀ z, P z", type "intro x" and then prove "P x".
+2. To prove a statement of the form "P → Q", type "intro HP" and then prove "Q".
 
--- part (h) prove one yadda yadda
+NOTE:
+Somehow the goal will become messy. I tried to fix it but it just wouldn't work.
+Try to work with simple cases where the goal still works, and then trust in the
+force when it doesn't.
 
-theorem M1F_Sheet01_Q05h_is_true : A ⊇ A := sorry
-theorem M1F_Sheet01_Q05h_is_false : ¬ (A ⊇ A) := sorry
+-/
 
+definition A : zfc := {1,2,3,4,5}
 
--- Notation (to remind Kevin)
--- \ sub for subset,
--- \ sup for superset
--- \ empty for empty set
--- \ un for union
--- \ i for intersection
--- \ \ for set-theoretic difference.
+-- prove one and delete the other for each part.
 
+theorem M1F_Sheet01_Q05a_is_true : (1:zfc) ∈ A := sorry
+theorem M1F_Sheet01_Q05a_is_false : (1:zfc) ∈ A := sorry
+
+theorem M1F_Sheet01_Q05b_is_true: ({1}:zfc) ∈ A := sorry
+theorem M1F_Sheet01_Q05b_is_false: ({1}:zfc) ∉ A := sorry
+
+theorem M1F_Sheet01_Q05c_is_true: ({1}:zfc) ⊆ A := sorry
+theorem M1F_Sheet01_Q05c_is_false: ({1}:zfc) ⊈ A := sorry
+
+-- The goal generator gets messy in (d) and (e).
+
+theorem M1F_Sheet01_Q05d_is_true: ({1,2}:zfc) ⊆ A := sorry
+theorem M1F_Sheet01_Q05d_is_false: ({1,2}:zfc) ⊆ A := sorry
+
+theorem M1F_Sheet01_Q05e_is_true: ({1,2,1}:zfc) ⊆ A := sorry
+theorem M1F_Sheet01_Q05e_is_false: ({1,2,1}:zfc) ⊈ A := sorry
+
+theorem M1F_Sheet01_Q05f_is_true: ({1,1}:zfc) ∈ A := sorry
+theorem M1F_Sheet01_Q05f_is_false: ({1,1}:zfc) ∉ A := sorry
+
+theorem M1F_Sheet01_Q05g_is_true: A ∈ A := sorry
+theorem M1F_Sheet01_Q05g_is_false: A ∉ A := sorry
+
+theorem M1F_Sheet01_Q05h_is_true: A ⊇ A := sorry
+theorem M1F_Sheet01_Q05h_is_false: A ⊉ A := sorry
