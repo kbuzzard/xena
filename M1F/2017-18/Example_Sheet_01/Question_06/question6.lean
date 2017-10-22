@@ -42,12 +42,11 @@ USAGE:
 2. A ∉ B is shorthand of ¬(A ∈ B), which is shorthand of (A ∈ B → false) per 1.
 3. A ⊆ B is shorthand of (∀ z, z ∈ A → z ∈ B).
 4. A ⊈ B is shorthand of ¬(A ⊆ B), and then use 1 and 3.
-5. A ⊇ B is shorthand of B ⊆ A.
-6. If the current goal is x ∈ {a,b,c,d,e}, then using "left" or "apply left"
+5. If the current goal is x ∈ {a,b,c,d,e}, then using "left" or "apply left"
    will make the goal x ∈ {a,b,c,d}.
-7. If the current goal is x ∈ {a,b,c,d,x}, then using "right" or "apply right"
+6. If the current goal is x ∈ {a,b,c,d,x}, then using "right" or "apply right"
    or "exact right" will prove the goal.
-8. If one wishes to disprove (i.e. derive false from) one of the current hypotheses
+7. If one wishes to disprove (i.e. derive false from) one of the current hypotheses
    of the form h : x ∈ {a,b,c,d,e}, using "cases h" will replace the current hypothesis
    with a_1 : x ∈ {a,b,c,d}, provided that x and e are not equal. When the set is empty,
    "cases h" will directly prove false.
@@ -57,6 +56,7 @@ HINT: To prove a statement of the form "P → P", use "exact id".
 RECAP:
 1. To prove a statement of the form "∀ z, P z", type "intro x" and then prove "P x".
 2. To prove a statement of the form "P → Q", type "intro HP" and then prove "Q".
+3. If the current goal is P ∨ Q, using "left" will reduce the goal to P.
 
 NOTE:
 Somehow the goal will become messy. I tried to fix it but it just wouldn't work.
@@ -65,32 +65,35 @@ force when it doesn't.
 
 -/
 
-definition A : zfc := {1,2,3,4,5}
+definition A : zfc := {1,2,{1,2}}
+definition B : zfc := {1,2,A}
 
 -- prove one and delete the other for each part.
 
-theorem M1F_Sheet01_Q05a_is_true : (1:zfc) ∈ A := sorry
-theorem M1F_Sheet01_Q05a_is_false : (1:zfc) ∈ A := sorry
+theorem M1F_Sheet01_Q06a_is_true : (1:zfc) ∈ A := sorry
+theorem M1F_Sheet01_Q06a_is_false : (1:zfc) ∈ A := sorry
 
-theorem M1F_Sheet01_Q05b_is_true: ({1}:zfc) ∈ A := sorry
-theorem M1F_Sheet01_Q05b_is_false: ({1}:zfc) ∉ A := sorry
+theorem M1F_Sheet01_Q06b_is_true: ({1}:zfc) ∈ A := sorry
+theorem M1F_Sheet01_Q06b_is_false: ({1}:zfc) ∉ A := sorry
 
-theorem M1F_Sheet01_Q05c_is_true: ({1}:zfc) ⊆ A := sorry
-theorem M1F_Sheet01_Q05c_is_false: ({1}:zfc) ⊈ A := sorry
+theorem M1F_Sheet01_Q06c_is_true: ({1,2}:zfc) ∈ A := sorry
+theorem M1F_Sheet01_Q06c_is_false: ({1,2}:zfc) ∉ A := sorry
 
--- The goal generator gets messy in (d) and (e).
+-- goal generator becomes messy for (d)
 
-theorem M1F_Sheet01_Q05d_is_true: ({1,2}:zfc) ⊆ A := sorry
-theorem M1F_Sheet01_Q05d_is_false: ({1,2}:zfc) ⊆ A := sorry
+theorem M1F_Sheet01_Q06d_is_true: ({1,2}:zfc) ⊆ A := sorry
+theorem M1F_Sheet01_Q06d_is_false: ({1,2}:zfc) ⊆ A := sorry
 
-theorem M1F_Sheet01_Q05e_is_true: ({1,2,1}:zfc) ⊆ A := sorry
-theorem M1F_Sheet01_Q05e_is_false: ({1,2,1}:zfc) ⊈ A := sorry
+theorem M1F_Sheet01_Q06e_is_true: (1:zfc) ∈ B := sorry
+theorem M1F_Sheet01_Q06e_is_false: (1:zfc) ∉ B := sorry
 
-theorem M1F_Sheet01_Q05f_is_true: ({1,1}:zfc) ∈ A := sorry
-theorem M1F_Sheet01_Q05f_is_false: ({1,1}:zfc) ∉ A := sorry
+theorem M1F_Sheet01_Q06f_is_true: ({1}:zfc) ∈ B := sorry
+theorem M1F_Sheet01_Q06f_is_false: ({1}:zfc) ∉ B := sorry
 
-theorem M1F_Sheet01_Q05g_is_true: A ∈ A := sorry
-theorem M1F_Sheet01_Q05g_is_false: A ∉ A := sorry
+theorem M1F_Sheet01_Q06g_is_true: ({1,2}:zfc) ∈ B → (1:zfc) ∈ A := sorry
+theorem M1F_Sheet01_Q06g_is_false: ¬(({1,2}:zfc) ∈ B → (1:zfc) ∈ A) := sorry
 
-theorem M1F_Sheet01_Q05h_is_true: A ⊇ A := sorry
-theorem M1F_Sheet01_Q05h_is_false: A ⊉ A := sorry
+-- goal generator becomes messy for (h)
+
+theorem M1F_Sheet01_Q06h_is_true: ({1,2}:zfc) ⊆ B ∨ (1:zfc) ∉ A := sorry
+theorem M1F_Sheet01_Q06h_is_false: ¬(({1,2}:zfc) ⊆ B ∨ (1:zfc) ∉ A) := sorry

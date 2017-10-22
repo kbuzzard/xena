@@ -1,76 +1,108 @@
-import data.set -- handy for proofs.
+inductive zfc : Type
+| empty  : zfc
+| insert : zfc → zfc → zfc
 
-definition A : set ℕ := {1,2,3,4,5}
+instance : has_emptyc zfc := ⟨zfc.empty⟩
+instance : has_insert zfc zfc := ⟨zfc.insert⟩
 
--- part (a) is true
+instance : has_zero zfc := ⟨{}⟩
+instance : has_one zfc := ⟨{0}⟩
 
-theorem M1F_Sheet01_Q05a_is_true : 1 ∈ A := 
+def succ (a : zfc) : zfc := has_insert.insert a a
+
+def zfc_add : zfc → zfc → zfc
+| m 0 := m
+| m (zfc.insert n p) := succ (zfc_add m n)
+
+instance : has_add zfc := ⟨zfc_add⟩
+
+inductive member : zfc → zfc → Prop
+| left {a b c : zfc} : member a c → member a (has_insert.insert b c)
+| right {a b : zfc} : member a (has_insert.insert a b)
+
+instance : has_mem zfc zfc := ⟨member⟩
+instance : has_subset zfc := ⟨(λ a b:zfc, (∀ z:zfc, z ∈ a → z ∈ b))⟩
+
+axiom member.ext (a b : zfc) : (∀ x, x ∈ a ↔ x ∈ b) ↔ a=b
+
+export zfc
+export member
+
+definition A : zfc := {1,2,3,4,5}
+
+theorem M1F_Sheet01_Q05a_is_true : (1:zfc) ∈ A := 
 begin
-simp [A]
+    left, left, left, left, right
 end
 
--- part (b) does not even typecheck.
-
--- part (c) is true
-
-theorem M1F_Sheet01_Q05c_is_true : {1} ⊆ A := 
+theorem M1F_Sheet01_Q05b_is_false: ({1}:zfc) ∉ A :=
 begin
-simp [A]
+    intro h,
+    cases h,
+    cases a_1,
+    cases a_2,
+    cases a_3,
+    cases a_4,
+    cases a_5
 end
 
--- part (d) is true
-
--- set_option pp.notation false
-theorem M1F_Sheet01_Q05d_is_true : {1,2} ⊆ A :=
+theorem M1F_Sheet01_Q05c_is_true: ({1}:zfc) ⊆ A :=
 begin
-simp [A], -- eew doesn't work!
-simp [has_subset.subset,set.subset], -- found using set_option pp.notation false
--- goal is now 
--- ∀ ⦃a : ℕ⦄, a = 1 ∨ a = 2 → a = 1 ∨ a = 2 ∨ a = 3 ∨ a = 4 ∨ a = 5
-intro a,
-intro H,
-cases H,
-  left,assumption,
-  right,left,assumption
-  -- more painful than I was expecting.
+    intro x,
+    intro h,
+    cases h,
+    cases a_1,
+    left, left, left, left, right
 end
 
--- part (e) is true. Proof basically same as (d).
-
-theorem M1F_Sheet01_Q05e_is_true : {1,2,1} ⊆ A := 
+theorem M1F_Sheet01_Q05d_is_true: ({1,2}:zfc) ⊆ A :=
 begin
-simp [A], 
-simp [has_subset.subset,set.subset],
--- goal is again 
--- ∀ ⦃a : ℕ⦄, a = 1 ∨ a = 2 → a = 1 ∨ a = 2 ∨ a = 3 ∨ a = 4 ∨ a = 5
-intro a,
-intro H,
-cases H,
-  left,assumption,
-  right,left,assumption
+    intro x,
+    intro h,
+    cases h,
+    cases a_1,
+    cases a_2,
+    left, left, left, left, right,
+    left, left, left, right
 end
 
--- part (f) doesn't typecheck
-
--- part (g) doesn't either
-
--- part (h) is true
-
-set_option pp.notation false
-
-theorem M1F_Sheet01_Q05h_is_true : A ⊇ A := 
+theorem M1F_Sheet01_Q05e_is_true: ({1,2,1}:zfc) ⊆ A :=
 begin
-unfold superset,
-simp [A],
-simp [has_subset.subset,set.subset]
--- wooah that worked!
--- Can use set_option trace.simplify.rewrite true to see why :-)
+    intro x,
+    intro h,
+    cases h,
+    cases a_1,
+    cases a_2,
+    cases a_3,
+    left, left, left, left, right,
+    left, left, left, right,
+    left, left, left, left, right
 end
 
--- Notation (to remind Kevin)
--- \ sub for subset,
--- \ sup for superset
--- \ empty for empty set
--- \ un for union
--- \ i for intersection
--- \ \ for set-theoretic difference.
+theorem M1F_Sheet01_Q05f_is_false: ({1,1}:zfc) ∉ A :=
+begin
+    intro h,
+    cases h,
+    cases a_1,
+    cases a_2,
+    cases a_3,
+    cases a_4,
+    cases a_5
+end
+
+theorem M1F_Sheet01_Q05g_is_false: A ∉ A :=
+begin
+    intro h,
+    cases h,
+    cases a_1,
+    cases a_2,
+    cases a_3,
+    cases a_4,
+    cases a_5
+end
+
+theorem M1F_Sheet01_Q05h_is_true: A ⊇ A :=
+begin
+    intro h,
+    exact id
+end
