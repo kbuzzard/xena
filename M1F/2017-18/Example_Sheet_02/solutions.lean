@@ -94,6 +94,8 @@ have H4 : (0:ℝ) < (n:real) +1,
   refl,
 end
 
+-- #check Q1a 
+
 -- #check id
 
 /-
