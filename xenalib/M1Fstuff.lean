@@ -3,6 +3,8 @@ instance coe_rat_real : has_coe rat real := ⟨of_rat⟩
 instance coe_int_real : has_coe int real := ⟨of_rat ∘ rat.of_int⟩
 instance coe_nat_real : has_coe nat real := ⟨of_rat ∘ rat.of_int ∘ int.of_nat⟩ 
 
+-- example : right_cancel_semigroup ℝ := by apply_instance
+
 lemma of_rat_lt_of_rat {q₁ q₂ : ℚ} : of_rat q₁ < of_rat q₂ ↔ q₁ < q₂ := 
 begin
 simp [lt_iff_le_and_ne, of_rat_le_of_rat]
