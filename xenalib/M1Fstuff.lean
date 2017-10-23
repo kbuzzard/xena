@@ -98,13 +98,13 @@ theorem lt_floor_add_one (x : ℝ) : x < 1 + floor x := sorry
 -- set_option pp.notation false
 -- set_option pp.all true
 
-#check le_of_lt
+-- #check le_of_lt
 -- noncomputable example : preorder ℝ := by apply_instance
 
-#print sub_lt_iff
+-- #print sub_lt_iff
 
-#check sub_lt
-theorem floor_real : ∀ (x : ℝ), ∃ (n : ℤ), ↑n ≤ x ∧ x < n+1 :=
+-- #check sub_lt
+theorem floor_real_exists : ∀ (x : ℝ), ∃ (n : ℤ), ↑n ≤ x ∧ x < n+1 :=
 begin
   intro x,
   have H : ∃ (q : ℚ), x < of_rat q ∧ of_rat q < x + 1,
@@ -136,21 +136,100 @@ begin
       x < ↑(rat.floor q)               : Hb
       ... = ↑(rat.floor q) + 0         : eq.symm (add_zero ↑(rat.floor q))
       ... = ↑(rat.floor q) + (-1 + 1)  : congr_arg (λ y, ↑(rat.floor q) + y) (eq.symm (neg_add_self 1))
-      ... = ↑(rat.floor q) + -1 + 1    : eq.symm (add_assoc ↑(rat.floor q) (-1) 1)
-      ... = -1 + ↑(rat.floor q) + 1    : 
-      ... = ↑(rat.floor q) - 1 + 1     : sorry -- rfl
-      ... = (((rat.floor q):rat):real) - ((1:rat):real) + 1 : sorry -- rfl
-      ... = ((((rat.floor q):rat) - (1:rat)):real) + 1  : sorry -- congr_arg (λ y, y+1) (of_rat_sub ((rat.floor q):rat) ((1:rat))
-      ... = ↑(rat.floor q -1) + 1 : sorry,
+      ... = ↑(rat.floor q) + -1 + 1    : eq.symm (add_assoc ↑(rat.floor q) (-1) 1) 
+      ... = ↑(rat.floor q) - 1 + 1     : @congr_arg _ _ _ _ (λ y:ℝ, y+1) (eq.trans (add_comm (rat.floor q) (-1)) (neg_add_eq_sub 1 (rat.floor q)))
+      ... = of_rat (rat.floor q) - of_rat (1:rat) + 1 : rfl
+      ... = (of_rat (((rat.floor q):rat) - (1:rat))) + 1  : (@congr_arg _ _ _ _ (λ y:ℝ, y+(1:ℝ))) (@of_rat_sub ((rat.floor q):rat) (1:rat))
+      ... = of_rat (rat.of_int (rat.floor q) - rat.of_int 1) + 1 : rfl
+      ... = of_rat (rat.of_int ((rat.floor q)-1)) + 1 : @congr_arg _ _ _ _ (λ y:ℚ, (of_rat y) + 1) (eq.symm (rat.coe_int_sub (rat.floor q) 1))
+      ... = ↑(rat.floor q - 1) + 1 : rfl,
     end
   ⟩, 
-  admit,
+  exact ⟨rat.floor q,
+    begin
+    split,
+      {
+        have H : (x < ↑(rat.floor q)) ∨ (x ≥ ↑(rat.floor q)),
+          exact lt_or_ge x ↑(rat.floor q),
+        --trace_state,
+        cases H with F T,
+          exact false.elim (Hs F),
+          exact T
+      },
+    {
+      clear Hs,
+      have H1 : x < of_rat q,
+        { exact Hq.left },
+      clear Hq,
+      suffices H2 : q < rat.of_int ((rat.floor q)+(1:ℤ)),
+        have H3 : ¬ (rat.floor q + 1 ≤ rat.floor q),
+          intro H4,
+          suffices H5 : rat.floor q < rat.floor q + 1,
+            exact (lt_iff_not_ge (rat.floor q) ((rat.floor q)+1)).mp H5 H4,
+        -- exact (lt_iff_not_ge q (((rat.floor q) + 1):int):rat).mpr,
+        simp,
+        tactic.swap,
+        apply (lt_iff_not_ge q _).mpr,
+        intro H2,
+        have H3 : (rat.floor q) + 1 ≤ rat.floor q,
+          exact rat.le_floor.mpr H2,
+          have H4: (1:ℤ) > 0,
+            exact int.one_pos,
+          suffices H5 : (rat.floor q) + 1 > rat.floor q,
+            exact (lt_iff_not_ge (rat.floor q) (rat.floor q + 1)).mp H5 H3,
+            -- rw [add_comm (rat.floor q) (1:ℤ)],
+            -- exact add_lt_add_left H4 (rat.floor q),add_zero (rat.floor q)],
+            have H6 :rat.floor q + 0 < rat.floor q + 1,
+            exact (add_lt_add_left H4 (rat.floor q)),
+            exact @eq.subst _ (λ y, y < rat.floor q + 1) _ _ (add_zero (rat.floor q)) H6,
+      clear H3,
+      suffices H3 : of_rat q < ↑(rat.floor q) + 1,
+        exact lt.trans H1 H3,
+        clear H1,
+        suffices H1 : of_rat q < of_rat (↑(rat.floor q)) + of_rat(↑(1:ℤ)),
+          exact H1,
+
+          rw [of_rat_add,of_rat_lt_of_rat,←(rat.coe_int_add (rat.floor q) 1)],
+          exact H2,
+    }
+    end⟩
 end
 
-#check congr_arg
-#check of_rat_addc
-#check neg_add_eq_sub
+#check floor_real_exists
+-- #check rat.coe_int_add
+
+-- #check of_rat_add
+-- of_rat_add : of_rat ?M_1 + of_rat ?M_2 = of_rat (?M_1 + ?M_2)
+-- of_rat_lt_of_rat : of_rat ?M_1 < of_rat ?M_2 ↔ ?M_1 < ?M_2
+-- #check @eq.subst
+-- eq.subst : ∀ {α : Sort u_1} {P : α → Prop} {a b : α}, a = b → P a → P b
+
+-- #check add_zero
+-- add_zero : ∀ (a : ?M_1), a + 0 = a
+-- #check @add_lt_add_left
+--  ∀ {α : Type u_1} [s : ordered_cancel_comm_monoid α] {a b : α}, a < b → ∀ (c : α), c + a < c + b
+
+-- add_lt_add_left : ?M_3 < ?M_4 → ∀ (c : ?M_1), c + ?M_3 < c + ?M_4
+
+-- lt_iff_not_ge : ∀ (x y : ?M_1), x < y ↔ ¬x ≥ y
+-- rat.le_floor : ∀ {z : ℤ} {r : ℚ}, z ≤ rat.floor r ↔ ↑z ≤ r
+
+-- #check (lt_or_ge x ↑(rat.floor q))
+
+-- #check rat.coe_int_sub
+-- rat.coe_int_sub : ∀ (z₁ z₂ : ℤ), ↑(z₁ - z₂) = ↑z₁ - ↑z₂
+
+-- #check @congr_arg
+-- congr_arg : ∀ {α : Sort u_1} {β : Sort u_2} {a₁ a₂ : α} (f : α → β), a₁ = a₂ → f a₁ = f a₂
+-- #check of_rat_add
+-- #check neg_add_eq_sub -- neg_add_eq_sub : ∀ (a b : ?M_1), -a + b = b - a
 --    ...                = x : by rw [add_assoc,add_neg 1,add_zero],
+-- #check @of_rat_sub
+-- of_rat_sub : of_rat ?M_1 - of_rat ?M_2 = of_rat (?M_1 - ?M_2)
+-- variable q : ℚ 
+-- #check ((@congr_arg _ _ _ _ (λ y:ℝ, y+1)) (@of_rat_sub ((rat.floor q):rat) (1:rat)))
+
+
 /-
   have H2 : ↑(rat.floor q) ≤ q,
       simp [rat.floor_le q],
@@ -273,32 +352,6 @@ exact (@of_rat_inj (1/2) (a:rat)).mp H3,
 exact rational_half_not_an_integer H2,
 end
 
-#check @of_rat_inj
+-- #check @of_rat_inj
 
-run_cmd mk_simp_attr `real_simps
-attribute [real_simps] of_rat_zero of_rat_one of_rat_neg of_rat_add of_rat_sub of_rat_mul
-attribute [real_simps] of_rat_inv of_rat_le_of_rat of_rat_lt_of_rat
-@[real_simps] lemma of_rat_bit0 (a : ℚ) : bit0 (of_rat a) = of_rat (bit0 a) := of_rat_add
-@[real_simps] lemma of_rat_bit1 (a : ℚ) : bit1 (of_rat a) = of_rat (bit1 a) :=
-by simp [bit1, bit0, of_rat_add,of_rat_one]
-@[real_simps] lemma of_rat_div {r₁ r₂ : ℚ} : of_rat r₁ / of_rat r₂ = of_rat (r₁ / r₂) :=
-by simp [has_div.div, algebra.div] with real_simps
 end M1F
-
-namespace tactic
-meta def eval_num_tac : tactic unit :=
-do t ← target,
-   (lhs, rhs) ← match_eq t,
-   (new_lhs, pr1) ← norm_num lhs,
-   (new_rhs, pr2) ← norm_num rhs,
-   is_def_eq new_lhs new_rhs,
-   `[exact eq.trans %%pr1 (eq.symm %%pr2)]
-end tactic
-
-
-example : (((3:real)/4)-12)<6 := by simp with real_simps;exact dec_trivial
-example : (6:real) + 9 = 15 := by tactic.eval_num_tac
-example : (2:real) * 2 + 3 = 7 := by tactic.eval_num_tac
-example : (5:real) ≠ 8 := by simp with real_simps;exact dec_trivial
-example : (6:real) < 10 := by simp with real_simps;exact dec_trivial 
-
