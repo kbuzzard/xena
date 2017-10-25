@@ -1,7 +1,13 @@
 import analysis.real init.classical
-instance coe_rat_real : has_coe rat real := ⟨of_rat⟩
-instance coe_int_real : has_coe int real := ⟨of_rat ∘ rat.of_int⟩
-instance coe_nat_real : has_coe nat real := ⟨of_rat ∘ rat.of_int ∘ int.of_nat⟩ 
+-- instance coe_rat_real : has_coe rat real := ⟨of_rat⟩
+
+-- example : has_coe int real := by apply_instance
+
+-- instance coe_int_real : has_coe int real := ⟨of_rat ∘ rat.of_int⟩
+
+-- example : has_coe int real := by apply_instance
+
+-- instance coe_nat_real : has_coe nat real := ⟨of_rat ∘ rat.of_int ∘ int.of_nat⟩ 
 
 -- example : right_cancel_semigroup ℝ := by apply_instance
 
@@ -116,14 +122,19 @@ begin
     exact ⟨rat.floor q - 1,
     begin
       split,
+      simp [rat.floor_le q,Hq.right],
+      suffices H7 : (↑q:real) ≤ x+1,
+        -- meh 
+      apply rat.floor_le q,
+
         let r : ℤ := rat.floor q,
         exact calc
         (↑(((rat.floor q) - 1):int):real) = (↑((r-1):int):real)     : rfl  
-        ...                = ((((r-1):int):rat):real)               : rfl 
-        ...                = (((((r:int):rat) - ((1:int):rat)):rat):real)       : of_rat_inj.mpr (rat.coe_int_sub r 1)
-        ...                = (((((rat.floor q):rat) - ((1:int):rat)):rat):real) : rfl -- of_rat_inj.mpr (rat.coe_int_sub r 1)
-        ...                ≤ ((((q:rat)- ((1:int):rat)):rat):real) : of_rat_le_of_rat.mpr (add_le_add (rat.floor_le q) (show -(1:rat) ≤ -1,by exact dec_trivial)) -- of_rat_sub 
-        ...                = ((q:rat):real) - (((1:int):rat):real) : eq.symm of_rat_sub
+        ...                = ((((r-1):int):rat):real)               : by simp
+        ...                = (((((r:int):rat) - ((1:int):rat)):rat):real)       : by simp -- of_rat_inj.mpr (rat.cast_sub r 1)
+        ...                = (rat.floor q) - (1:real) : rfl -- of_rat_inj.mpr (rat.coe_int_sub r 1)
+        ...                ≤ ((((q:rat)- ((1:int):rat)):rat):real) : by simp [rat.floor_le q] -- of_rat_le_of_rat.mpr (add_le_add (rat.floor_le q) (show -(1:rat) ≤ -1,by exact dec_trivial)) -- of_rat_sub 
+        ...                = ((q:rat):real) - (((1:int):rat):real) : by simp -- eq.symm of_rat_sub
         ...                = ((q:rat):real) - ((1:rat):real) : rfl
         ...                = of_rat q       - ((1:rat):real) : rfl
         ...                = of_rat q       - (1:real)       : rfl
@@ -298,7 +309,7 @@ begin
 intro H12,
 have H2 : ↑(z₁ - z₂) = (0:rat),
 exact calc
-↑(z₁ - z₂) = (↑z₁ - ↑z₂ : ℚ)  : (rat.coe_int_sub z₁ z₂)
+↑(z₁ - z₂) = (↑z₁ - ↑z₂ : ℚ)  : by simp --  (rat.cast_sub z₁ z₂)
 ...               = (↑ z₂ - ↑ z₂:ℚ)  : by rw H12
 ... = (0 : rat) : by simp,
 have H3 : z₁ - z₂ = 0,
@@ -326,7 +337,7 @@ exact rat.mul_inv_cancel 2 H21,
 have H4 : (1:rat) = (2:rat)*(x:rat),
 exact H3 ▸ H2,
 have H5 : ((((2:int)*x):int):rat)=((2:int):rat)*(x:rat),
-simp [rat.coe_int_mul],
+simp [rat.cast_mul],
 have H6 : ↑ ((2:int)*x) = (↑1:rat),
 exact eq.trans H5 (eq.symm H4),
 clear H H2 H21 H3 H4 H5,
