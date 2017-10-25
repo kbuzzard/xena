@@ -111,60 +111,39 @@ theorem lt_floor_add_one (x : ℝ) : x < 1 + floor x := sorry
 
 -- #print sub_lt_iff
 
+-- #check @rat.cast_le
+
 -- #check sub_lt
+
 theorem floor_real_exists : ∀ (x : ℝ), ∃ (n : ℤ), ↑n ≤ x ∧ x < n+1 :=
 begin
-  intro x,
-  have H : ∃ (q : ℚ), x < of_rat q ∧ of_rat q < x + 1,
-    exact @exists_lt_of_rat_of_rat_gt x (x+1) (by simp [zero_lt_one]),
-  cases H with q Hq,
-  cases classical.em (x < rat.floor q) with Hb Hs,
-    exact ⟨rat.floor q - 1,
-    begin
-      split,
-      simp [rat.floor_le q,Hq.right],
-      suffices H7 : (↑q:real) ≤ x+1,
-        -- meh 
-      apply rat.floor_le q,
+intro x,
+have H : ∃ (q : ℚ), x < of_rat q ∧ of_rat q < x + 1,
+  exact @exists_lt_of_rat_of_rat_gt x (x+1) (by simp [zero_lt_one]),
+cases H with q Hq,
+cases classical.em (x < rat.floor q) with Hb Hs,
+  exact ⟨rat.floor q - 1,
+  begin
+  split,
+    simp [rat.floor_le q,Hq.right],
+    suffices H7 : (↑q:real) ≤ x+1,
+      exact calc (↑(rat.floor q):ℝ) = (↑((rat.floor q):ℚ):ℝ) : by simp
+      ... ≤ (↑q:ℝ) : rat.cast_le.mpr (rat.floor_le q)
+      ... ≤ x+1 : H7,
+    exact le_of_lt (calc (↑q:ℝ) = of_rat q : coe_rat_eq_of_rat q
+    ... < x+1 : Hq.right),
+  simp,
+  rw [←add_assoc],
+  simp [Hb]
+  end
+  ⟩,
 
-        let r : ℤ := rat.floor q,
-        exact calc
-        (↑(((rat.floor q) - 1):int):real) = (↑((r-1):int):real)     : rfl  
-        ...                = ((((r-1):int):rat):real)               : by simp
-        ...                = (((((r:int):rat) - ((1:int):rat)):rat):real)       : by simp -- of_rat_inj.mpr (rat.cast_sub r 1)
-        ...                = (rat.floor q) - (1:real) : rfl -- of_rat_inj.mpr (rat.coe_int_sub r 1)
-        ...                ≤ ((((q:rat)- ((1:int):rat)):rat):real) : by simp [rat.floor_le q] -- of_rat_le_of_rat.mpr (add_le_add (rat.floor_le q) (show -(1:rat) ≤ -1,by exact dec_trivial)) -- of_rat_sub 
-        ...                = ((q:rat):real) - (((1:int):rat):real) : by simp -- eq.symm of_rat_sub
-        ...                = ((q:rat):real) - ((1:rat):real) : rfl
-        ...                = of_rat q       - ((1:rat):real) : rfl
-        ...                = of_rat q       - (1:real)       : rfl
-        ...                ≤  x                               : le_of_lt (sub_lt_iff.mpr Hq.right)
-        --- ends like this
-        ...                = x : rfl,
-      -- admit,
-
-
-      exact calc
-      
-      x < ↑(rat.floor q)               : Hb
-      ... = ↑(rat.floor q) + 0         : eq.symm (add_zero ↑(rat.floor q))
-      ... = ↑(rat.floor q) + (-1 + 1)  : congr_arg (λ y, ↑(rat.floor q) + y) (eq.symm (neg_add_self 1))
-      ... = ↑(rat.floor q) + -1 + 1    : eq.symm (add_assoc ↑(rat.floor q) (-1) 1) 
-      ... = ↑(rat.floor q) - 1 + 1     : @congr_arg _ _ _ _ (λ y:ℝ, y+1) (eq.trans (add_comm (rat.floor q) (-1)) (neg_add_eq_sub 1 (rat.floor q)))
-      ... = of_rat (rat.floor q) - of_rat (1:rat) + 1 : rfl
-      ... = (of_rat (((rat.floor q):rat) - (1:rat))) + 1  : (@congr_arg _ _ _ _ (λ y:ℝ, y+(1:ℝ))) (@of_rat_sub ((rat.floor q):rat) (1:rat))
-      ... = of_rat (rat.of_int (rat.floor q) - rat.of_int 1) + 1 : rfl
-      ... = of_rat (rat.of_int ((rat.floor q)-1)) + 1 : @congr_arg _ _ _ _ (λ y:ℚ, (of_rat y) + 1) (eq.symm (rat.coe_int_sub (rat.floor q) 1))
-      ... = ↑(rat.floor q - 1) + 1 : rfl,
-    end
-  ⟩, 
   exact ⟨rat.floor q,
     begin
     split,
       {
         have H : (x < ↑(rat.floor q)) ∨ (x ≥ ↑(rat.floor q)),
           exact lt_or_ge x ↑(rat.floor q),
-        --trace_state,
         cases H with F T,
           exact false.elim (Hs F),
           exact T
@@ -174,7 +153,16 @@ begin
       have H1 : x < of_rat q,
         { exact Hq.left },
       clear Hq,
-      suffices H2 : q < rat.of_int ((rat.floor q)+(1:ℤ)),
+/-
+      rw [←coe_rat_eq_of_rat] at H1,
+      suffices H2 : x < ↑(rat.floor q) + ↑(1:ℤ),
+        simp [H2],
+      suffices H3 : q < ↑(((rat.floor q):ℤ):ℚ) + ↑(1:ℤ),
+      exact lt_trans H1 _,-- (by rw [←rat.cast_add]), 
+-/
+      -- insanity starts here
+
+      suffices H2 : q < ↑((rat.floor q)+(1:ℤ)),
         have H3 : ¬ (rat.floor q + 1 ≤ rat.floor q),
           intro H4,
           suffices H5 : rat.floor q < rat.floor q + 1,
@@ -198,103 +186,265 @@ begin
       clear H3,
       suffices H3 : of_rat q < ↑(rat.floor q) + 1,
         exact lt.trans H1 H3,
-        clear H1,
-        suffices H1 : of_rat q < of_rat (↑(rat.floor q)) + of_rat(↑(1:ℤ)),
-          exact H1,
-
-          rw [of_rat_add,of_rat_lt_of_rat,←(rat.coe_int_add (rat.floor q) 1)],
-          exact H2,
+      clear H1,
+      rw [←coe_rat_eq_of_rat],
+      have H : (↑(rat.floor q):ℝ) + (1:ℝ) = (((rat.floor q):ℚ):ℝ) + (((1:ℤ):ℚ):ℝ),
+        simp,
+      rw [H,←rat.cast_add,rat.cast_lt,←int.cast_add],
+      exact H2
     }
     end⟩
 end
 
-#check floor_real_exists
--- #check rat.coe_int_add
+theorem square_cont_at_zero : ∀ (r:ℝ), r>0 → ∃ (eps:ℝ),(eps>0) ∧ eps^2<r :=
+begin
+intros r Hrgt0,
+cases classical.em (r<1) with Hrl1 Hrnl1,
+  have H : r^2<r,
+    unfold pow_nat has_pow_nat.pow_nat monoid.pow,
+    simp,
+    exact calc r*r < r*1 : mul_lt_mul_of_pos_left Hrl1 Hrgt0
+    ... = r : mul_one r,
+  existsi r,
+  exact ⟨Hrgt0,H⟩,
+have Hrge1 : r ≥ 1,
+  exact le_of_not_lt Hrnl1,
+cases le_iff_eq_or_lt.mp Hrge1 with r1 rg1,
+  existsi ((1/2):ℝ),
+  split,
+    suffices H : 0 < ((1/2):ℝ),
+      exact H,
+    simp with real_simps,
+    exact dec_trivial,
+  -- *TODO* 1/2 > 0 doesn't work!
+  -- need of_rat_gt, not in realsimps
+  rw [←r1],
+  unfold pow_nat has_pow_nat.pow_nat monoid.pow,
+  simp with real_simps,
+  exact dec_trivial,
+clear Hrnl1 Hrge1,
+existsi (1:ℝ),
+split,
+  exact zero_lt_one,
+unfold pow_nat has_pow_nat.pow_nat monoid.pow,
+simp,
+exact rg1
+end
 
--- #check of_rat_add
--- of_rat_add : of_rat ?M_1 + of_rat ?M_2 = of_rat (?M_1 + ?M_2)
--- of_rat_lt_of_rat : of_rat ?M_1 < of_rat ?M_2 ↔ ?M_1 < ?M_2
--- #check @eq.subst
--- eq.subst : ∀ {α : Sort u_1} {P : α → Prop} {a b : α}, a = b → P a → P b
+theorem exists_square_root (r:ℝ) (rnneg : r ≥ 0) : ∃ (q : ℝ), (q ≥ 0) ∧ q^2=r :=
+begin
+cases le_iff_eq_or_lt.mp rnneg with r0 rpos,
+  rw [←r0],
+  have H : (0:ℝ)≥ 0 ∧ (0:ℝ)^2 = 0,
+  split,
+  exact le_of_eq (by simp),
+  unfold pow_nat has_pow_nat.pow_nat monoid.pow,
+  simp,
+  exact ⟨(0:ℝ),H⟩,
+  clear rnneg,
+let s := { x:ℝ | x^2 ≤ r},
+have H0 : (0:ℝ) ∈ s,
+  simp,
+  unfold pow_nat has_pow_nat.pow_nat monoid.pow,
+  simp,
+  exact le_of_lt rpos,
+have H1 : max r 1 ∈ upper_bounds s,
+  cases classical.em (r ≤ 1) with rle1 rgt1,
+    unfold upper_bounds,
+    unfold set_of,
+    intro t,
+    intro Ht,
+    suffices H : t ≤ 1,
+      exact le_trans H (le_max_right r 1),
+    have H : t^2 ≤ 1,
+      exact le_trans Ht rle1,
+    cases classical.em (t≤1) with tle1 tgt1,
+      exact tle1,
+    have H2: t > 1,
+      exact lt_of_not_ge tgt1,
+    exfalso,
+    have H3 : t*t>1,
+      exact calc 1<t : H2
+      ... = t*1 : eq.symm (mul_one t)
+      ... < t*t : mul_lt_mul_of_pos_left H2 (lt_trans zero_lt_one H2),
+    unfold pow_nat has_pow_nat.pow_nat monoid.pow at H,
+    simp at H,
+    exact not_lt_of_ge H H3,
 
--- #check add_zero
--- add_zero : ∀ (a : ?M_1), a + 0 = a
--- #check @add_lt_add_left
---  ∀ {α : Type u_1} [s : ordered_cancel_comm_monoid α] {a b : α}, a < b → ∀ (c : α), c + a < c + b
-
--- add_lt_add_left : ?M_3 < ?M_4 → ∀ (c : ?M_1), c + ?M_3 < c + ?M_4
-
--- lt_iff_not_ge : ∀ (x y : ?M_1), x < y ↔ ¬x ≥ y
--- rat.le_floor : ∀ {z : ℤ} {r : ℚ}, z ≤ rat.floor r ↔ ↑z ≤ r
-
--- #check (lt_or_ge x ↑(rat.floor q))
-
--- #check rat.coe_int_sub
--- rat.coe_int_sub : ∀ (z₁ z₂ : ℤ), ↑(z₁ - z₂) = ↑z₁ - ↑z₂
-
--- #check @congr_arg
--- congr_arg : ∀ {α : Sort u_1} {β : Sort u_2} {a₁ a₂ : α} (f : α → β), a₁ = a₂ → f a₁ = f a₂
--- #check of_rat_add
--- #check neg_add_eq_sub -- neg_add_eq_sub : ∀ (a b : ?M_1), -a + b = b - a
---    ...                = x : by rw [add_assoc,add_neg 1,add_zero],
--- #check @of_rat_sub
--- of_rat_sub : of_rat ?M_1 - of_rat ?M_2 = of_rat (?M_1 - ?M_2)
--- variable q : ℚ 
--- #check ((@congr_arg _ _ _ _ (λ y:ℝ, y+1)) (@of_rat_sub ((rat.floor q):rat) (1:rat)))
-
-
-/-
-  have H2 : ↑(rat.floor q) ≤ q,
-      simp [rat.floor_le q],
-    have H3 : ↑(rat.floor q) ≤ of_rat q,
-      apply of_rat_le_of_rat.mpr,
-      exact H2,
-    have H4 : ↑(rat.floor q) < x+1,
-      apply lt_of_le_of_lt H3 Hq.right,
-    have H5 : ↑(rat.floor q) ≤ x+1,
-      apply le_of_lt H4,
-    let t : ℚ := ((rat.floor q - 1):int),
-    suffices H5 : ↑t ≤ x,
-      exact H5,
-    have H6 : t = ↑(rat.floor q) - ↑1,
-      apply rat.coe_int_sub,
-    rw [H6],
-    have H7 : of_rat ↑(rat.floor q) - of_rat 1 = of_rat (↑(rat.floor q) - 1),
---     (↑(
---      (rat.floor q):rat):real) - (↑(1:rat):real) = (((rat.floor q):rat):real) - (↑1:real),
---      apply (eq.symm of_rat_sub),
---    unfold coe lift_t,
-    exact (@of_rat_sub ((rat.floor q):rat) (1:rat)),
-    
---    suffices H7 : of_rat ((rat.floor q):rat) - of_rat 1 ≤ x,
---    exact eq.subst (@of_rat_sub ((rat.floor q):rat() (1:rat)) H7,
---    have H5 : ↑(rat.floor q) - 1 < x,
---      simp,exact H4,
---    have h55 : (1:real)≤ 1,
---      simp with real_simps;exact dec_trivial,
---    have H6 :↑(rat.floor q) < x + 1,
-
-    --  apply add_lt_add_of_lt_of_le H5 h55,
---    simp [rat.coe_int_sub (rat.floor q) 1],
---    have H6 : preorder ℝ,
---      apply_instance,
- --   have H7 : ((((rat.floor q) -1):int):real) < x,
- --     simp [H5,of_rat_sub],
---    let t : ℚ := ((rat.floor q - 1):int),
---    suffices H7 : ↑ t ≤ x,
---      exact H7,
---    have H8 : ↑(((rat.floor q) - 1):rat) ≤ x,
-    --  apply le_of_lt H5,
---    suffices H9 : t =((rat.floor q):rat) - 1,
-    
---      apply H4,
---      simp [H3,Hq.right,le_of_lt],
---    unfold coe,unfold lift_t,unfold has_lift_t.lift coe_t ha _t.coe coe_b has_coe.coe,
-    
---    simp [rat.floor_le q,of_rat_le_of_rat,of_rat_add],
---    simp [of_rat_le_of_rat,Hq.right,rat.floor_le],
--/
-
+  have H : 1<r,
+    exact lt_of_not_ge rgt1,
+  unfold upper_bounds,
+  unfold set_of,
+  intro t,
+  intro Ht,
+  suffices H : t ≤ r,
+    exact le_trans H (le_max_left r 1),
+  cases classical.em (t≤r) with Hl Hg,
+    exact Hl,
+  have H1 : r<t,
+    exact lt_of_not_ge Hg,
+  have H2 : t^2 ≤ r,
+    exact Ht,
+  clear H0 Ht s Hg rgt1,
+  exfalso,
+  have H3 : 1<t,
+    exact lt_trans H H1,
+  have H4 : t^2 < t,
+    exact lt_of_le_of_lt H2 H1,
+  have H5 : t < t^2,
+    exact calc t = 1*t : eq.symm (one_mul t)
+    ... < t*t : mul_lt_mul_of_pos_right H3 (lt_trans zero_lt_one H3)
+    ... = t^2 : by {unfold pow_nat has_pow_nat.pow_nat monoid.pow,simp},
+  have H6 : t < t,
+    exact lt_trans H5 H4,
+  have H7 : ¬ (t=t), 
+    exact ne_of_lt H6,
+  exact H7 (rfl),
+have H : ∃ (x : ℝ), is_lub s x,
+  exact exists_supremum_real H0 H1,
+cases H with q Hq,
+existsi q,
+unfold is_lub at Hq,
+unfold is_least at Hq,
+split,
+  exact Hq.left 0 H0,
+have Hqge0 : 0 ≤ q,
+  exact Hq.left 0 H0,
+-- idea is to prove q^2=r by showing not < or >
+-- first not <
+have H2 : ¬ (q^2<r),
+  intro Hq2r,
+  have H2 : q ∈ upper_bounds s,
+    exact Hq.left,
+  clear Hq H0 H1,
+  unfold upper_bounds at H2,
+  have H3 : ∀ qe, q<qe → ¬(qe^2≤r),
+    intro qe,
+    intro qlqe,
+    intro H4,
+    have H5 : qe ≤ q,
+      exact H2 qe H4,
+    exact not_lt_of_ge H5 qlqe,
+  have H4 : ∀ eps > 0,(q+eps)^2>r,
+    intros eps Heps,
+    exact lt_of_not_ge (H3 (q+eps) ((lt_add_iff_pos_right q).mpr Heps)),
+  clear H3 H2 s,
+  cases le_iff_eq_or_lt.mp Hqge0 with Hq0 Hqg0,
+    cases (square_cont_at_zero r rpos) with eps Heps,
+    specialize H4 eps,
+    rw [←Hq0] at H4,
+    simp at H4,
+    have H3 : eps^2>r,
+      exact H4 Heps.left,
+    exact (lt_iff_not_ge r (eps^2)).mp H3 (le_of_lt Heps.right), 
+  clear Hqge0,
+  -- want eps such that 2*q*eps+eps^2 <= r-q^2
+  -- so eps=min((r-q^2)/4q,thing-produced-by-square-cts-function)
+  have H0 : (0:ℝ)<2, 
+    simp with real_simps,
+    exact dec_trivial,
+  have H : 0<(r-q^2),
+    exact sub_pos_of_lt Hq2r,
+  have H2 : 0 < (r-q^2)/2,
+    exact div_pos_of_pos_of_pos H H0,
+  have H3 : 0 < (r-q^2)/2/(2*q),
+    exact div_pos_of_pos_of_pos H2 (mul_pos H0 Hqg0),
+  cases (square_cont_at_zero ((r-q^2)/2) H2) with e0 He0,
+  let e1 := min ((r-q^2)/2/(2*q)) e0,
+  have He1 : e1>0,
+    exact lt_min H3 He0.left,
+  specialize H4 e1, -- should be a contradiction
+  have H1 : (q+e1)^2 > r,
+    exact H4 He1,
+  have H5 : e1 ≤ ((r-q^2)/2/(2*q)),
+    exact (min_le_left ((r-q^2)/2/(2*q)) e0),
+  have H6 : e1*e1<(r - q ^ 2) / 2,
+    exact calc e1*e1 ≤ e0*e1 : mul_le_mul_of_nonneg_right (min_le_right ((r - q ^ 2) / 2 / (2 * q)) e0) (le_of_lt He1)
+    ... ≤ e0*e0 : mul_le_mul_of_nonneg_left (min_le_right ((r - q ^ 2) / 2 / (2 * q)) e0) (le_of_lt He0.left )
+    ... = e0^2 :  by {unfold pow_nat has_pow_nat.pow_nat monoid.pow,simp}
+    ... < (r-q^2)/2 : He0.right,
+  have Hn1 : (q+e1)^2 < r,
+    exact calc (q+e1)^2 = (q+e1)*(q+e1) : by {unfold pow_nat has_pow_nat.pow_nat monoid.pow,simp}
+    ... = q*q+2*q*e1+e1*e1 : by rw [mul_add,add_mul,add_mul,mul_comm e1 q,two_mul,add_mul,add_assoc,add_assoc,add_assoc]
+    ... = q^2 + (2*q)*e1 + e1*e1 : by {unfold pow_nat has_pow_nat.pow_nat monoid.pow,simp}
+    ... ≤ q^2 + (2*q)*((r - q ^ 2) / 2 / (2 * q)) + e1*e1 : add_le_add_right (add_le_add_left ((mul_le_mul_left (mul_pos H0 Hqg0)).mpr H5) (q^2)) (e1*e1)
+    ... < q^2 + (2*q)*((r - q ^ 2) / 2 / (2 * q)) + (r-q^2)/2 : add_lt_add_left H6 _
+    ... = r : by admit, -- rw [mul_div_cancel'], -- nearly there
+  
+-- need continuity of square fn here
+  admit,
+-- now not >
+have H3 : ¬ (q^2>r),
+  intro Hq2r,
+  have H3 : q ∈ lower_bounds (upper_bounds s),
+    exact Hq.right,
+  clear Hq H0 H1 H2,
+  have Hqg0 : 0 < q,
+    cases le_iff_eq_or_lt.mp Hqge0 with Hq0 H,
+      tactic.swap,
+      exact H,
+    unfold pow_nat has_pow_nat.pow_nat monoid.pow at Hq2r,
+    rw [←Hq0] at Hq2r,
+    simp at Hq2r,
+    exfalso,
+    exact not_lt_of_ge (le_of_lt rpos) Hq2r,
+  clear Hqge0,
+  have H : ∀ (eps:ℝ), (eps > 0 ∧ eps < q) → (q-eps)^2 < r,
+    unfold lower_bounds at H3,
+    unfold set_of at H3,
+    unfold has_mem.mem set.mem has_mem.mem at H3,
+    intros eps Heps,
+    have H : ¬ ((q-eps) ∈ (upper_bounds s)),
+      intro H,
+      have H2 : q ≤ q-eps,
+        exact H3 (q-eps) H,
+      rw [le_sub_iff_add_le] at H2,
+      have Hf : q<q, 
+        exact calc 
+        q < eps+q : lt_add_of_pos_left q Heps.left
+        ...   = q+eps : add_comm eps q
+        ... ≤ q : H2, 
+      have Hf2 : ¬ (q=q),
+        exact ne_of_lt Hf,
+      exact Hf2 (by simp),
+    unfold upper_bounds at H,
+    unfold has_mem.mem set.mem has_mem.mem set_of at H,
+    have H2 : ∃ (b:ℝ), ¬ (s b → b ≤ q-eps),
+      exact classical.not_forall.mp H, 
+    cases H2 with b Hb,
+    clear H,
+    cases classical.em (s b) with Hsb Hsnb,
+      tactic.swap,
+      have Hnb : s b → b ≤ q - eps,
+        intro Hsb,
+        exfalso,
+        exact Hsnb Hsb,
+      exfalso,
+      exact Hb Hnb,
+    cases classical.em (b ≤ q - eps) with Hlt Hg,
+      exfalso,
+      exact Hb (λ _,Hlt),
+    have Hh : q-eps < b,
+      exact lt_of_not_ge Hg,
+    clear Hg Hb,
+    -- todo: (q-eps)>0, (q-eps)^2<b^2<=r, 
+    have H0 : 0<q-eps,
+      rw [lt_sub_iff,zero_add],exact Heps.right,
+     unfold pow_nat has_pow_nat.pow_nat monoid.pow,
+     exact calc (q-eps)*((q-eps)*1) = (q-eps)*(q-eps) : congr_arg (λ t, (q-eps)*t) (mul_one (q-eps))
+     ... < (q-eps) * b : mul_lt_mul_of_pos_left Hh H0
+     ... < b * b : mul_lt_mul_of_pos_right Hh (lt_trans H0 Hh)
+     ... = b^2 : by { unfold pow_nat has_pow_nat.pow_nat monoid.pow, simp}
+     ... ≤ r : Hsb,
+       -- todo: continuity of square,
+  admit,
+  have H : q^2 ≤ r,
+    exact le_of_not_lt H3,
+  cases lt_or_eq_of_le H with Hlt Heq,
+    exfalso,
+    exact H2 Hlt,
+  exact Heq,
+end
 
 namespace M1F
 
