@@ -22,12 +22,30 @@ open nat
 
 definition natural_power : real → nat → real
 | x 0 := 1
-| x (n+1) := (natural_power x n) * x
+| x (succ n) := (natural_power x n) * x
 
-theorem T : ∀ x:real, ∀ m n:nat, natural_power x (m+n) = natural_power x m *natural_power x n :=
+-- Proof by Eduard Oravkin
+theorem T1 : ∀ x:real, ∀ m n:nat, natural_power x (m+n) = natural_power x m *natural_power x n :=
+begin
+intro x, intro m, intro n,
+induction n with s H1,
+have H : natural_power x 0 = 1,
+  refl,
+rw [add_zero, H , mul_one],
+unfold natural_power,
+rw [← mul_assoc, H1],
+end
+
+theorem T2 : ∀ x: real, ∀ m n : nat, natural_power (natural_power x m) n = natural_power x (m*n) :=
 begin
 admit
 end
+
+theorem T3 : ∀ x y: real, ∀ n : nat, natural_power x n * natural_power y n = natural_power (x*y) n :=
+begin
+admit
+end
+
 
 constant nth_root (x : real) (n : nat) : (x>0) → (n>0) → real
 
