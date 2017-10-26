@@ -36,9 +36,17 @@ unfold natural_power,
 rw [← mul_assoc, H1],
 end
 
+-- Proof by Chris Hughes 
 theorem T2 : ∀ x: real, ∀ m n : nat, natural_power (natural_power x m) n = natural_power x (m*n) :=
 begin
-admit
+assume x m n,
+induction n with n H,
+unfold natural_power,
+rw [mul_zero, eq_comm],
+unfold natural_power,
+rw [succ_eq_add_one,mul_add,mul_one,add_one],
+unfold natural_power,
+rw [T1,H]
 end
 
 theorem T3 : ∀ x y: real, ∀ n : nat, natural_power x n * natural_power y n = natural_power (x*y) n :=
