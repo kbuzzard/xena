@@ -49,9 +49,19 @@ unfold natural_power,
 rw [T1,H]
 end
 
+-- Proof by Ali Barkhordarian
 theorem T3 : ∀ x y: real, ∀ n : nat, natural_power x n * natural_power y n = natural_power (x*y) n :=
 begin
-admit
+assume x y n,
+induction n with n H,
+unfold natural_power,
+exact one_mul 1,
+unfold natural_power,
+rw [mul_assoc],
+rw [← mul_assoc x],
+rw [mul_comm x],
+rw [mul_assoc, ←mul_assoc],
+rw [H]
 end
 
 
