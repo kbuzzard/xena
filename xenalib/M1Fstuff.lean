@@ -369,10 +369,8 @@ have H2 : ¬ (q^2<r),
     ... = q^2 + (2*q)*e1 + e1*e1 : by {unfold pow_nat has_pow_nat.pow_nat monoid.pow,simp}
     ... ≤ q^2 + (2*q)*((r - q ^ 2) / 2 / (2 * q)) + e1*e1 : add_le_add_right (add_le_add_left ((mul_le_mul_left (mul_pos H0 Hqg0)).mpr H5) (q^2)) (e1*e1)
     ... < q^2 + (2*q)*((r - q ^ 2) / 2 / (2 * q)) + (r-q^2)/2 : add_lt_add_left H6 _
-    ... = r : by admit, -- rw [mul_div_cancel'], -- nearly there
-  
--- need continuity of square fn here
-  admit,
+    ... = r : by rw [mul_comm,div_mul_eq_mul_div,mul_div_assoc,div_self (ne_of_gt (mul_pos H0 Hqg0)),mul_one,add_assoc,div_add_div_same,←two_mul,mul_comm,mul_div_assoc,div_self (ne_of_gt H0),mul_one,add_sub,add_comm,←add_sub,sub_self,add_zero], -- rw [mul_div_cancel'], -- nearly there
+exact not_lt_of_ge (le_of_lt H1) Hn1,
 -- now not >
 have H3 : ¬ (q^2>r),
   intro Hq2r,
