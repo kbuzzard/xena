@@ -428,13 +428,48 @@ have H3 : ¬ (q^2>r),
     -- todo: (q-eps)>0, (q-eps)^2<b^2<=r, 
     have H0 : 0<q-eps,
       rw [lt_sub_iff,zero_add],exact Heps.right,
-     unfold pow_nat has_pow_nat.pow_nat monoid.pow,
-     exact calc (q-eps)*((q-eps)*1) = (q-eps)*(q-eps) : congr_arg (λ t, (q-eps)*t) (mul_one (q-eps))
-     ... < (q-eps) * b : mul_lt_mul_of_pos_left Hh H0
-     ... < b * b : mul_lt_mul_of_pos_right Hh (lt_trans H0 Hh)
-     ... = b^2 : by { unfold pow_nat has_pow_nat.pow_nat monoid.pow, simp}
-     ... ≤ r : Hsb,
-       -- todo: continuity of square,
+    unfold pow_nat has_pow_nat.pow_nat monoid.pow,
+    exact calc (q-eps)*((q-eps)*1) = (q-eps)*(q-eps) : congr_arg (λ t, (q-eps)*t) (mul_one (q-eps))
+    ... < (q-eps) * b : mul_lt_mul_of_pos_left Hh H0
+    ... < b * b : mul_lt_mul_of_pos_right Hh (lt_trans H0 Hh)
+    ... = b^2 : by { unfold pow_nat has_pow_nat.pow_nat monoid.pow, simp}
+    ... ≤ r : Hsb,
+  -- We now know (q-eps)^2<r for all eps>0, and q^2>r. Need a contradiction.
+  -- Idea: (q^2-2*q*eps+eps^2)<r so 2q.eps-eps^2>q^2-r>0, 
+  -- so we need to find eps such that 2q.eps-eps^2<(q^2-r)
+  -- so set eps=min((q^2-r)/2q,q)
+  have H0 : (0:ℝ)<2, 
+    simp with real_simps,
+    exact dec_trivial,
+  have H1 : 0<(q^2-r),
+    exact sub_pos_of_lt Hq2r,
+  have H2 : 0 < (q/2),
+    exact div_pos_of_pos_of_pos Hqg0 H0,
+  have J1 : 0 < (q^2-r)/(2*q),
+    exact div_pos_of_pos_of_pos H1 (mul_pos H0 Hqg0),
+  let e1 := min ((q^2-r)/(2*q)) (q/2),
+  have He1 : e1>0,
+    exact lt_min J1 H2,
+  specialize H e1, -- should be a contradiction
+  have J0 : e1<q,
+    exact calc e1 ≤ (q/2) : min_le_right ((q^2-r)/(2*q)) (q/2)
+    ... = q*(1/2) : by rw [←mul_div_assoc,mul_one]
+    ... < q*1 : mul_lt_mul_of_pos_left (by simp with real_simps;exact dec_trivial) Hqg0
+    ... = q : by rw [mul_one],
+  have H4 : (q-e1)^2 < r,
+    exact H ⟨He1,J0⟩,
+  have H5 : e1 ≤ ((q^2-r)/(2*q)),
+    exact (min_le_left ((q^2-r)/(2*q)) (q/2)),
+  have H6 : e1*e1>0,
+    exact mul_pos He1 He1,
+  have Hn1 : (q-e1)^2 > r,
+    exact calc (q-e1)^2 = (q-e1)*(q-e1) : by {unfold pow_nat has_pow_nat.pow_nat monoid.pow,simp}
+    ... = q*q-2*q*e1+e1*e1 : by rw [mul_sub,sub_mul,sub_mul,mul_comm e1 q,two_mul,add_mul] --,add_assoc,add_assoc,add_assoc]
+    ... = q^2 + (2*q)*e1 + e1*e1 : by {unfold pow_nat has_pow_nat.pow_nat monoid.pow,simp}
+    ... ≤ q^2 + (2*q)*((r - q ^ 2) / 2 / (2 * q)) + e1*e1 : add_le_add_right (add_le_add_left ((mul_le_mul_left (mul_pos H0 Hqg0)).mpr H5) (q^2)) (e1*e1)
+    ... < q^2 + (2*q)*((r - q ^ 2) / 2 / (2 * q)) + (r-q^2)/2 : add_lt_add_left H6 _
+    ... = r : by rw [mul_comm,div_mul_eq_mul_div,mul_div_assoc,div_self (ne_of_gt (mul_pos H0 Hqg0)),mul_one,add_assoc,div_add_div_same,←two_mul,mul_comm,mul_div_assoc,div_self (ne_of_gt H0),mul_one,add_sub,add_comm,←add_sub,sub_self,add_zero], -- rw [mul_div_cancel'], -- nearly there
+exact not_lt_of_ge (le_of_lt H1) Hn1,
   admit,
   have H : q^2 ≤ r,
     exact le_of_not_lt H3,
