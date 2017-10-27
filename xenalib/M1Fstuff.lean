@@ -38,25 +38,9 @@ do t ← target,
    `[exact eq.trans %%pr1 (eq.symm %%pr2)]
 end tactic
 
--- #check classical.indefinite_description 
---
--- #check of_rat_inj
--- #check exists.elim
--- #check classical.some
--- #check non_empty
--- #print nonempty
--- set_option pp.all true
--- #print classical.choice,
 
--- set_option pp.notation false
--- set_option pp.all true
--- I want a floor function.
--- #check exists_lt_of_rat_of_rat_gt
--- exists_lt_of_rat_of_rat_gt : ?M_1 < ?M_2 → (∃ (q : ℚ), ?M_1 < of_rat q ∧ of_rat q < ?M_2)
--- #check @exists_lt_of_rat_of_rat_gt
--- exists_lt_of_rat_of_rat_gt : ∀ {r p : ℝ}, r < p → (∃ (q : ℚ), r < of_rat q ∧ of_rat q < p)
 
-variable α : Type
+-- variable α : Type
 
 -- example : set α = (α → Prop) := rfl
 /-
@@ -464,19 +448,19 @@ have H3 : ¬ (q^2>r),
     exact mul_pos He1 He1,
   have Hn1 : (q-e1)^2 > r,
     exact calc (q-e1)^2 = (q-e1)*(q-e1) : by {unfold pow_nat has_pow_nat.pow_nat monoid.pow,simp}
-    ... = q*q-2*q*e1+e1*e1 : by rw [mul_sub,sub_mul,sub_mul,mul_comm e1 q,two_mul,add_mul] --,add_assoc,add_assoc,add_assoc]
-    ... = q^2 + (2*q)*e1 + e1*e1 : by {unfold pow_nat has_pow_nat.pow_nat monoid.pow,simp}
-    ... ≤ q^2 + (2*q)*((r - q ^ 2) / 2 / (2 * q)) + e1*e1 : add_le_add_right (add_le_add_left ((mul_le_mul_left (mul_pos H0 Hqg0)).mpr H5) (q^2)) (e1*e1)
-    ... < q^2 + (2*q)*((r - q ^ 2) / 2 / (2 * q)) + (r-q^2)/2 : add_lt_add_left H6 _
-    ... = r : by rw [mul_comm,div_mul_eq_mul_div,mul_div_assoc,div_self (ne_of_gt (mul_pos H0 Hqg0)),mul_one,add_assoc,div_add_div_same,←two_mul,mul_comm,mul_div_assoc,div_self (ne_of_gt H0),mul_one,add_sub,add_comm,←add_sub,sub_self,add_zero], -- rw [mul_div_cancel'], -- nearly there
-exact not_lt_of_ge (le_of_lt H1) Hn1,
-  admit,
+    ... = q*q-2*q*e1+e1*e1 : by rw [mul_sub,sub_mul,sub_mul,mul_comm e1 q,two_mul,add_mul];simp
+    ... = q^2 - (2*q)*e1 + e1*e1 : by {unfold pow_nat has_pow_nat.pow_nat monoid.pow,simp}
+    ... > q^2 - (2*q)*e1         : lt_add_of_pos_right (q^2 -(2*q)*e1) H6
+    ... ≥ q^2 - (2*q)*((q ^ 2 - r) / (2 * q)) : sub_le_sub (le_of_eq (eq.refl (q^2))) (mul_le_mul_of_nonneg_left H5 (le_of_lt (mul_pos H0 Hqg0))) -- lt_add_iff_pos_right  -- (add_le_add_left ((mul_le_mul_left (mul_pos H0 Hqg0)).mpr H5) (q^2)) (e1*e1)
+    ... = r : by rw [←div_mul_eq_mul_div_comm,div_self (ne_of_gt (mul_pos H0 Hqg0)),one_mul];simp, --     ... = r : by rw [mul_comm,div_mul_eq_mul_div,mul_div_assoc,div_self (ne_of_gt (mul_pos H0 Hqg0)),mul_one,add_assoc,div_add_div_same,←two_mul,mul_comm,mul_div_assoc,div_self (ne_of_gt H0),mul_one,add_sub,add_comm,←add_sub,sub_self,add_zero], -- rw [mul_div_cancel'], -- nearly there
+
+    exact not_lt_of_ge (le_of_lt (H ⟨He1,J0⟩)) Hn1,
   have H : q^2 ≤ r,
     exact le_of_not_lt H3,
   cases lt_or_eq_of_le H with Hlt Heq,
     exfalso,
     exact H2 Hlt,
-  exact Heq,
+  exact Heq
 end
 
 namespace M1F
