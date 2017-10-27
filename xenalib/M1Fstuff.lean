@@ -102,8 +102,8 @@ theorem lt_floor_add_one (x : ℝ) : x < 1 + floor x := sorry
 theorem floor_real_exists : ∀ (x : ℝ), ∃ (n : ℤ), ↑n ≤ x ∧ x < n+1 :=
 begin
 intro x,
-have H : ∃ (q : ℚ), x < of_rat q ∧ of_rat q < x + 1,
-  exact @exists_lt_of_rat_of_rat_gt x (x+1) (by simp [zero_lt_one]),
+have H : ∃ (q : ℚ), x < ↑q ∧ ↑q < x + 1,
+  exact @exists_rat_btwn x (x+1) (by simp [zero_lt_one]),
 cases H with q Hq,
 cases classical.em (x < rat.floor q) with Hb Hs,
   exact ⟨rat.floor q - 1,
@@ -114,8 +114,7 @@ cases classical.em (x < rat.floor q) with Hb Hs,
       exact calc (↑(rat.floor q):ℝ) = (↑((rat.floor q):ℚ):ℝ) : by simp
       ... ≤ (↑q:ℝ) : rat.cast_le.mpr (rat.floor_le q)
       ... ≤ x+1 : H7,
-    exact le_of_lt (calc (↑q:ℝ) = of_rat q : coe_rat_eq_of_rat q
-    ... < x+1 : Hq.right),
+    exact le_of_lt Hq.right,
   simp,
   rw [←add_assoc],
   simp [Hb]
@@ -134,7 +133,7 @@ cases classical.em (x < rat.floor q) with Hb Hs,
       },
     {
       clear Hs,
-      have H1 : x < of_rat q,
+      have H1 : x < ↑q,
         { exact Hq.left },
       clear Hq,
 /-
@@ -169,7 +168,10 @@ cases classical.em (x < rat.floor q) with Hb Hs,
             exact @eq.subst _ (λ y, y < rat.floor q + 1) _ _ (add_zero (rat.floor q)) H6,
       clear H3,
       suffices H3 : of_rat q < ↑(rat.floor q) + 1,
-        exact lt.trans H1 H3,
+        -- exact lt.trans H1 H3,
+        exact calc x < ↑q : H1
+        ... = of_rat q : coe_rat_eq_of_rat q
+        ... < ↑(rat.floor q) + 1 : H3,
       clear H1,
       rw [←coe_rat_eq_of_rat],
       have H : (↑(rat.floor q):ℝ) + (1:ℝ) = (((rat.floor q):ℚ):ℝ) + (((1:ℤ):ℚ):ℝ),
