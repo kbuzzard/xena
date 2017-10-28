@@ -465,6 +465,42 @@ have H3 : ¬ (q^2>r),
   exact Heq
 end
 
+-- set_option pp.notation false
+
+theorem square_is_pow_two {α : Type} [monoid α] {x : α} : x^2 = x*x :=
+begin
+unfold pow_nat has_pow_nat.pow_nat monoid.pow,
+simp
+end
+
+theorem square_inj_on_nonneg (x y : ℝ) : (x ≥ 0) → (y ≥ 0) → (x^2 = y^2) → (x=y) :=
+begin
+assume H_x_ge_zero : x ≥ 0,
+assume H_y_ge_zero : y ≥ 0,
+assume H_x_pow_two_eq_y_pow_two : x^2 = y^2,
+have H : x*x = y*y,
+  rwa [square_is_pow_two,square_is_pow_two] at H_x_pow_two_eq_y_pow_two,
+have H_eq_or_neg : x = y ∨ x = -y,
+  exact (mul_self_eq_mul_self_iff _ _).mp H,
+cases H_eq_or_neg with Heq Hneg,
+  exact Heq,
+have H_x_le_zero : x ≤ 0, exact calc x=-y : Hneg ... ≤ 0 : neg_nonpos.mpr H_y_ge_zero,
+have H_x_eq_zero : x = 0, exact eq_iff_le_and_le.2 ⟨H_x_le_zero, H_x_ge_zero⟩,
+exact (eq.symm (calc y=-x : eq.symm (neg_eq_iff_neg_eq.1 (eq.symm Hneg))
+                ... = 0 : neg_eq_zero.2 H_x_eq_zero 
+                ... = x : eq.symm (H_x_eq_zero))),
+end
+
+-- #check exists_square_root
+-- exists_square_root : ∀ (r : ℝ), r ≥ 0 → (∃ (q : ℝ), q ≥ 0 ∧ q ^ 2 = r)
+
+theorem exists_unique_square_root : ∀ (r:ℝ), (r ≥ 0) → ∃ (q:ℝ), (q ≥ 0 ∧ q^2 = r ∧ ∀ (s:ℝ), s ≥ 0 ∧ s^2 = r → s=q) :=
+begin
+intro r,
+intro 
+end
+
+
 namespace M1F
 
 

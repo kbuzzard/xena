@@ -1,4 +1,4 @@
-import xenalib.M1Fstuff 
+import xenalib.M1Fstuff algebra.group_power
 
 -- automatic coercions to reals  
 
@@ -220,6 +220,8 @@ def countable_intersection_from_one {α : Type} (X : nat → set α ) := { t : �
 
 -- part d has same sets as part c
 
+-- set_option pp.notation false
+
 theorem Q1d : countable_intersection_from_one Q1c_sets = {x | -1<x ∧ x<1} :=
 begin
 unfold countable_intersection_from_one,
@@ -228,30 +230,25 @@ apply funext,
 intro x,
 unfold set_of,
 apply propext,
+unfold has_mem.mem set.mem,
+-- all that unfolding leaves us with
+/-
+x : ℝ
+⊢ (∀ (i : ℕ), i > 0 → -↑i < x ∧ x < ↑i) ↔ -1 < x ∧ x < 1
+-/
 split;intro H,
   simpa using ((H 1) (zero_lt_one)),
 intro i,
 intro Hi,
+have i_le_one, exact nat.succ_le_of_lt Hi,
 split,
-suffices H1 : -(i:ℝ) ≤ -1, -- -of_rat ((i:ℤ):ℚ) ≤ -of_rat(((1:ℕ):ℤ):ℚ),
-  simpa using (lt_of_le_of_lt H1 H.left),
-  rw [neg_le_neg_iff,of_rat_le_of_rat,rat.coe_int_le,int.coe_nat_le_coe_nat_iff],
-  cases i,
-  exfalso,
-  simp at Hi,
-  have H1 : 0 ≠ 0,
-    exact ne_of_gt Hi,
-  contradiction,
-  exact nat.succ_le_of_lt Hi,
-suffices H1 : of_rat (((1:ℕ):ℤ):ℚ) ≤ of_rat (((i:ℕ):ℤ):ℚ),
-  exact lt_of_lt_of_le H.right H1,
-  rw [of_rat_le_of_rat,rat.coe_int_le,int.coe_nat_le_coe_nat_iff],
-  cases i,
-  have H1 : 0 ≠ 0,
-    exact ne_of_gt Hi,
-  contradiction,
-  exact nat.succ_le_of_lt Hi,
-end
+  exact calc -(i:ℝ) ≤ -↑1 : neg_le_neg (nat.cast_le.2 i_le_one)
+  ...            =  -1 : by simp
+  ... <x : H.left,
+exact calc x < 1 : H.right
+...          = ↑(1:ℕ) : by simp
+... ≤ ↑i : nat.cast_le.2 i_le_one
+end 
 
 -- question 2
 
@@ -280,13 +277,13 @@ have H2 : x*(1+1) < (x+1),
   exact H.right,
 have H3 : x*2<(x+1),
   exact H2,
-exact lt_div_of_mul_lt H1 H3
+exact lt_div_of_mul_lt H1 H3,
   -- simp [div_lt_div_of_lt_of_pos H2 H1],
 end 
 
 -- set_option pp.notation false
 
-theorem Q3a (n : int) : 3 ∣ n^2 → 3 ∣ n :=
+theorem Q3a (n : int) : (3:ℤ) ∣ n^2 → 3 ∣ n :=
 begin
 intro Hn2,
 -- let r := n % 3,
@@ -316,7 +313,7 @@ cases r0 with r1,
   have H2 : 3 ∣ ((n-2)*(n+2)),
 --    rw [←int.dvd_iff_mod_eq_zero],
   rw [←int.dvd_iff_mod_eq_zero] at H,
-  exact dvd_trans H (dvd_mul_left _ _),
+  exact dvd_trans H (dvd_mul_left _ _), 
 simp at H2,
 rw [mul_add,add_mul,add_mul,add_assoc,←add_assoc (2*n) _ _,mul_comm 2 n,←mul_add,add_neg_self,mul_zero,zero_add] at H2,
 unfold pow_nat has_pow_nat.pow_nat pow_nat monoid.pow at Hn2,
@@ -326,7 +323,7 @@ simp at H3,
 rw [←add_assoc,add_neg_self,zero_add] at H3,
 have H4 : ¬ ((3:ℤ) ∣ 2*2),
   exact dec_trivial,
-  exact H4 H3,
+exact H4 H3,
 cases r1 with r2,
   clear H H2 H3,
   exfalso,
