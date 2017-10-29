@@ -16,7 +16,9 @@ begin
 simp [lt_iff_le_and_ne, of_rat_le_of_rat]
 end
 
--- Helpful simp lemmas for reals: thanks to Sebastian Ullrich
+#check @of_rat_inv 
+
+
 run_cmd mk_simp_attr `real_simps
 attribute [real_simps] of_rat_zero of_rat_one of_rat_neg of_rat_add of_rat_sub of_rat_mul
 attribute [real_simps] of_rat_inv of_rat_le_of_rat of_rat_lt_of_rat
@@ -25,6 +27,54 @@ attribute [real_simps] of_rat_inv of_rat_le_of_rat of_rat_lt_of_rat
 by simp [bit1, bit0, of_rat_add,of_rat_one]
 @[real_simps] lemma of_rat_div {r₁ r₂ : ℚ} : of_rat r₁ / of_rat r₂ = of_rat (r₁ / r₂) :=
 by simp [has_div.div, algebra.div] with real_simps
+
+-- Helpful simp lemmas for reals: thanks to Sebastian Ullrich
+
+run_cmd mk_simp_attr `real_simps2
+attribute [real_simps2] rat.cast_zero rat.cast_one rat.cast_neg rat.cast_add rat.cast_sub rat.cast_mul
+attribute [real_simps2] rat.cast_le rat.cast_lt rat.cast_bit0 rat.cast_bit1
+
+-- set_option pp.notation false
+
+noncomputable example : discrete_field ℝ := by apply_instance
+noncomputable example : division_ring ℝ := by apply_instance
+
+-- set_option pp.all true
+
+/-
+@[real_simps2] lemma rat_cast_inv {α : Type} [discrete_field α] [linear_ordered_field α] (r : ℚ) : ((r⁻¹:ℚ):α) = ((r:ℚ):α)⁻¹ := 
+begin
+cases classical.em (r=0) with Hz Hnz,
+  rw Hz,
+
+  rw [inv_zero,rat.cast_zero],
+  exact eq.symm (@inv_zero α _inst_1), -- ,inv_zero],
+have Hup_nz : ¬ (↑r:α)=0,
+  intro Hup_z,
+  rw [←rat.cast_zero] at Hup_z,
+  -- rw [rat.cast_inj] at Hup_z,
+-- rw [mul_eq_mul],
+-- simp [Hnz]
+admit,
+admit 
+end
+
+#check @rat.cast_inj
+#check @inv_zero
+
+
+#check @rat.cast_zero 
+
+#check @eq_inv_iff_mul_eq_one
+-/
+
+-- @[real_simps2] lemma rat_cast_div {α : Type} [linear_ordered_field α] (r₁ r₂ : ℚ) : (r₁:α) / (r₂:α) = (((r₁ / r₂):ℚ):α) :=
+-- by simp [has_div.div, algebra.div] with real_simps2
+
+-- #check rat_cast_div
+
+-- set_option pp.all true
+
 
 -- I don't understand this code; however it is the only way that I as
 -- a muggle know how to access norm_num. Thanks to Mario Carneiro
@@ -37,6 +87,13 @@ do t ← target,
    is_def_eq new_lhs new_rhs,
    `[exact eq.trans %%pr1 (eq.symm %%pr2)]
 end tactic
+
+example : (((3:real)/4)-12)<6 := by simp with real_simps;exact dec_trivial
+example : (6:real) + 9 = 15 := by tactic.eval_num_tac
+example : (2:real) * 2 + 3 = 7 := by tactic.eval_num_tac
+example : (5:real) ≠ 8 := by simp with real_simps;exact dec_trivial
+example : (6:real) < 10 := by simp with real_simps;exact dec_trivial 
+
 
 
 
@@ -497,8 +554,35 @@ end
 theorem exists_unique_square_root : ∀ (r:ℝ), (r ≥ 0) → ∃ (q:ℝ), (q ≥ 0 ∧ q^2 = r ∧ ∀ (s:ℝ), s ≥ 0 ∧ s^2 = r → s=q) :=
 begin
 intro r,
-intro 
+assume H_r_ge_zero : r ≥ 0,
+cases (exists_square_root r H_r_ge_zero) with q H_q_squared_is_r,
+suffices H_unique : ∀ (s:ℝ), s ≥ 0 ∧ s ^ 2 = r → s = q,
+  exact ⟨q,⟨H_q_squared_is_r.left,⟨H_q_squared_is_r.right,H_unique⟩⟩⟩, 
+intro s,
+assume H_s_ge_zero_and_square_is_r,
+exact square_inj_on_nonneg s q H_s_ge_zero_and_square_is_r.left H_q_squared_is_r.left (eq.trans H_s_ge_zero_and_square_is_r.right (eq.symm H_q_squared_is_r.right))
 end
+
+noncomputable def square_root (x:ℝ) (H_x_nonneg : x ≥ 0) : ℝ := classical.some (exists_square_root x H_x_nonneg)
+
+-- set_option pp.notation false
+-- example : (0:ℝ) ≤ 2 := by simp -- rw [←rat.cast_zero,rat.cast_bit0,rat.cast_bit1],
+-- #check (square_root 2 _) -- (by {unfold ge;exact dec_trivial}))
+
+/- 
+meta def sqrt_tac : tactic unit := `[assumption <|> exact dec_trivial]
+noncomputable def sqrt (r : ℝ) (h : r ≥ 0 . sqrt_tac) : ℝ :=
+classical.some (exists_unique_square_root r h)
+
+-- noncomputable def s2 : ℝ := sqrt 2,
+example : (6:real) + 9 = 15 := by simp with real_simps;exact dec_trivial
+
+-- exact dec_trivial
+-/
+def H_2_ge_0 : (2:ℝ) ≥ 0 := by unfold ge;simp with real_simps;exact dec_trivial
+
+noncomputable def s2 : ℝ := square_root 2 H_2_ge_0
+
 
 
 namespace M1F
@@ -525,7 +609,8 @@ end
 
 lemma rational_half_not_an_integer : ¬ (∃ y : ℤ, 1/2 = (y:rat)) :=
 begin
-simp,
+apply not_exists.2,
+rw [one_div_eq_inv],
 assume x:ℤ,
 intro H,
 unfold has_inv.inv at H, -- why does this become such an effort?
@@ -535,39 +620,53 @@ unfold linear_ordered_field.inv at H,
 unfold discrete_linear_ordered_field.inv at H,
 unfold discrete_field.inv at H,
 have H2 : ((2:rat)*rat.inv 2) = (2:rat)*x,
-simp [H],
+  simp [H],
 have H21 : (2:rat)≠ 0 := dec_trivial,
 have H3 : (2:rat)*rat.inv 2 = (1:rat),
-exact rat.mul_inv_cancel 2 H21,
+  exact rat.mul_inv_cancel 2 H21,
 have H4 : (1:rat) = (2:rat)*(x:rat),
-exact H3 ▸ H2,
+  exact H3 ▸ H2,
 have H5 : ((((2:int)*x):int):rat)=((2:int):rat)*(x:rat),
-simp [rat.cast_mul],
+  simp [rat.cast_mul],
 have H6 : ↑ ((2:int)*x) = (↑1:rat),
-exact eq.trans H5 (eq.symm H4),
+  exact eq.trans H5 (eq.symm H4),
 clear H H2 H21 H3 H4 H5,
 have H7 : 2*x=1,
-exact rat.of_int_inj (2*x) 1 H6,
+  exact rat.of_int_inj (2*x) 1 H6,
 clear H6,
 have H8 : (2*x) % 2 = 0,
-simp [@int.add_mul_mod_self 0],
+  simp [@int.add_mul_mod_self 0],
 have H9 : (1:int) % 2 = 0,
-apply @eq.subst ℤ  (λ t, t%2 =0) _ _ H7 H8,
+  apply @eq.subst ℤ  (λ t, t%2 =0) _ _ H7 H8,
 have H10 : (1:int) % 2 ≠ 0,
-exact dec_trivial,
+  exact dec_trivial,
 contradiction,
 end
 
-lemma real_half_not_an_integer : ¬ (∃ y : ℤ, of_rat (1/2) = of_rat(y)) :=
+-- set_option pp.all true
+
+lemma real_half_not_an_integer : ¬ (∃ y : ℤ, ((1/2):ℝ) = (y:ℝ)) :=
 begin
-assume H : (∃ y : ℤ, of_rat (1/2) = of_rat(y)),
-have H2 : (∃ y : ℤ , (1:rat)/2 = (y:rat)),
-apply exists.elim H,
-intro a,
-intro H3,
-existsi a,
-exact (@of_rat_inj (1/2) (a:rat)).mp H3,
-exact rational_half_not_an_integer H2,
+assume H_real : (∃ y : ℤ, ((1/2):ℝ) = (y:ℝ)),
+cases H_real with a Ha, 
+suffices H2 : ((1:ℤ):ℝ) = ((2:ℤ):ℝ)*((a:ℤ):ℝ),
+  rw [←int.cast_mul,int.cast_inj] at H2,
+  have H8 : (2*a) % 2 = 0,
+    simp [@int.add_mul_mod_self 0],
+  have H9 : (1:int) % 2 = 0,
+    apply @eq.subst ℤ  (λ t, t%2 =0) _ _ (eq.symm H2) H8,
+  have H10 : (1:int) % 2 ≠ 0,
+    exact dec_trivial,
+  contradiction,
+have H20: (2:ℝ) ≠ 0, simp with real_simps,exact dec_trivial,
+have H1 : (↑a:ℝ) * 2 = 1,
+  exact mul_eq_of_eq_div (a:ℝ) 1 H20 (eq.symm Ha),
+have H2 : 1 = 2 * (↑a:ℝ),
+  rw [mul_comm] at H1,
+  exact eq.symm (H1),
+have H3 : (1:ℝ) = ((1:ℤ):ℝ), by simp,
+have H4 : (2:ℝ) = ((2:ℤ):ℝ), by simp,
+rwa [←H3,←H4],
 end
 
 -- #check @of_rat_inj

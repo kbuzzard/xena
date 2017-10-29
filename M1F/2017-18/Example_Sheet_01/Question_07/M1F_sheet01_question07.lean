@@ -1,3 +1,5 @@
+#exit -- remove this to make the code run
+
 import analysis.real
 -- real numbers live in here in Lean 3.3.0 mathlib
 -- NB you need mathlib installed to get this working.
