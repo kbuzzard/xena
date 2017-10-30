@@ -40,7 +40,6 @@ end
 
 theorem zero_add_eq_add_zero (n : xnat) : zero + n = n + zero :=
 begin
-trace_state,
 rewrite [zero_add,add_zero]
 end
 
@@ -90,7 +89,8 @@ theorem one_times (a : xnat) : (succ zero) * a = a := sorry
 theorem right_distrib (a b c : xnat) : a * (b + c) = a* b + a * c := sorry
 
 -- I'll do the next one for you because I found it the hardest. Feel
-free to delete it and find your own proof -- or even a better proof!
+-- free to delete it and find your own proof -- or even a better proof!
+
 theorem left_distrib (a b c : xnat) : (a + b) * c = a * c + b * c :=
 begin
 induction c with n Hn,
