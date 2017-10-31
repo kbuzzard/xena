@@ -1,350 +1,373 @@
 constant ℝ : Type
-constant z : ℝ
-constant e : ℝ
-constant add : ℝ → ℝ → ℝ
-constant mul : ℝ → ℝ → ℝ
-constant le : ℝ → ℝ → Prop
-
-notation 0 := z
-infix `+` := (λ a b:ℝ, add a b)
-infix `*` := (λ a b:ℝ, mul a b)
-infix `≤` := (λ a b:ℝ, le a b)
-
-axiom azl {a:ℝ} : z+a = a
-axiom azr {a:ℝ} : a+z = a
-axiom ail {a:ℝ} : ∃(b:ℝ), b+a = z
-axiom air {a:ℝ} : ∃(b:ℝ), a+b = z
-axiom aa {a b c:ℝ} : (a+b)+c = a+(b+c)
-axiom ac {a b:ℝ} : a+b = b+a
-axiom mel {a:ℝ} : e*a = a
-axiom mer {a:ℝ} : a*e = a
-axiom mil {a:ℝ} : ∃(b:ℝ), b*a = e
-axiom mir {a:ℝ} : ∃(b:ℝ), a*b = e
-axiom ma {a b c:ℝ} : (a*b)*c = a*(b*c)
-axiom mc {a b:ℝ} : a*b = b*a
-axiom dl {a b c:ℝ} : a*(b+c) = a*b+a*c
-axiom dr {a b c:ℝ} : (a+b)*c = a*c+b*c
-axiom o1 {a b:ℝ} : a ≤ b → b ≤ a → a=b
-axiom o2 {a b c:ℝ} : a ≤ b → b ≤ c → a ≤ c
-axiom o3 {a b:ℝ} : a ≤ b ∨ b ≤ a
-axiom o4 {a b c:ℝ} : a ≤ b → a+c ≤ b+c
-axiom o5 {a b:ℝ} : z ≤ a → z ≤ b → z ≤ (a*b)
-axiom ze : z ≠ e
-
-theorem o6 {a b c:ℝ} : b ≤ c → a+b ≤ a+c :=
-    (λ HBC,
-    have H1: b+a ≤ c+a :=
-        o4 HBC,
-    (@ac c a) ▸ (@ac b a) ▸ H1
-)
-
-theorem acl {a b c:ℝ} : a+b = a+c → b = c :=
-    exists.elim ail (λ y Hy Habc,
-        have H: y+(a+b) = y+(a+c) :=
-            congr_arg (add y) Habc,
-        have H: (y+a)+b = y+(a+c) :=
-            aa.trans H,
-        have H: z+b = y+(a+c) :=
-            (congr_arg (λ h, h+b) Hy).symm.trans H,
-        have H: b = y+(a+c) :=
-            azl.symm.trans H,
-        have H: b = (y+a)+c :=
-            H.trans aa.symm,
-        have H: b = z+c :=
-            H.trans (congr_arg (λ h, h+c) Hy),
-        H.trans azl
-    )
-
-theorem acr {a b c:ℝ} : a+c = b+c → a = b :=
-    exists.elim air (λ y Hy Habc,
-        have H: (a+c)+y = (b+c)+y :=
-            congr_arg (λ h, h+y) Habc,
-        have H: a+(c+y) = (b+c)+y :=
-            aa.symm.trans H,
-        have H: a+z = (b+c)+y :=
-            (congr_arg (λ h, a+h) Hy).symm.trans H,
-        have H: a = (b+c)+y :=
-            azr.symm.trans H,
-        have H: a = b+(c+y) :=
-            H.trans aa,
-        have H: a = b+z :=
-            H.trans (congr_arg (add b) Hy),
-        H.trans azr
-    )
-
-example: ∀(x:ℝ), z*x = z :=
-    (λ x,
-    have H1: z+z = z :=
-        azl,
-    have H2: (z+z)*x = z*x :=
-        congr_arg (λ h, h*x) H1,
-    have H3: (z+z)*x = (z*x)+(z*x) :=
-        dr,
-    have H4: (z*x)+(z*x) = z*x :=
-        H3.symm.trans H2,
-    exists.elim ail (λ y H5,
-        have H6: y+((z*x)+(z*x)) = y+(z*x) :=
-            congr_arg (add y) H4,
-        have H7: y+((z*x)+(z*x)) = z :=
-            H6.trans H5,
-        have H8: (y+(z*x))+(z*x) = z :=
-            aa.trans H7,
-        have H9: z+(z*x) = z :=
-            (congr_arg (λ h, h+(z*x)) H5.symm).trans H8,
-        azl.symm.trans H9
-    )
-)
+@[instance] constant real_field : linear_ordered_field ℝ
 
 axiom lem {P: Prop} : P ∨ ¬P
-axiom dne {P: Prop} : ¬¬P → P
 axiom set.ext {α: Type} {A B:set α} : (∀(x:α), x ∈ A ↔ x ∈ B) → A = B
 
-theorem diff_equal {α: Type} {A:set α} : A \ ∅ = A :=
+theorem dne {P: Prop} : ¬¬P → P :=
+begin
+    intro HnnP,
+    have H: P ∨ ¬P,
+    apply lem,
+    cases H with HP HnP,
+    assumption,
+    apply false.elim,
+    apply HnnP,
+    exact HnP
+end
+
+theorem diff_equal {α: Type} (A:set α) : A \ ∅ = A :=
     set.ext (λ x, iff.intro
         and.left
         (λ H, and.intro H id)
     )
-theorem int_empty {α: Type} {A: set α} : A ∩ ∅ = ∅ :=
+theorem int_empty {α: Type} (A: set α) : A ∩ ∅ = ∅ :=
     set.ext (λ x, iff.intro
         and.right
         false.elim
     )
-theorem empty_int {α: Type} {A: set α} : ∅ ∩ A = ∅ :=
+theorem empty_int {α: Type} (A: set α) : ∅ ∩ A = ∅ :=
     set.ext (λ x, iff.intro
         and.left
         false.elim
     )
-theorem empty_union {α: Type} {A: set α} : ∅ ∪ A = A :=
+theorem int_univ {α: Type} (A: set α) : A ∩ set.univ = A :=
+    set.ext (λ x, iff.intro
+        and.left
+        (λ H, ⟨H, true.intro⟩)
+    )
+theorem univ_int {α: Type} (A: set α) : set.univ ∩ A = A :=
+    set.ext (λ x, iff.intro
+        and.right
+        (λ H, ⟨true.intro, H⟩)
+    )
+theorem empty_union {α: Type} (A: set α) : ∅ ∪ A = A :=
     set.ext (λ x, iff.intro
         (λ H, or.elim H false.elim id)
         or.inr
     )
-theorem union_empty {α: Type} {A: set α} : A ∪ ∅ = A :=
+theorem union_empty {α: Type} (A: set α) : A ∪ ∅ = A :=
     set.ext (λ x, iff.intro
         (λ H, or.elim H id false.elim)
         or.inl
     )
+theorem univ_union {α: Type} (A: set α) : set.univ ∪ A = set.univ :=
+    set.ext (λ x, iff.intro
+        (λ H, true.intro)
+        or.inl
+    )
+theorem union_univ {α: Type} (A: set α) : A ∪ set.univ = set.univ :=
+    set.ext (λ x, iff.intro
+        (λ H, true.intro)
+        or.inr
+    )
+theorem comp_univ {α: Type} : -(∅:set α) = set.univ :=
+    set.ext (λ x, iff.intro
+        (λ H, true.intro)
+        (λ H, λ H2, H2)
+    )
+theorem comp_comp {α : Type} {A : set α} : -(-A) = A :=
+    set.ext (λ x, iff.intro
+        dne
+        (λ p q, q p)
+    )
 
-constant α: Type
-constant Ω: set α
-constant F: set (set α)
-axiom s0 {A} : A ∈ F → A ⊆ Ω
-axiom s1: ∅ ∈ F
-axiom s2 {A} : A ∈ F → Ω \ A ∈ F
-axiom s3 {A B} : A ∈ F → B ∈ F → A ∪ B ∈ F
+-- sigma field
+class sigma_field {α : Type} (F : set (set α)) :=
+    (empty_sigma : ∅ ∈ F)
+    (comp_sigma : ∀ A, A ∈ F → - A ∈ F)
+    (union_sigma : ∀ {A B}, A ∈ F → B ∈ F → A ∪ B ∈ F)
 
-theorem s4: Ω ∈ F :=
-    have L: Ω \ ∅ ∈ F :=
-        s2 s1,
-    (@diff_equal _ Ω) ▸ L
+export sigma_field
 
-theorem s5 {A B:set α} : A ∈ F → B ∈ F → B \ A ∈ F :=
-    (λ p q,
-    have H1: Ω \ (A ∪ Ω \ B) = B \ A :=
-        set.ext (λ x, iff.intro
-            (λ h1, and.intro
-                (dne (λ h2, h1.right (or.inr ⟨h1.left, h2⟩)))
-                (λ h2, h1.right (or.inl h2))
-            )
-            (λ h1, and.intro
-                (s0 q h1.left)
-                (λ h2, or.elim h2
-                    h1.right
-                    (λ h3, h3.right h1.left)
-                )
-            )
-        ),
-    have H2: Ω \ (A ∪ Ω \ B) ∈ F :=
-        s2 (s3 p (s2 q)),
-    H1 ▸ H2
-)
+theorem sample_sigma {α : Type} {F : set (set α)} [s : sigma_field F] :
+    set.univ ∈ F :=
+begin
+    rw ←comp_univ,
+    exact comp_sigma ∅ s.empty_sigma,
+end
 
-theorem s6 {A B:set α} : A ∈ F → B ∈ F → A ∩ B ∈ F :=
-    (λ p q,
-    have H1: Ω \ (Ω \ A ∪ Ω \ B) = A ∩ B :=
-        set.ext (λ x, iff.intro
-            (λ h1, and.intro
-                (dne (λ h2, h1.right (or.inl ⟨h1.left, h2⟩)))
-                (dne (λ h2, h1.right (or.inr ⟨h1.left, h2⟩)))
-            )
-            (λ h1, and.intro (s0 p h1.left)
-                (λ h2, or.elim h2
-                    (λ h3, h3.right h1.left)
-                    (λ h3, h3.right h1.right)
-                )
-            )
-        ),
-    H1 ▸ s2 (s3 (s2 p) (s2 q))
-)
+theorem diff_sigma {α : Type} {F : set (set α)} [s : sigma_field F] {A B:set α} :
+    A ∈ F → B ∈ F → B \ A ∈ F :=
+begin
+    intros p q,
+    have H1: -(A ∪ -B) = B \ A,
+    apply set.ext,
+        intro x,
+        apply iff.intro,
+            intro xL,
+            constructor,
+            apply dne,
+                intro xnB,
+                apply xL,
+                right,
+                exact xnB,
+            intro xA,
+            apply xL,
+            left, assumption,
+            intro xBmA,
+            cases xBmA with xB xnA,
+                intro xLR,
+                cases xLR with xA xnB,
+                apply xnA xA,
+                apply xnB xB,
+    rw ←H1,
+    simp [s.comp_sigma,s.union_sigma,p,q]
+end
 
-constant P: Π (x:set α), x ∈ F → ℝ
-axiom p1 {A} {p:A ∈ F} : z≤(P A p)
-axiom p2: P Ω s4 = e
-axiom p3 {A B} (p:A ∈ F) (q:B ∈ F) : A ∩ B = ∅ → P (A ∪ B) (s3 p q) = add (P A p) (P B q)
+theorem int_sigma {α : Type} {F : set (set α)} [s : sigma_field F] {A B:set α} :
+    A ∈ F → B ∈ F → A ∩ B ∈ F :=
+begin
+    intros p q,
+    have H1: -(-A ∪ -B) = A ∩ B,
+    apply set.ext,
+        intro x,
+        apply iff.intro,
+            intro xL,
+            constructor,
+            apply dne,
+                intro xnA,
+                exact xL (or.inl xnA),
+            apply dne,
+                intro xnB,
+                exact xL (or.inr xnB),
+            intro xAiB,
+            cases xAiB with xA xB,
+                intro xnL,
+                cases xnL with xmA xmB,
+                exact xmA xA,
+                exact xmB xB,
+    rw ←H1,
+    simp [s.comp_sigma,s.union_sigma,p,q]
+end
 
-theorem p4 {A B C:set α} (p:A ∈ F) (q:B ∈ F) (r:A ∪ B = C) (s:A ∩ B = ∅) :
-P C (r ▸ s3 p q) = add (P A p) (P B q) :=
-    let PA := P A p,
-        PB := P B q,
-        PAUB := P (A ∪ B) (s3 p q)
-    in
-    have H1: PAUB = PA+PB :=
-        p3 p q s,
-    have H2: P C (r ▸ s3 p q) = PAUB :=
-        @eq.subst _ (λ y, ∀ h:y ∈ F, P y h = P (A ∪ B) (s3 p q)) _ _ r (λ h, rfl) (r ▸ s3 p q),
-    H2.trans H1
+-- probability
+class probability {α : Type} {F : set (set α)} (P : Π (x:set α), x ∈ F → ℝ) extends sigma_field F :=
+    (prob_nonneg : ∀ {A:set α} {p:A ∈ F}, 0 ≤ (P A p))
+    (prob_sample_one : P set.univ sample_sigma = 1)
+    (prob_disjoint : ∀ {A B} (p:A ∈ F) (q:B ∈ F),
+    A ∩ B = ∅ → P (A ∪ B) (union_sigma p q) = (P A p) + (P B q))
 
-theorem P1: -- empty set
-P ∅ s1 = z :=
-    let PE := P ∅ s1,
-        PΩ := P Ω s4,
-        PEUΩ := P (∅ ∪ Ω) (s3 s1 s4)
-    in
-    have H1: PEUΩ = PE + PΩ :=
-        p3 s1 s4 empty_int,
-    have H2: Ω = ∅ ∪ Ω :=
-        empty_union.symm,
-    have H3: PΩ = PEUΩ :=
-        @eq.subst _ (λ h, ∀ y:h ∈ F, PΩ = P h y) _ _ H2 (λ p, rfl) (s3 s1 s4),
-    have H4: PΩ = PE + PΩ :=
-        H3.trans H1,
-    have H5: z + PΩ = PE + PΩ :=
-        azl.trans H4,
-    eq.symm (acr H5)
+export probability
 
-theorem P2 {A} {p:A ∈ F} : -- complement
-(P A p) + (P (Ω \ A) (s2 p)) = e :=
-    let AC := Ω \ A,
-        PAC := P AC (s2 p)
-    in
-    have H1: A ∪ AC = Ω :=
-        set.ext (λ x, iff.intro
-            (λ h, or.elim h (λ x, s0 p x) and.left)
-            (λ h, or.elim lem or.inl (λ x, or.inr ⟨h, x⟩))
-        ),
-    have H2: A ∩ AC = ∅ :=
-        set.ext (λ x, iff.intro
-            (λ h, h.right.right h.left)
-            false.elim
-        ),
-    (p4 p (s2 p) H1 H2).symm.trans p2
+theorem prob_union {α : Type} {A B C : set α} {F : set (set α)} (P : Π (x:set α), x ∈ F → ℝ) [c : probability P]
+(p:A ∈ F) (q:B ∈ F) (r:A ∪ B = C) (s:A ∩ B = ∅) :
+P C (r ▸ union_sigma p q) = (P A p) + (P B q) :=
+let PA := P A p,
+    PB := P B q,
+    PAUB := P (A ∪ B) (union_sigma p q)
+in
+begin
+    have H1: PAUB = PA+PB,
+    exact prob_disjoint P p q s,
+    have H2: C ∈ F,
+    rw ←r,
+    exact union_sigma p q,
+    have H3: ∀ c:C ∈ F, P C c = PAUB,
+    rw H1,
+    rw ←r,
+    rw ←c.prob_disjoint,
+    intro c,
+    exact rfl,
+    exact s,
+    rw ←c.prob_disjoint,
+    exact H3 H2,
+    exact s
+end
 
-theorem P3 {A B} {p:A ∈ F} {q:B ∈ F} : -- subset ordering
+theorem prob_empty_zero {α : Type} {A B C : set α} {F : set (set α)} {P : Π (x:set α), x ∈ F → ℝ} [c : probability P] :
+P ∅ c.empty_sigma = 0 :=
+let PE := P ∅ c.empty_sigma,
+    PΩ := P set.univ sample_sigma,
+    PEUΩ := P (∅ ∪ set.univ) (union_sigma c.empty_sigma sample_sigma)
+in
+begin
+    have H1: PE + PΩ = PΩ,
+    apply eq.symm,
+    apply prob_union P,
+    exact empty_union set.univ,
+    exact empty_int set.univ,
+    apply add_right_cancel,
+    rw zero_add,
+    exact H1
+end
+
+theorem prob_comp {α : Type} {F : set (set α)} {P : Π (x:set α), x ∈ F → ℝ} [c : probability P]
+{A} {p:A ∈ F} :
+(P A p) + (P (-A) (comp_sigma A p)) = 1 :=
+let PAC := P (-A) (comp_sigma A p)
+in
+begin
+    have H1: A ∪ (-A) = set.univ,
+    apply set.ext,
+        intro x,
+        apply iff.intro,
+            intro xAUAC,
+            exact true.intro,
+            intro xS,
+            cases lem with xA xnA,
+            left, assumption,
+            right, exact xnA,
+    have H2: A ∩ (-A) = ∅,
+    apply set.ext,
+        intro x,
+        apply iff.intro,
+            intro xAiAC,
+            cases xAiAC with xA xAC,
+            apply xAC,
+            exact xA,
+            apply false.elim,
+    apply eq.trans,
+    apply eq.symm,
+    apply prob_union,
+    exact H1,
+    exact H2,
+    exact prob_sample_one P
+end
+
+theorem prob_subset_le {α : Type} {F : set (set α)} {P : Π (x:set α), x ∈ F → ℝ} [c : probability P]
+{A B} {p:A ∈ F} {q:B ∈ F} :
 A ⊆ B → (P A p) ≤ (P B q) :=
-    let BmA := B \ A,
-        AiB := A ∩ B,
-        BmAUA := B \ A ∪ A,
-        PA := P A p,
-        PB := P B q,
-        PBmA := P BmA (s5 p q),
-        PAiB := P AiB (s6 p q)
-    in
-    (λ HAB,
-    have r: BmA ∈ F :=
-        s5 p q,
-    have H1: BmA ∪ A = B :=
-        set.ext (λ x, iff.intro
-            (λ h, or.elim h and.left (λ h, HAB h))
-            (λ h1, or.elim lem or.inr (λ h2, or.inl ⟨h1, h2⟩))
-        ),
-    have H2: BmA ∩ A = ∅ :=
-        set.ext (λ x, iff.intro
-            (λ h, h.left.right h.right)
-            false.elim
-        ),
-    have H3: PBmA + PA = PB :=
-        eq.symm (p4 r p H1 H2),
-    have H5: z + PA ≤ PBmA + PA :=
-        o4 p1,
-    have H6: PA ≤ PBmA +PA :=
-        @eq.subst _ (λ h, h≤(PBmA+PA)) _ _ (@azl PA) H5,
-    have H7: le PA (P (BmA ∪ A) (s3 r p)) :=
-        @eq.subst _ (λ h, le PA h) _ _ (p3 r p H2).symm H6,
-    have H8: P (BmA ∪ A) (s3 r p) = PB :=
-        @eq.subst _ (λ h, (∀ r:h ∈ F, P h r = PB)) _ _ H1.symm (λ h, rfl) (s3 r p),
-    @eq.subst _ (λ h, le PA h) _ _ H8 H7
-)
+let BmA := B \ A,
+    AiB := A ∩ B,
+    BmAUA := B \ A ∪ A,
+    PA := P A p,
+    PB := P B q,
+    PBmA := P BmA (diff_sigma p q),
+    PAiB := P AiB (int_sigma p q)
+in
+begin
+    intro HAB,
+    have H1: A ∪ BmA = B,
+    apply set.ext,
+        intro x,
+        apply iff.intro,
+            intro xAUBmA,
+            cases xAUBmA with xA xBmA,
+            exact HAB xA,
+            exact xBmA.left,
+            intro xB,
+            cases lem with xA xnA,
+            left, assumption,
+            right, exact ⟨xB, xnA⟩,
+    have H2: A ∩ BmA = ∅,
+    apply set.ext,
+        intro x,
+        apply iff.intro,
+            intro xAiBmA,
+            cases xAiBmA with xA xBmA,
+            exact xBmA.right xA,
+            apply false.elim,
+    rw prob_union P _ _ H1,
+    apply le_add_of_nonneg_right,
+    apply prob_nonneg,
+    exact H2,
+    exact diff_sigma p q
+end
 
-theorem P4 {A B} {p:A ∈ F} {q:B ∈ F} : -- inclusion-exclusion
-add (P (A ∪ B) (s3 p q)) (P (A ∩ B) (s6 p q)) = add (P A p) (P B q) :=
-    let BmA := B \ A,
-        AiB := A ∩ B,
-        AUB := A ∪ B,
-        PA := P A p,
-        PB := P B q,
-        PBmA := P BmA (s5 p q),
-        PAiB := P AiB (s6 p q),
-        PAUB := P (A ∪ B) (s3 p q)
-    in
-    have H1: A ∪ BmA = AUB :=
-        set.ext (λ x, iff.intro
-            (λ h1, or.elim h1
-                or.inl
-                (λ h2, or.inr h2.left)
-            )
-            (λ h1, or.elim h1
-                or.inl
-                (λ h2, or.elim lem
-                    (λ h3, or.inl h3)
-                    (λ h3, or.inr ⟨h2,h3⟩)
-                )
-            )
-        ),
-    have H2: A ∩ BmA = ∅ :=
-        set.ext (λ x, iff.intro
-            (λ h, h.right.right h.left)
-            false.elim
-        ),
-    have H3: PAUB = PA+PBmA :=
-        p4 p (s5 p q) H1 H2,
-    have H4: BmA ∪ AiB = B :=
-        set.ext (λ x, iff.intro
-            (λ h1, or.elim h1
-                and.elim_left
-                and.elim_right
-            )
-            (λ h1, or.elim lem
-                (λ h2, or.inr ⟨h2, h1⟩)
-                (λ h2, or.inl ⟨h1, h2⟩)
-            )
-        ),
-    have H5: BmA ∩ AiB = ∅ :=
-        set.ext (λ x, iff.intro
-            (λ h, h.left.right h.right.left)
-            false.elim
-        ),
-    have H6: PBmA+PAiB = PB :=
-        eq.symm (p4 (s5 p q) (s6 p q) H4 H5),
-    have H7: PAUB+PAiB = add (add PA PBmA) PAiB :=
-        H3 ▸ rfl,
-    have H8: add PA (add PBmA PAiB) = PA+PB :=
-        H6 ▸ rfl,
-    H7.trans (aa.trans H8)
+theorem inclusion_exclusion  {α : Type} {F : set (set α)} {P : Π (x:set α), x ∈ F → ℝ} [c : probability P]
+{A B} {p:A ∈ F} {q:B ∈ F} :
+P (A ∪ B) (union_sigma p q) = (P A p) + (P B q) - (P (A ∩ B) (int_sigma p q)) :=
+let BmA := B \ A,
+    AiB := A ∩ B,
+    AUB := A ∪ B,
+    PA := P A p,
+    PB := P B q,
+    PBmA := P BmA (diff_sigma p q),
+    PAiB := P AiB (int_sigma p q),
+    PAUB := P (A ∪ B) (union_sigma p q)
+in
+begin
+    have H1: A ∪ BmA = AUB,
+    apply set.ext,
+        intro x,
+        apply iff.intro,
+            intro xAUBmA,
+            cases xAUBmA with xA xBmA,
+            left, assumption,
+            right, exact xBmA.left,
+            intro xAUB,
+            cases xAUB with xA xB,
+            left, assumption,
+            cases lem with _ xnA,
+            left, assumption,
+            right, exact ⟨xB, xnA⟩,
+    have H2: A ∩ BmA = ∅,
+    apply set.ext,
+        intro x,
+        apply iff.intro,
+            intro xAiBmA,
+            cases xAiBmA with xA xBmA,
+            exact xBmA.right xA,
+            apply false.elim,
+    have H3: P (A ∪ B) _ = PA+PBmA,
+    exact prob_union P p (diff_sigma p q) H1 H2,
+    rw H3,
+    rw ←add_sub,
+    apply congr_arg,
+    apply eq_sub_of_add_eq,
+    have H4: BmA ∪ AiB = B,
+    apply set.ext,
+        intro x,
+        apply iff.intro,
+            intro h,
+            cases h with xBmA xAiB,
+            exact xBmA.left,
+            exact xAiB.right,
+            intro xB,
+            cases lem with xA xnA,
+            right, exact ⟨xA, xB⟩,
+            left, exact ⟨xB, xnA⟩,
+    have H5: BmA ∩ AiB = ∅,
+    apply set.ext,
+        intro x,
+        apply iff.intro,
+            intro h,
+            exact h.left.right h.right.left,
+            apply false.elim,
+    rw ←prob_union P,
+    exact H4,
+    exact H5
+end
 
-theorem P5 {A B C} {p:A ∈ F} {q:B ∈ F} {r:C ∈ F}
-{s:A ∪ B = Ω} {t:A ∩ B = ∅}: -- total probability
-add (P (C ∩ A) (s6 r p)) (P (C ∩ B) (s6 r q)) = P C r :=
-    let PA := P A p,
-        PB := P B q,
-        PC := P C r,
-        CA := C ∩ A,
-        CB := C ∩ B,
-        PCA := P CA (s6 r p),
-        PCB := P CB (s6 r q)
-    in
-    have H1: CA ∪ CB = C :=
-        set.ext (λ x, iff.intro
-            (λ h, or.elim h and.elim_left and.elim_left)
-            (λ h1, or.elim
-                ((eq.symm s ▸ s0 r h1):(x ∈ A ∪ B))
-                (λ h2, or.inl ⟨h1, h2⟩)
-                (λ h2, or.inr ⟨h1, h2⟩)
-            )
-        ),
-    have H2: CA ∩ CB = ∅ :=
-        set.ext (λ x, iff.intro
-            (λ h, t ▸ ⟨h.left.right, h.right.right⟩)
-            false.elim
-        ),
-    eq.symm (p4 (s6 r p) (s6 r q) H1 H2)
-
+theorem total_prob  {α : Type} {F : set (set α)} {P : Π (x:set α), x ∈ F → ℝ} [c : probability P]
+{A B C} {p:A ∈ F} {q:B ∈ F} {r:C ∈ F}
+{s:A ∪ B = set.univ} {t:A ∩ B = ∅}:
+(P (C ∩ A) (int_sigma r p)) + (P (C ∩ B) (int_sigma r q)) = P C r :=
+let PA := P A p,
+    PB := P B q,
+    PC := P C r,
+    CA := C ∩ A,
+    CB := C ∩ B,
+    PCA := P CA (int_sigma r p),
+    PCB := P CB (int_sigma r q)
+in
+begin
+    have H1: CA ∪ CB = C,
+    apply set.ext,
+        intro x,
+        apply iff.intro,
+            intro xCAUCB,
+            cases xCAUCB with xCA xCB,
+            exact xCA.left,
+            exact xCB.left,
+            intro xC,
+            have xAB: x ∈ A ∪ B,
+            rw s,
+            exact true.intro,
+            cases xAB with xA xB,
+            left, exact ⟨xC, xA⟩,
+            right, exact ⟨xC, xB⟩,
+    have H2: CA ∩ CB = ∅,
+    apply set.ext,
+        intro x,
+        apply iff.intro,
+            intro xCAiCB,
+            rw ←t,
+            exact ⟨xCAiCB.left.right, xCAiCB.right.right⟩,
+            apply false.elim,
+    apply eq.symm,
+    apply prob_union,
+    exact H1,
+    exact H2
+end
