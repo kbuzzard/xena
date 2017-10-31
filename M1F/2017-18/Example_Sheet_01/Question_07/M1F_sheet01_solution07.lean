@@ -9,28 +9,28 @@ import analysis.real xenalib.M1Fstuff
 -- I did it in the end, and called it real_half_not_an_integer
 -- I put it in the M1Fstuff library.
 
-#check M1F.real_half_not_an_integer
+-- #check M1F.real_half_not_an_integer
 
 
 def A : set ℝ := { x | x^2 < 3}
-def B : set ℝ := {x | (∃ y : ℤ, x = of_rat y) ∧ x^2 < 3}
+def B : set ℝ := {x | (∃ y : ℤ, x = ↑y) ∧ x^2 < 3}
 def C : set ℝ := {x | x^3 < 3}
 
 -- set_option pp.notation false
 
-theorem part_a : ¬ (of_rat (1/2) ∈ A ∩ B) :=
+theorem part_a : ¬ (((1/2):ℝ) ∈ A ∩ B) :=
 begin
-assume H:of_rat (1/2) ∈ A ∩ B,
-have H2: of_rat (1/2) ∈ B,
+assume H : ((1/2):ℝ) ∈ A ∩ B,
+have H2: ((1/2):ℝ) ∈ B,
 exact and.right H,
-have H3: ∃ y : ℤ, of_rat (1/2) = of_rat y,
+have H3: ∃ y : ℤ, ((1/2):ℝ) = ↑y,
 exact and.left H2,
 exact M1F.real_half_not_an_integer H3,
 end
 
 
 -- set_option pp.all true
-#check @of_rat_mul
+-- #check @of_rat_mul
 
 set_option pp.notation false
 theorem part_b : of_rat (1/2) ∈ A ∪ B := 
@@ -112,27 +112,30 @@ end
 -- To do part (d) it's helpful to evaluate B completely.
 -- def B : set ℝ := {x | (∃ y : ℤ, x = of_rat y) ∧ x^2 < 3}
 
-#check @eq.subst
-#check rat.coe_int_mul
-#check rat.coe_int_lt
+-- #check @eq.subst
+-- #check rat.coe_int_mul
+-- #check rat.coe_int_lt
 --  set_option pp.notation false
 
 
-lemma B_is_minus_one_zero_one (x:ℝ): x ∈ B → (x=of_rat(-1)) ∨ (x=of_rat(0)) ∨ (x=of_rat(1)) :=
+lemma B_is_minus_one_zero_one (x:ℝ): x ∈ B → (x=((-1):ℝ)) ∨ (x=(0:ℝ)) ∨ (x=(1:ℝ)) :=
 begin
 assume H : x ∈ B,
-have H2 : exists y : ℤ, x = of_rat y,
+have H2 : exists y : ℤ, x = (y:ℝ),
   exact H.left,
 have H3 : x^2 < 3,
   exact H.right,
 cases H2 with y H4,
 unfold pow_nat has_pow_nat.pow_nat monoid.pow at H3,
 simp at H3,
-have H5 : of_rat ↑ y * of_rat ↑ y < 3,
-  exact (@eq.subst ℝ (λ z, z*z<(3:real)) x (of_rat y) H4 H3),
-rewrite of_rat_mul at H5,
-have J : (3:real) = of_rat(3),
-simp with real_simps,
+have H5 : ((y:ℚ):ℝ) * ((y:ℚ):ℝ) < 3,
+  exact (@eq.subst ℝ (λ z, z*z<(3:real)) x (y:ℚ) (by simp [H4]) H3),
+rw [←rat.cast_mul] at H5,
+have J : (3:real) = (((3:ℤ):ℚ):ℝ),
+  simp,
+rw [J,rat.cast_lt,←int.cast_mul,int.cast_lt] at H5,
+/-
+  rw ←coe_rat_eq_of_rat 3,exact 
 have H6 : of_rat (↑ y * ↑ y) < of_rat 3,
   exact eq.subst J H5,
 rewrite of_rat_lt_of_rat at H6,
@@ -140,20 +143,26 @@ clear H3 H5 J,
 rewrite eq.symm (rat.coe_int_mul y y) at H6,
 change (3:rat) with ↑(3:int) at H6,
 rewrite rat.coe_int_lt at H6,
+
 -- Situation now:
 -- y is an integer, H6 is y*y<3
 -- H4 is x=of_rat(y)=y:real,
 -- and we want to prove x=-1 or 0 or 1.
+
+-/
+have H6 : y*y<3,
+  exact H5,
+  clear H5,
+
 cases y with y m1my,
   rewrite eq.symm (int.of_nat_mul y y) at H6,
   have H1:y*y < 3,
     exact @int.lt_of_coe_nat_lt_coe_nat (y*y) 3 H6,
-  clear H6,
   cases y with ys,
     right,left,
     exact H4,
   cases ys with yss,
-    right,right,exact H4,
+    right,right,simp [H4],
   have H : 4<3,
   exact calc
   4 = 2*2 : dec_trivial
@@ -165,7 +174,7 @@ cases y with y m1my,
   exfalso,
   contradiction,
   cases m1my with y2,
-    left,exact H4,
+    left,simp [H4],
   exfalso,
   have H1 : int.nat_abs (int.neg_succ_of_nat (nat.succ y2)) = y2+2,
   refl,
@@ -194,16 +203,16 @@ theorem part_d : B ⊆ C :=  -- B={-1,0,1} so this is true
 begin
 intro x,
 intro H,
-have H2 : (x=of_rat(-1)) ∨ (x=of_rat(0)) ∨ (x=of_rat(1)),
+have H2 : (x=-1) ∨ (x=0) ∨ (x=1),
 exact B_is_minus_one_zero_one x H,
 unfold has_mem.mem set.mem C set_of,
 cases H2 with xm1 xrest,
 -- need to prove of_rat(-1)^3<3
-have H2 : of_rat(-1)^3 < 3,
+have H2 : ((-1):ℝ)^3 < 3,
 unfold pow_nat has_pow_nat.pow_nat monoid.pow,
 simp with real_simps,exact dec_trivial,
 -- apply (@eq.subst ℝ (λ x,x^3<3) x (of_rat(-1)) xm1),
-exact @eq.subst ℝ (λ t, t^3<3) (of_rat(-1)) x (eq.symm xm1) H2,
+exact @eq.subst ℝ (λ t, t^3<3) (-1) x (eq.symm xm1) H2,
 cases xrest with x0 x1,
 have H2 : of_rat(0)^3 < 3,
 unfold pow_nat has_pow_nat.pow_nat monoid.pow,
@@ -257,9 +266,8 @@ intro J,
 have J2 : x ∈ (A ∪ B),
 exact (@J x HC),
 cases J2 with HA HB,
--- contradiction -- gives a deterministic timeout!
-exact HnA HA,
-exact HnB HB,
+contradiction,
+contradiction,
 end
 
 theorem part_f : ¬ ((A ∩ B) ∪ C = (A ∪ B) ∩ C) := 

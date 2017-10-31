@@ -26,7 +26,7 @@ constant real : Type
  -- Oh! Can't do this because no Q or R!
 
 
-#check ((↑(2:nat)):real)
+-- #check ((↑(2:nat)):real)
 
 example : ∀ a b : real, a * b = b * a := 
 begin
@@ -65,4 +65,4 @@ variable x : real
 
 
 
-#check (x^2)
+-- #check (x^2) -- need to make this work

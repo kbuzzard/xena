@@ -57,7 +57,9 @@ intro H1,
 -- see what we can deduce from H1 if we set x=2.
 --
 have H2 : (2:ℤ)^2-3*2+2=0 → (2:ℤ)=1, -- new hypothesis
-  exact (H1 2), -- and there's its proof.
+{ exact (H1 2) }, -- and there's its proof.
+-- We used { ... } here to 'focus' on the
+-- first of several goals.
 -- 
 -- Hypothesis H2 now says that smething which is true,
 -- implies something which is false. So that's going to
@@ -67,15 +69,15 @@ have H2 : (2:ℤ)^2-3*2+2=0 → (2:ℤ)=1, -- new hypothesis
 -- easy hypothesis H3.
 --
 have H3 : (2:ℤ)^2-3*2+2=0,
-  trivial, -- Xena can work this proof out herself.
+{ trivial }, -- Xena can work this proof out herself.
 --
 -- From hypotheses H2 and H3 we can deduce that 2=1!
 have H4 : (2:ℤ) = 1,
-  exact (H2 H3),
+{ exact (H2 H3) },
 -- H2 applied to H3 tells us that 2=1. But Xena is smart
 -- enough to know that 2 isn't 1.
 have H5 : (2:ℤ) ≠ 1,
-  cc, -- "cc" is a proof tactic that Xena knows.
+{ cc }, -- "cc" is a proof tactic that Xena knows.
 -- Amongst other things, it solves basic inequalities like this.
 -- Xena currently knows a few of these tactics,
 -- and she learns more all the time, as new ones are
@@ -116,7 +118,7 @@ intro H, -- H is now the hypothesis that for all x, x^2-3x+2=0 iff x=1
 -- but we could also just use part a.
 -- We first deduce from H that for all x, x^2-3x+2=0 implies x=1.
 have H2: ∀ x : ℤ, (x^2-3*x+2=0 → x=1),
-exact λ x, iff.elim_left (H x),
+{ exact λ x, iff.elim_left (H x) },
 -- and now we note that this and part a give us our contradiction
 apply m1f_sheet01_q01a_is_F,
 assumption
@@ -138,57 +140,60 @@ intro x,
 -- break it up into an if and an only if.
 apply iff.intro,
 -- now we have two things to prove so I'll indent.
-  -- Let's do the easy one first. (that weird v sign means "or")
-  show x=1 ∨ x=2 → x^2-3*x+2=0,
-  intro H12, -- hypothesis H12 says "x=1 or x=2"
-  apply or.elim H12, -- eliminate the or, 
-    intro H1, -- H1 is the hypothesis that x=1.
-    simp [H1], -- now sub in to x^2-3x+2=0,
-    trivial, -- and it's trivial.
-    -- that was x=1, and x=2 is just as easy.
-    intro H2,
-    simp [H2],
-    trivial,
-  -- now we have to do the trickier case.
-  -- 
-  -- We have to prove x^2-3x+2=0 implies x=1 or x=2.
-  intro H, -- this is the hypothesis x^2-3x+2=0.
-  -- We will now show that this hypothesis H implies x=1 or x=2
-  -- by slowly introducing new hypotheses H2,H3,H4 of H, with the "have" command,
-  -- and then proving each one,
-  -- until finally we have proved x=1 or x=2.
+ -- Let's do the easy one first. (that weird v sign means "or")
+show x=1 ∨ x=2 → x^2-3*x+2=0, {
+ intro H12, -- hypothesis H12 says "x=1 or x=2"
+ apply or.elim H12, -- eliminate the or, 
+ intro H1, -- H1 is the hypothesis that x=1.
+ simp [H1], -- now sub in to x^2-3x+2=0,
+ trivial, -- and it's trivial.
+ -- that was x=1, and x=2 is just as easy.
+ intro H2,
+ simp [H2],
+ trivial
+},
+-- now we have to do the trickier case.
+-- 
+-- We have to prove x^2-3x+2=0 implies x=1 or x=2.
+intro H, -- this is the hypothesis x^2-3x+2=0.
+-- We will now show that this hypothesis H implies x=1 or x=2
+-- by slowly introducing new hypotheses H2,H3,H4 of H, with the "have" command,
+-- and then proving each one,
+-- until finally we have proved x=1 or x=2.
 
-  -- First Let's factor.
-  
-  have H2:x^2-3*x+2=(x-1)*(x-2),
-  -- Aargh! Lean stuggles to do this! Excuse us for a second.
-  unfold pow,
-  change (3:ℤ) with 2+1;simp [mul_add,mul_one,add_left_cancel_iff],
-  -- Done.
+-- First Let's factor.
+ 
+have H2:x^2-3*x+2=(x-1)*(x-2), {
+ -- Aargh! Lean stuggles to do this! Excuse us for a second.
+ unfold pow,
+ change (3:ℤ) with 2+1;simp [mul_add,mul_one,add_left_cancel_iff],
+ -- Done.
+},
 
-  have H3: (x-1)*(x-2)=0, -- This follows from H1 and H2 via a calculation. 
-  exact
-    calc 
-    (x-1)*(x-2) = x^2-3*x+2 : eq.symm H2
-    ...         = 0         : H
-  ,
+have H3: (x-1)*(x-2)=0, { -- This follows from H1 and H2 via a calculation. 
+ exact
+ calc 
+ (x-1)*(x-2) = x^2-3*x+2 : eq.symm H2
+ ... = 0 : H
+},
 
-  -- From H3 we can deduce x-1=0 or x-2=0. This is an inbuilt 
-  -- fact in Lean -- if a*b=0 then either a=0 or b=0. So we apply this fact. 
-  have H4: (x-1)=0 ∨ (x-2)=0,
-  apply iff.elim_left mul_eq_zero_iff_eq_zero_or_eq_zero,
-  assumption,
+ -- From H3 we can deduce x-1=0 or x-2=0. This is an inbuilt 
+ -- fact in Lean -- if a*b=0 then either a=0 or b=0. So we apply this fact. 
+have H4: (x-1)=0 ∨ (x-2)=0, {
+ apply iff.elim_left mul_eq_zero_iff_eq_zero_or_eq_zero,
+ assumption
+},
 
-  -- Now all we have to do is to prove that if x-1=0 then x=1, and if x-2=0 then x=2
+ -- Now all we have to do is to prove that if x-1=0 then x=1, and if x-2=0 then x=2
 
-  cases H4 with HX1 HX2,
-  -- x-1=0
-    left, -- prove the left part of "x=1 or x=2"
-    apply iff.elim_left sub_eq_zero_iff_eq HX1,
+cases H4 with HX1 HX2,
+-- x-1=0
+left, -- prove the left part of "x=1 or x=2"
+apply iff.elim_left sub_eq_zero_iff_eq HX1,
 
-  -- x-2=0
-    right,
-    apply iff.elim_left sub_eq_zero_iff_eq HX2,
+-- x-2=0
+right,
+apply iff.elim_left sub_eq_zero_iff_eq HX2,
 
 -- QED!
 end
@@ -202,37 +207,38 @@ begin
 intro x,
 intro Hx,
 have H12 : x=1 ∨ x=2, 
-  apply (iff.elim_left (m1f_sheet01_q01d_is_T x) Hx),
+{ apply (iff.elim_left (m1f_sheet01_q01d_is_T x) Hx) },
 -- H12 is "x=1 or x=2", and goal is now "x=1 or x=2 or x=3", so looking good :-)
 -- To understand the next lines better it might be good to think of
 -- it as x=1 or (x=2 or x=3)
 cases H12, -- next line is x=1, one after is x=2
-  left,assumption, 
-  right,left,assumption,
+{ left, assumption }, 
+{ right, left, assumption },
 end
 
 -- End M1F Sheet 1 Q1 part (e)
 
 -- M1F Sheet 1 Q1 part (f) is false
 
-theorem m1f_sheet01_q01f_is_F : ¬ (∀ x : ℤ, (x=1 ∨ x=2 ∨ x=3) → x^2 - 3*x + 2 = 0)  := 
+theorem m1f_sheet01_q01f_is_F : ¬ (∀ x : ℤ, (x=1 ∨ x=2 ∨ x=3) → x^2 - 3*x + 2 = 0) := 
 begin
 intro H,
 specialize H 3,
-  have H2 : (3:int)=1 ∨ (3:int)=2 ∨ (3:int)=3,
-  right,right,trivial,
+have H2 : (3:int)=1 ∨ (3:int)=2 ∨ (3:int)=3,
+{ right,right,trivial },
 
 let s:=(3:int)^2-3*3+2,
 
-  have H3: s=0,
-  exact H H2,
+have H3: s=0,
+{ exact H H2 },
 
 -- But it's easy to check s isn't 0:
-  have H4: s ≠ 0,
-  exact dec_trivial,
+have H4: s ≠ 0,
+{ exact dec_trivial },
 
 -- H3 and H4 are a contradiction.
 contradiction,
 end
 
 -- End M1F Sheet 1 Q1 part (f)
+
