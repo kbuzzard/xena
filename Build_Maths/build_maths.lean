@@ -6,11 +6,11 @@ inductive xnat
 
 open xnat 
 
-definition plus : xnat → xnat → xnat
+definition add : xnat → xnat → xnat
 | n zero := n
-| n (succ p) := succ (plus n p)
+| n (succ p) := succ (add n p)
 
-notation a + b := plus a b 
+notation a + b := add a b 
 definition one := succ zero
 definition two := succ one 
 
@@ -19,54 +19,60 @@ begin
 refl
 end
 
-theorem plus_assoc (a b c : xnat) : (a + b) + c = a + (b + c) :=
+theorem add_assoc (a b c : xnat) : (a + b) + c = a + (b + c) :=
 
 begin
 induction c with n Hn,
-  unfold plus,
-unfold plus,
+  unfold add,
+unfold add,
 rw [Hn],
 end
 
-theorem add_zero (n : xnat) : n + zero = n := by unfold plus
+theorem add_zero (n : xnat) : n + zero = n := by unfold add
 
 theorem zero_add (n : xnat) : zero + n = n := 
 begin
 induction n with t Ht,
   refl,
-unfold plus,
+unfold add,
 rw [Ht],
 end
 
+#check zero_add
+#check add_zero
+
 theorem zero_add_eq_add_zero (n : xnat) : zero + n = n + zero :=
 begin
-rewrite [zero_add,add_zero]
+rewrite [zero_add],
+rewrite [add_zero],
 end
 
-theorem one_plus_eq_succ (n : xnat) : (succ zero) + n = succ n :=
+theorem one_add_eq_succ (n : xnat) : one + n = succ n :=
 begin
+unfold one,
 induction n with a Ha,
   refl,
-  unfold plus,
+  unfold add,
   rw [Ha],
 end
 
-theorem plus_one_eq_succ (n : xnat) : n + (succ zero) = succ n :=
+theorem add_one_eq_succ (n : xnat) : n + one = succ n :=
 begin
-unfold plus
+unfold one,
+unfold add,
 end
 
-theorem plus_comm (a b : xnat) : plus a b = plus b a :=
+theorem add_comm (a b : xnat) : add a b = add b a :=
 begin 
 induction a with m Hm,
   -- base case
   exact zero_add_eq_add_zero b,
 
 -- inductive step
-unfold plus,
-rewrite ←one_plus_eq_succ,
-rewrite ←one_plus_eq_succ (b+m),
-rewrite plus_assoc,
+unfold add,
+rewrite ←one_add_eq_succ,
+rewrite ←one_add_eq_succ (b+m),
+rewrite add_assoc,
 rewrite Hm
 end
 
@@ -96,9 +102,9 @@ begin
 induction c with n Hn,
   unfold times,
   refl,
-rw [←plus_one_eq_succ,right_distrib,Hn,right_distrib,right_distrib],
+rw [←add_one_eq_succ,right_distrib,Hn,right_distrib,right_distrib],
 rw [times_one,times_one,times_one],
-rw [plus_assoc,←plus_assoc (b*n),plus_comm (b*n),←plus_assoc,←plus_assoc,←plus_assoc],
+rw [add_assoc,←add_assoc (b*n),add_comm (b*n),←add_assoc,←add_assoc,←add_assoc],
 end
 
 theorem times_assoc (a b c : xnat) : (a * b) * c = a * (b * c) := sorry
@@ -113,7 +119,7 @@ definition lessthan : xnat → xnat → Prop
 
 notation a < b := lessthan a b 
 
-theorem plus_succ_equals_succ (a b : xnat) : a + (succ b) = succ (a + b) := sorry
+theorem add_succ_equals_succ (a b : xnat) : a + (succ b) = succ (a + b) := sorry
 
 theorem inequality_A1 (a b t : xnat) : a < b → a + t < b + t := sorry
 

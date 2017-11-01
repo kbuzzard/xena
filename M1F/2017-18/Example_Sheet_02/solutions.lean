@@ -50,7 +50,7 @@ apply funext,
 intro x,
 unfold set_of,
 have H : ∃ (n : ℤ), ↑n ≤ x ∧ x < ↑n + 1,
-  exact floor_real_exists x,
+  exact M1F.floor_real_exists x,
 apply propext,
 split,
   intro H2,
@@ -122,7 +122,7 @@ split;intro H,
 have H2 : 0 < 1/x,
   exact lt_div_of_mul_lt H.left (by simp [zero_lt_one]),
 have H3 : ∃ (n : ℤ), ↑n ≤ 1 / x ∧ 1 / x < ↑n + 1,
-  exact floor_real_exists (1/x),
+  exact M1F.floor_real_exists (1/x),
   cases H3 with n Hn,
   have H3 : (0:ℝ) < (n:ℝ) + (1:ℝ),
     exact lt_of_lt_of_le H2 (le_of_lt Hn.right),
@@ -176,9 +176,9 @@ apply propext,
 split;intro H,
 trivial,
 have H2 : ∃ (n : ℤ), ↑n ≤ x ∧ x < ↑n + 1,
-  exact floor_real_exists x,
+  exact M1F.floor_real_exists x,
 have H3 : ∃ (m : ℤ), ↑m ≤ (-x) ∧ (-x) < ↑m + 1,
-  exact floor_real_exists (-x),
+  exact M1F.floor_real_exists (-x),
 cases H2 with n Hn,
 cases H3 with m Hm,
 let iz:ℤ := max (1:ℤ) (max (n+1) ((m+1))),
@@ -361,13 +361,27 @@ exact H7 H8
 -- unfold int.div at q,
 end
 
--- set_option pp.notation false
+-- square root of 3
 
--- Before we prove square root exists
--- we need some consequences of continuity
--- of squaring function
+def exists_sqrt_3 := M1F.exists_unique_square_root 3 (by unfold ge;simp with real_simps;exact dec_trivial) 
 
--- set_option pp.notation false
+#check exists_sqrt_3
+-- exists_sqrt_3 : ∃ (q : ℝ), q ≥ 0 ∧ q ^ 2 = 3 ∧ ∀ (s : ℝ), s ≥ 0 ∧ s ^ 2 = 3 → s = q
+
+noncomputable def s3 := classical.some (exists_sqrt_3)
+def s3_proof := classical.some_spec (exists_sqrt_3)
+
+example : s3^2 = 3 := s3_proof.right.left
+
+noncomputable example : monoid ℝ := by apply_instance
+
+noncomputable theorem Q3b : ¬ (∃ q : ℚ, (q:ℝ) = s3) :=
+begin
+intro H,
+cases H with q Hq,
+have Hq2 : q*q = (3:ℚ),
+  rw [←@rat.cast_inj ℝ,rat.cast_mul,Hq,s3_proof.right.left,eq.symm (@M1F.square_is_pow_two _ _ s3)], -- meh
+end
 
 
 

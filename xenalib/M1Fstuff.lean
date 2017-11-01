@@ -1,23 +1,13 @@
-import analysis.real init.classical
--- instance coe_rat_real : has_coe rat real := ⟨of_rat⟩
+import analysis.real init.classical tactic.norm_num
 
--- example : has_coe int real := by apply_instance
+namespace M1F
 
--- instance coe_int_real : has_coe int real := ⟨of_rat ∘ rat.of_int⟩
-
--- example : has_coe int real := by apply_instance
-
--- instance coe_nat_real : has_coe nat real := ⟨of_rat ∘ rat.of_int ∘ int.of_nat⟩ 
-
--- example : right_cancel_semigroup ℝ := by apply_instance
+-- Helpful simp lemmas for reals: thanks to Sebastian Ullrich
 
 lemma of_rat_lt_of_rat {q₁ q₂ : ℚ} : of_rat q₁ < of_rat q₂ ↔ q₁ < q₂ := 
 begin
 simp [lt_iff_le_and_ne, of_rat_le_of_rat]
 end
-
-#check @of_rat_inv 
-
 
 run_cmd mk_simp_attr `real_simps
 attribute [real_simps] of_rat_zero of_rat_one of_rat_neg of_rat_add of_rat_sub of_rat_mul
@@ -28,133 +18,33 @@ by simp [bit1, bit0, of_rat_add,of_rat_one]
 @[real_simps] lemma of_rat_div {r₁ r₂ : ℚ} : of_rat r₁ / of_rat r₂ = of_rat (r₁ / r₂) :=
 by simp [has_div.div, algebra.div] with real_simps
 
--- Helpful simp lemmas for reals: thanks to Sebastian Ullrich
+-- new version (doesn't work yet):
 
 run_cmd mk_simp_attr `real_simps2
 attribute [real_simps2] rat.cast_zero rat.cast_one rat.cast_neg rat.cast_add rat.cast_sub rat.cast_mul
-attribute [real_simps2] rat.cast_le rat.cast_lt rat.cast_bit0 rat.cast_bit1
+attribute [real_simps2] rat.cast_inv rat.cast_le rat.cast_lt rat.cast_bit0 rat.cast_bit1 rat.cast_div
 
--- set_option pp.notation false
+-- equality works beautifully
 
-noncomputable example : discrete_field ℝ := by apply_instance
-noncomputable example : division_ring ℝ := by apply_instance
+example : (6:real) + 9 = 15 := by norm_num
+example : (2:real)/4 + 4 = 3*3/2 := by norm_num
 
--- set_option pp.all true
-
-/-
-@[real_simps2] lemma rat_cast_inv {α : Type} [discrete_field α] [linear_ordered_field α] (r : ℚ) : ((r⁻¹:ℚ):α) = ((r:ℚ):α)⁻¹ := 
-begin
-cases classical.em (r=0) with Hz Hnz,
-  rw Hz,
-
-  rw [inv_zero,rat.cast_zero],
-  exact eq.symm (@inv_zero α _inst_1), -- ,inv_zero],
-have Hup_nz : ¬ (↑r:α)=0,
-  intro Hup_z,
-  rw [←rat.cast_zero] at Hup_z,
-  -- rw [rat.cast_inj] at Hup_z,
--- rw [mul_eq_mul],
--- simp [Hnz]
-admit,
-admit 
-end
-
-#check @rat.cast_inj
-#check @inv_zero
-
-
-#check @rat.cast_zero 
-
-#check @eq_inv_iff_mul_eq_one
--/
-
--- @[real_simps2] lemma rat_cast_div {α : Type} [linear_ordered_field α] (r₁ r₂ : ℚ) : (r₁:α) / (r₂:α) = (((r₁ / r₂):ℚ):α) :=
--- by simp [has_div.div, algebra.div] with real_simps2
-
--- #check rat_cast_div
-
--- set_option pp.all true
-
-
--- I don't understand this code; however it is the only way that I as
--- a muggle know how to access norm_num. Thanks to Mario Carneiro
-namespace tactic
-meta def eval_num_tac : tactic unit :=
-do t ← target,
-   (lhs, rhs) ← match_eq t,
-   (new_lhs, pr1) ← norm_num lhs,
-   (new_rhs, pr2) ← norm_num rhs,
-   is_def_eq new_lhs new_rhs,
-   `[exact eq.trans %%pr1 (eq.symm %%pr2)]
-end tactic
+-- inequalities I can still do with the deprecated(?) functions
 
 example : (((3:real)/4)-12)<6 := by simp with real_simps;exact dec_trivial
-example : (6:real) + 9 = 15 := by tactic.eval_num_tac
-example : (2:real) * 2 + 3 = 7 := by tactic.eval_num_tac
 example : (5:real) ≠ 8 := by simp with real_simps;exact dec_trivial
-example : (6:real) < 10 := by simp with real_simps;exact dec_trivial 
+example : (10:real) > 7 := by unfold gt;simp with real_simps;exact dec_trivial 
 
+-- but at the time of writing I can't get them to work with the new ones.
 
+-- example : (((3:real)/4)-12)<6 := by simp with real_simps2;exact dec_trivial -- fails
+-- example : (((3:real)/4)-12)<6 := by norm_num -- excessive memory consumption 
 
+-- example : (5:real) ≠ 8 := by simp with real_simps2;exact dec_trivial -- fails
+-- example : (5:real) ≠ 8 := by norm_num  -- excessive memory consumption
 
--- variable α : Type
-
--- example : set α = (α → Prop) := rfl
-/-
-#print nonempty 
--- set_option pp.all true
-noncomputable def floor_with_proof : ℝ → ℤ  := λ x, 
-begin
---  have H2 : 0+x < 1+x, by 
---    apply add_lt_add_of_lt_of_le (zero_lt_one) (le_of_eq (rfl)),
---  have H3 : x < x+1, by simp [H2],
-  let rat_in_interval := {q // x < of_rat q ∧ of_rat q < x + 1},
-  have H : ∃ (q : ℚ), x < of_rat q ∧ of_rat q < x + 1,
-  exact @exists_lt_of_rat_of_rat_gt x (x+1) (by simp [zero_lt_one]),
-  have H2 : ∃ (s : rat_in_interval), true,
-  simp [H],
-  have H3 : nonempty rat_in_interval,
-    apply exists.elim H2,
-    intro a,
-    intro Pa,
-    constructor,
-    exact a,
-  have qHq : rat_in_interval := classical.choice (H3),
-  cases qHq with q Hq,
-  exact (if (x < rat.floor q) then rat.floor q - 1  else rat.floor q ),
-end
-
--- theorems need classical logic
--- should it be 
--- theorem floor_le : ∀ x, floor x ≤ x
--- or
--- theorem floor_ge : ∀ x, x ≥ floor x
--- or any other combination of these ideas?
--- How many? One? Four?
-noncomputable theorem floor_le (x : ℝ) : ↑(floor x) ≤ x :=
-begin
-unfold floor,
-simp,
-
-have n : ℤ := floor x,
-
-admit,
-end
-
--- should I prove floor + 1 or 1 + floor?
-theorem lt_floor_add_one (x : ℝ) : x < 1 + floor x := sorry
--/
--- set_option pp.notation false
--- set_option pp.all true
-
--- #check le_of_lt
--- noncomputable example : preorder ℝ := by apply_instance
-
--- #print sub_lt_iff
-
--- #check @rat.cast_le
-
--- #check sub_lt
+-- example : (10:real) > 7 := by unfold gt;simp with real_simps2;exact dec_trivial -- fails
+-- example : (10:real) > 7 := by norm_num -- (deterministic) timeout
 
 theorem floor_real_exists : ∀ (x : ℝ), ∃ (n : ℤ), ↑n ≤ x ∧ x < n+1 :=
 begin
@@ -193,13 +83,7 @@ cases classical.em (x < rat.floor q) with Hb Hs,
       have H1 : x < ↑q,
         { exact Hq.left },
       clear Hq,
-/-
-      rw [←coe_rat_eq_of_rat] at H1,
-      suffices H2 : x < ↑(rat.floor q) + ↑(1:ℤ),
-        simp [H2],
-      suffices H3 : q < ↑(((rat.floor q):ℤ):ℚ) + ↑(1:ℤ),
-      exact lt_trans H1 _,-- (by rw [←rat.cast_add]), 
--/
+
       -- insanity starts here
 
       suffices H2 : q < ↑((rat.floor q)+(1:ℤ)),
@@ -522,8 +406,6 @@ have H3 : ¬ (q^2>r),
   exact Heq
 end
 
--- set_option pp.notation false
-
 theorem square_is_pow_two {α : Type} [monoid α] {x : α} : x^2 = x*x :=
 begin
 unfold pow_nat has_pow_nat.pow_nat monoid.pow,
@@ -566,7 +448,7 @@ end
 noncomputable def square_root (x:ℝ) (H_x_nonneg : x ≥ 0) : ℝ := classical.some (exists_square_root x H_x_nonneg)
 
 -- set_option pp.notation false
--- example : (0:ℝ) ≤ 2 := by simp -- rw [←rat.cast_zero,rat.cast_bit0,rat.cast_bit1],
+-- example : (0:ℝ) ≤ 2 := by rw [←rat.cast_zero,rat.cast_bit0,rat.cast_bit1],
 -- #check (square_root 2 _) -- (by {unfold ge;exact dec_trivial}))
 
 /- 
@@ -574,18 +456,19 @@ meta def sqrt_tac : tactic unit := `[assumption <|> exact dec_trivial]
 noncomputable def sqrt (r : ℝ) (h : r ≥ 0 . sqrt_tac) : ℝ :=
 classical.some (exists_unique_square_root r h)
 
--- noncomputable def s2 : ℝ := sqrt 2,
-example : (6:real) + 9 = 15 := by simp with real_simps;exact dec_trivial
+-- noncomputable def s2 : ℝ := sqrt 2, -- couldn't get this to work.
 
--- exact dec_trivial
 -/
+
+/- Square root -- example of usage
+
 def H_2_ge_0 : (2:ℝ) ≥ 0 := by unfold ge;simp with real_simps;exact dec_trivial
 
 noncomputable def s2 : ℝ := square_root 2 H_2_ge_0
 
+-/
 
 
-namespace M1F
 
 
 lemma rat.zero_eq_int_zero (z : int) : ↑ z = (0:rat) → z = 0 :=
