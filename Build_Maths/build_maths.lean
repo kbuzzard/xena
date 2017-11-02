@@ -62,6 +62,7 @@ unfold one,
 unfold add,
 end
 
+
 theorem add_comm (a b : xnat) : add a b = add b a :=
 begin 
 induction a with m Hm,
@@ -78,19 +79,27 @@ end
 
 -- Now your turn!
 
-definition times : xnat → xnat → xnat
+definition mul : xnat → xnat → xnat
 | n zero := zero
-| n (succ p) := (times n p) + n
+| n (succ p) := (mul n p) + n
 
-notation a * b := times a b
+notation a * b := mul a b
 
-theorem times_zero (a : xnat) : a * zero = zero := rfl
+example : one * one = one := 
+begin
+refl
+end
 
-theorem zero_times (a : xnat) : zero * a = zero := sorry
 
-theorem times_one (a : xnat) : a * (succ zero) = a := sorry
 
-theorem one_times (a : xnat) : (succ zero) * a = a := sorry
+
+theorem mul_zero (a : xnat) : a * zero = zero := rfl
+
+theorem zero_mul (a : xnat) : zero * a = zero := sorry
+
+theorem mul_one (a : xnat) : a * (succ zero) = a := sorry
+
+theorem one_mul (a : xnat) : (succ zero) * a = a := sorry
 
 theorem right_distrib (a b c : xnat) : a * (b + c) = a* b + a * c := sorry
 
@@ -100,24 +109,24 @@ theorem right_distrib (a b c : xnat) : a * (b + c) = a* b + a * c := sorry
 theorem left_distrib (a b c : xnat) : (a + b) * c = a * c + b * c :=
 begin
 induction c with n Hn,
-  unfold times,
+  unfold mul,
   refl,
 rw [←add_one_eq_succ,right_distrib,Hn,right_distrib,right_distrib],
-rw [times_one,times_one,times_one],
+rw [one,mul_one,mul_one,mul_one],
 rw [add_assoc,←add_assoc (b*n),add_comm (b*n),←add_assoc,←add_assoc,←add_assoc],
 end
 
-theorem times_assoc (a b c : xnat) : (a * b) * c = a * (b * c) := sorry
+theorem mul_assoc (a b c : xnat) : (a * b) * c = a * (b * c) := sorry
 
-theorem times_comm (a b : xnat) : a * b = b * a := sorry
+theorem mul_comm (a b : xnat) : a * b = b * a := sorry
 
-definition lessthan : xnat → xnat → Prop 
+definition lt : xnat → xnat → Prop 
 | zero zero := false
 | (succ m) zero := false
 | zero (succ p) := true 
-| (succ m) (succ p) := lessthan m p
+| (succ m) (succ p) := lt m p
 
-notation a < b := lessthan a b 
+notation a < b := lt a b 
 
 theorem add_succ_equals_succ (a b : xnat) : a + (succ b) = succ (a + b) := sorry
 
