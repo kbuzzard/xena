@@ -368,23 +368,22 @@ def exists_sqrt_3 := M1F.exists_unique_square_root 3 (by unfold ge;simp with rea
 -- #check exists_sqrt_3
 -- exists_sqrt_3 : ∃ (q : ℝ), q ≥ 0 ∧ q ^ 2 = 3 ∧ ∀ (s : ℝ), s ≥ 0 ∧ s ^ 2 = 3 → s = q
 
-noncomputable def s3 := classical.some (exists_sqrt_3)
-def s3_proof := classical.some_spec (exists_sqrt_3)
+noncomputable def sqrt3 := classical.some (exists_sqrt_3)
+def sqrt3_proof := classical.some_spec (exists_sqrt_3)
 
-example : s3^2 = 3 := s3_proof.right.left
+example : sqrt3^2 = 3 := sqrt3_proof.right.left
 
 noncomputable example : monoid ℝ := by apply_instance
 
--- set_option pp.notation false
-
-noncomputable theorem Q3b : ¬ (∃ q : ℚ, (q:ℝ) = s3) :=
+theorem Q3b : M1F.is_irrational (sqrt3) :=
 begin
+unfold M1F.is_irrational,
 intro H,
 cases H with q Hq,
 have Hq2 : q*q = (3:ℚ),
   rw [←@rat.cast_inj ℝ,rat.cast_mul,Hq,←M1F.square_is_pow_two],
-  unfold s3,
-  rw [s3_proof.right.left],
+  unfold sqrt3,
+  rw [sqrt3_proof.right.left],
   norm_num,
 clear Hq,
 let n:=q.num,
@@ -495,8 +494,58 @@ revert H0,
 norm_num,
 end
 
+theorem Q4a : ¬ (∀ (x y : ℝ), M1F.is_irrational x → M1F.is_irrational y → M1F.is_irrational (x+y)) :=
+begin
+intro H,
+let H2 := H sqrt3 (-sqrt3) Q3b,
+have H3 : M1F.is_irrational (-sqrt3),
+  unfold M1F.is_irrational,
+  intro H4,
+  cases H4 with q Hq,
+  apply Q3b,
+  exact ⟨-q,
+    begin
+    rw [rat.cast_neg],
+    exact eq.symm (eq_neg_iff_eq_neg.mpr (Hq)),
+    end
+  ⟩,
+apply H2 H3,
+exact ⟨0,
+begin
+rw [add_neg_self,rat.cast_zero],
+end
+⟩,
+end
 
+theorem Q4b : ¬ (∀ (a : ℝ), ∀ (b : ℚ), M1F.is_irrational a → M1F.is_irrational (a*b)) :=
+begin
+intro H,
+let H2 := H sqrt3 0 Q3b,
+apply H2,
+exact ⟨0,by rw [rat.cast_zero,mul_zero]⟩, 
+end
 
+theorem Q5a : ∀ (x : ℝ), ∃ (y:ℝ), x+y=2 :=
+begin
+intro x,
+exact ⟨-x+2,by rw [←add_assoc,add_neg_self,zero_add]⟩,
+end
 
+theorem Q5b : ¬ (∃ (y:ℝ), ∀ (x:ℝ), x+y=2) :=
+begin
+intro H,
+cases H with y Hy,
+let H := Hy (-y),
+rw [neg_add_self] at H,
+revert H,
+norm_num,
+end
+
+theorem Q6 : sqrt2+sqrt6<sqrt15 :=
+
+noncomputable def sqrt3 := classical.some (exists_sqrt_3)
+def sqrt3_proof := classical.some_spec (exists_sqrt_3)
+
+example : sqrt3^2 = 3 := sqrt3_proof.right.left
 
 end M1F_Sheet02

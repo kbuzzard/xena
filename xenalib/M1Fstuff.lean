@@ -552,6 +552,6 @@ have H4 : (2:ℝ) = ((2:ℤ):ℝ), by simp,
 rwa [←H3,←H4],
 end
 
--- #check @of_rat_inj
+definition is_irrational (x : ℝ) := ¬ (∃ (q : ℚ), (q:ℝ) = x)
 
 end M1F
