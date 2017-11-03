@@ -365,7 +365,7 @@ end
 
 def exists_sqrt_3 := M1F.exists_unique_square_root 3 (by unfold ge;simp with real_simps;exact dec_trivial) 
 
-#check exists_sqrt_3
+-- #check exists_sqrt_3
 -- exists_sqrt_3 : ∃ (q : ℝ), q ≥ 0 ∧ q ^ 2 = 3 ∧ ∀ (s : ℝ), s ≥ 0 ∧ s ^ 2 = 3 → s = q
 
 noncomputable def s3 := classical.some (exists_sqrt_3)
@@ -375,12 +375,124 @@ example : s3^2 = 3 := s3_proof.right.left
 
 noncomputable example : monoid ℝ := by apply_instance
 
+-- set_option pp.notation false
+
 noncomputable theorem Q3b : ¬ (∃ q : ℚ, (q:ℝ) = s3) :=
 begin
 intro H,
 cases H with q Hq,
 have Hq2 : q*q = (3:ℚ),
-  rw [←@rat.cast_inj ℝ,rat.cast_mul,Hq,s3_proof.right.left,eq.symm (@M1F.square_is_pow_two _ _ s3)], -- meh
+  rw [←@rat.cast_inj ℝ,rat.cast_mul,Hq,←M1F.square_is_pow_two],
+  unfold s3,
+  rw [s3_proof.right.left],
+  norm_num,
+clear Hq,
+let n:=q.num,
+let d0:=q.denom,
+have Hq_is_n_div_d : q=n/d0,
+  rw [rat.num_denom q,rat.mk_eq_div],
+  refl,
+have Hd0_not_zero : ¬ (d0=0),
+  intro Hd0,
+  have Hq0 : q=0,
+    rwa [Hd0,nat.cast_zero,div_zero] at Hq_is_n_div_d,
+  rw [Hq0,mul_zero] at Hq2,
+  revert Hq2,
+  norm_num,
+let d:ℤ:=↑d0,
+rw [rat.num_denom q] at Hq2,
+rw [rat.mk_eq_div] at Hq2,
+change q.denom with d0 at Hq2,
+change (d0:ℤ) with d at Hq2,
+have Hd_not_zero : ¬ (d=0),
+  intro H0, apply Hd0_not_zero,
+  rw [←nat.cast_zero] at H0,
+  change d with (d0:ℤ) at H0,
+  rw [←@nat.cast_inj ℤ],
+  simp [H0], -- why doesn't exact work?
+
+-- tidy up
+change q.num with n at Hq2,
+clear Hq_is_n_div_d Hd0_not_zero,
+
+rw [div_mul_div] at Hq2,
+have H0 : (d:ℚ) * (d:ℚ) ≠ 0,
+  intro H1,
+  apply Hd_not_zero,
+  rw [←int.cast_zero,←int.cast_mul,int.cast_inj] at H1,
+  cases eq_zero_or_eq_zero_of_mul_eq_zero H1,
+    assumption,
+  assumption,
+  have H1 : (3:ℚ) * (↑d * ↑d) = ↑n * ↑n,
+    exact (eq_div_iff_mul_eq _ _ H0).mp (eq.symm Hq2),
+  have H2 : ((3:ℤ):ℚ) * (↑d * ↑d) = ↑n * ↑n,
+    exact H1,
+  rw [←int.cast_mul,←int.cast_mul,←int.cast_mul,int.cast_inj] at H2,
+
+-- tidy up; now in Z.
+clear Hq2 H0 H1,
+-- coprimality of n and d0 built into rat
+have H0 : nat.coprime (int.nat_abs n) d0,
+  exact q.cop,
+have H3 : n*n=n^2,
+  exact eq.symm (M1F.square_is_pow_two),
+rw [H3] at H2,
+have H1 : (3:ℤ) ∣ n^2,
+  exact ⟨d*d,eq.symm H2⟩,
+have H4 : (3:ℤ) ∣ n,
+  exact Q3a n H1,
+cases H4 with n1 H5,
+rw [←H3,H5] at H2,clear H3,
+rw [mul_assoc] at H2,
+have H6 : d * d = n1 * (3 * n1),
+  exact eq_of_mul_eq_mul_left (by norm_num) H2,clear H2,
+  rw [mul_comm n1,mul_assoc] at H6,
+  rw [←M1F.square_is_pow_two] at H6,
+have H2 : (3:ℤ) ∣ d^2,
+  exact ⟨n1 * n1, H6⟩,
+clear H1 H6,
+have H1 : (3:ℤ) ∣ d,
+  exact Q3a d H2,
+clear H2,
+cases H1 with d1 H2,
+-- now know H5 : n=3*something, 
+-- H2 : d = 3 * something,
+-- H0 : n coprime to d (modulo coercions)
+-- Seems like I now have to coerce everything down to nat
+let n0 := int.nat_abs n,
+clear Hd_not_zero,
+change int.nat_abs n with n0 at H0,
+let n2 := int.nat_abs n1,
+have H1 : n0 = 3 * n2,
+  change (3:ℕ) with int.nat_abs (3:ℤ),
+  rw [←int.nat_abs_mul,←H5],
+clear H5,
+let d2 := int.nat_abs d1,
+have H3 : d0 = 3 * d2,
+  rw [←int.nat_abs_of_nat d0],
+  change 3 with int.nat_abs (3:ℤ),
+  change d2 with int.nat_abs d1,
+  rw [←int.nat_abs_mul,←H2],
+rw [H1,H3] at H0,
+clear H3 H2 d d0 H1 n0 n q,
+have H1 : nat.coprime (3 * n2) 3,
+  exact nat.coprime.coprime_mul_right_right H0,
+clear H0,
+  rw [mul_comm] at H1,
+have H2 :nat.coprime 3 3,
+  exact nat.coprime.coprime_mul_left H1,
+clear H1 n2 d2 n1 d1,
+have H0 : nat.gcd 3 3 = 1,
+  exact H2,clear H2,
+have H1 : 3 ∣ nat.gcd 3 3,
+  exact nat.dvd_gcd ⟨1,mul_one 3⟩ ⟨1,mul_one 3⟩,
+rw H0 at H1,
+clear H0,
+have H0 : 3 = 1,
+exact nat.eq_one_of_dvd_one H1,
+clear H1,
+revert H0,
+norm_num,
 end
 
 
