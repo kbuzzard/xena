@@ -2,49 +2,7 @@ import analysis.real init.classical tactic.norm_num
 
 namespace M1F
 
--- Helpful simp lemmas for reals: thanks to Sebastian Ullrich
 
-lemma of_rat_lt_of_rat {q₁ q₂ : ℚ} : of_rat q₁ < of_rat q₂ ↔ q₁ < q₂ := 
-begin
-simp [lt_iff_le_and_ne, of_rat_le_of_rat]
-end
-
-run_cmd mk_simp_attr `real_simps
-attribute [real_simps] of_rat_zero of_rat_one of_rat_neg of_rat_add of_rat_sub of_rat_mul
-attribute [real_simps] of_rat_inv of_rat_le_of_rat of_rat_lt_of_rat
-@[real_simps] lemma of_rat_bit0 (a : ℚ) : bit0 (of_rat a) = of_rat (bit0 a) := of_rat_add
-@[real_simps] lemma of_rat_bit1 (a : ℚ) : bit1 (of_rat a) = of_rat (bit1 a) :=
-by simp [bit1, bit0, of_rat_add,of_rat_one]
-@[real_simps] lemma of_rat_div {r₁ r₂ : ℚ} : of_rat r₁ / of_rat r₂ = of_rat (r₁ / r₂) :=
-by simp [has_div.div, algebra.div] with real_simps
-
--- new version (doesn't work yet):
-
-run_cmd mk_simp_attr `real_simps2
-attribute [real_simps2] rat.cast_zero rat.cast_one rat.cast_neg rat.cast_add rat.cast_sub rat.cast_mul
-attribute [real_simps2] rat.cast_inv rat.cast_le rat.cast_lt rat.cast_bit0 rat.cast_bit1 rat.cast_div
-
--- equality works beautifully
-
-example : (6:real) + 9 = 15 := by norm_num
-example : (2:real)/4 + 4 = 3*3/2 := by norm_num
-
--- inequalities I can still do with the deprecated(?) functions
-
-example : (((3:real)/4)-12)<6 := by simp with real_simps;exact dec_trivial
-example : (5:real) ≠ 8 := by simp with real_simps;exact dec_trivial
-example : (10:real) > 7 := by unfold gt;simp with real_simps;exact dec_trivial 
-
--- but at the time of writing I can't get them to work with the new ones.
-
--- example : (((3:real)/4)-12)<6 := by simp with real_simps2;exact dec_trivial -- fails
--- example : (((3:real)/4)-12)<6 := by norm_num -- excessive memory consumption 
-
--- example : (5:real) ≠ 8 := by simp with real_simps2;exact dec_trivial -- fails
--- example : (5:real) ≠ 8 := by norm_num  -- excessive memory consumption
-
--- example : (10:real) > 7 := by unfold gt;simp with real_simps2;exact dec_trivial -- fails
--- example : (10:real) > 7 := by norm_num -- (deterministic) timeout
 
 theorem floor_real_exists : ∀ (x : ℝ), ∃ (n : ℤ), ↑n ≤ x ∧ x < n+1 :=
 begin
@@ -141,14 +99,9 @@ cases le_iff_eq_or_lt.mp Hrge1 with r1 rg1,
   split,
     suffices H : 0 < ((1/2):ℝ),
       exact H,
-    simp with real_simps,
-    exact dec_trivial,
-  -- *TODO* 1/2 > 0 doesn't work!
-  -- need of_rat_gt, not in realsimps
+    { norm_num },  
   rw [←r1],
-  unfold pow_nat has_pow_nat.pow_nat monoid.pow,
-  simp with real_simps,
-  exact dec_trivial,
+  { norm_num },
 clear Hrnl1 Hrge1,
 existsi (1:ℝ),
 split,
@@ -268,8 +221,7 @@ have H2 : ¬ (q^2<r),
   -- want eps such that 2*q*eps+eps^2 <= r-q^2
   -- so eps=min((r-q^2)/4q,thing-produced-by-square-cts-function)
   have H0 : (0:ℝ)<2, 
-    simp with real_simps,
-    exact dec_trivial,
+    norm_num,
   have H : 0<(r-q^2),
     exact sub_pos_of_lt Hq2r,
   have H2 : 0 < (r-q^2)/2,
@@ -366,8 +318,7 @@ have H3 : ¬ (q^2>r),
   -- so we need to find eps such that 2q.eps-eps^2<(q^2-r)
   -- so set eps=min((q^2-r)/2q,q)
   have H0 : (0:ℝ)<2, 
-    simp with real_simps,
-    exact dec_trivial,
+    norm_num,
   have H1 : 0<(q^2-r),
     exact sub_pos_of_lt Hq2r,
   have H2 : 0 < (q/2),
@@ -381,7 +332,7 @@ have H3 : ¬ (q^2>r),
   have J0 : e1<q,
     exact calc e1 ≤ (q/2) : min_le_right ((q^2-r)/(2*q)) (q/2)
     ... = q*(1/2) : by rw [←mul_div_assoc,mul_one]
-    ... < q*1 : mul_lt_mul_of_pos_left (by simp with real_simps;exact dec_trivial) Hqg0
+    ... < q*1 : mul_lt_mul_of_pos_left (by norm_num) Hqg0
     ... = q : by rw [mul_one],
   have H4 : (q-e1)^2 < r,
     exact H ⟨He1,J0⟩,
@@ -451,25 +402,23 @@ noncomputable def square_root (x:ℝ) (H_x_nonneg : x ≥ 0) : ℝ := classical.
 -- example : (0:ℝ) ≤ 2 := by rw [←rat.cast_zero,rat.cast_bit0,rat.cast_bit1],
 -- #check (square_root 2 _) -- (by {unfold ge;exact dec_trivial}))
 
-/- 
-meta def sqrt_tac : tactic unit := `[assumption <|> exact dec_trivial]
+
+meta def sqrt_tac : tactic unit := `[assumption <|> norm_num]
 noncomputable def sqrt (r : ℝ) (h : r ≥ 0 . sqrt_tac) : ℝ :=
 classical.some (exists_unique_square_root r h)
 
--- noncomputable def s2 : ℝ := sqrt 2, -- couldn't get this to work.
+def sqrt_proof (r:ℝ) (h : r ≥ 0 . sqrt_tac) := 
+(classical.some_spec (exists_unique_square_root r h)).right.left
+
+def sqrt_allinfo (r:ℝ) (h : r ≥ 0 . sqrt_tac) := 
+classical.some_spec (exists_unique_square_root r h)
+
+/- example of usage:
+
+noncomputable def s2 : ℝ := sqrt 2
+example : s2^2=2 := sqrt_proof 2
 
 -/
-
-/- Square root -- example of usage
-
-def H_2_ge_0 : (2:ℝ) ≥ 0 := by unfold ge;simp with real_simps;exact dec_trivial
-
-noncomputable def s2 : ℝ := square_root 2 H_2_ge_0
-
--/
-
-
-
 
 lemma rat.zero_eq_int_zero (z : int) : ↑ z = (0:rat) → z = 0 :=
 begin
@@ -541,7 +490,7 @@ suffices H2 : ((1:ℤ):ℝ) = ((2:ℤ):ℝ)*((a:ℤ):ℝ),
   have H10 : (1:int) % 2 ≠ 0,
     exact dec_trivial,
   contradiction,
-have H20: (2:ℝ) ≠ 0, simp with real_simps,exact dec_trivial,
+have H20: (2:ℝ) ≠ 0, {norm_num},
 have H1 : (↑a:ℝ) * 2 = 1,
   exact mul_eq_of_eq_div (a:ℝ) 1 H20 (eq.symm Ha),
 have H2 : 1 = 2 * (↑a:ℝ),
@@ -555,3 +504,52 @@ end
 definition is_irrational (x : ℝ) := ¬ (∃ (q : ℚ), (q:ℝ) = x)
 
 end M1F
+
+/-
+no longer needed:
+
+-- Helpful simp lemmas for reals: thanks to Sebastian Ullrich
+
+lemma of_rat_lt_of_rat {q₁ q₂ : ℚ} : of_rat q₁ < of_rat q₂ ↔ q₁ < q₂ := 
+begin
+simp [lt_iff_le_and_ne, of_rat_le_of_rat]
+end
+
+run_cmd mk_simp_attr `real_simps
+attribute [real_simps] of_rat_zero of_rat_one of_rat_neg of_rat_add of_rat_sub of_rat_mul
+attribute [real_simps] of_rat_inv of_rat_le_of_rat of_rat_lt_of_rat
+@[real_simps] lemma of_rat_bit0 (a : ℚ) : bit0 (of_rat a) = of_rat (bit0 a) := of_rat_add
+@[real_simps] lemma of_rat_bit1 (a : ℚ) : bit1 (of_rat a) = of_rat (bit1 a) :=
+by simp [bit1, bit0, of_rat_add,of_rat_one]
+@[real_simps] lemma of_rat_div {r₁ r₂ : ℚ} : of_rat r₁ / of_rat r₂ = of_rat (r₁ / r₂) :=
+by simp [has_div.div, algebra.div] with real_simps
+
+-- new version (doesn't work yet):
+
+run_cmd mk_simp_attr `real_simps2
+attribute [real_simps2] rat.cast_zero rat.cast_one rat.cast_neg rat.cast_add rat.cast_sub rat.cast_mul
+attribute [real_simps2] rat.cast_inv rat.cast_le rat.cast_lt rat.cast_bit0 rat.cast_bit1 rat.cast_div
+
+-- equality works beautifully
+
+example : (6:real) + 9 = 15 := by norm_num
+example : (2:real)/4 + 4 = 3*3/2 := by norm_num
+
+-- inequalities I can still do with the deprecated(?) functions
+
+example : (((3:real)/4)-12)<6 := by simp with real_simps;exact dec_trivial
+example : (5:real) ≠ 8 := by simp with real_simps;exact dec_trivial
+example : (10:real) > 7 := by unfold gt;simp with real_simps;exact dec_trivial 
+
+-- but at the time of writing I can't get them to work with the new ones.
+
+-- example : (((3:real)/4)-12)<6 := by simp with real_simps2;exact dec_trivial -- fails
+example : (((3:real)/4)-12)<6 := by norm_num -- excessive memory consumption 
+
+-- example : (5:real) ≠ 8 := by simp with real_simps2;exact dec_trivial -- fails
+example : (5:real) ≠ 8 := by norm_num  -- excessive memory consumption
+
+-- example : (10:real) > 7 := by unfold gt;simp with real_simps2;exact dec_trivial -- fails
+example : (10:real) > 7 := by norm_num -- (deterministic) timeout
+
+-/

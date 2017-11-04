@@ -363,7 +363,7 @@ end
 
 -- square root of 3
 
-def exists_sqrt_3 := M1F.exists_unique_square_root 3 (by unfold ge;simp with real_simps;exact dec_trivial) 
+def exists_sqrt_3 := M1F.exists_unique_square_root 3 (by norm_num) 
 
 -- #check exists_sqrt_3
 -- exists_sqrt_3 : ∃ (q : ℝ), q ≥ 0 ∧ q ^ 2 = 3 ∧ ∀ (s : ℝ), s ≥ 0 ∧ s ^ 2 = 3 → s = q
@@ -541,11 +541,35 @@ revert H,
 norm_num,
 end
 
-theorem Q6 : sqrt2+sqrt6<sqrt15 :=
 
+theorem Q6 : M1F.sqrt 2 + M1F.sqrt 6 < M1F.sqrt 15 :=
+begin
+let s2 := M1F.sqrt 2,
+change M1F.sqrt 2 with s2,
+let s6 := M1F.sqrt 6,
+change M1F.sqrt 6 with s6,
+let s15 := M1F.sqrt 15,
+change M1F.sqrt 15 with s15,
+cases (lt_or_ge (s2 + s6) (s15)),
+  assumption,
+exfalso,
+have H2 : s15 ≥ 0,
+exact (M1F.sqrt_allinfo 15).left,
+have H3 : s15^2 = 15,
+  exact (M1F.sqrt_allinfo 15).right.left,
+
+end
+
+
+/-
 noncomputable def sqrt3 := classical.some (exists_sqrt_3)
 def sqrt3_proof := classical.some_spec (exists_sqrt_3)
 
 example : sqrt3^2 = 3 := sqrt3_proof.right.left
+
+def exists_sqrt_3 := M1F.exists_unique_square_root 3 (by unfold ge;simp with real_simps;exact dec_trivial) 
+
+
+-/
 
 end M1F_Sheet02
