@@ -110,40 +110,19 @@ apply not_exists.2,
 rw [one_div_eq_inv],
 assume x:ℤ,
 intro H,
-have H6 : ((1:ℤ):ℚ)=(2*x),
+have H6 : ((1:ℤ):ℚ)=((2:ℤ):ℚ)*x,
   exact calc
   ((1:ℤ):ℚ) = (1:ℚ) : by simp
-  ... = (2:ℚ)* 2⁻¹ : eq.symm (mul_inv_self (2:ℚ))
-  ... = (2*x) : sorry,
-
-unfold has_inv.inv at H, -- why does this become such an effort?
-unfold division_ring.inv at H,
-unfold field.inv at H,
-unfold linear_ordered_field.inv at H,
-unfold discrete_linear_ordered_field.inv at H,
-unfold discrete_field.inv at H,
-have H2 : ((2:rat)*rat.inv 2) = (2:rat)*x,
-  simp [H],
-have H21 : (2:rat)≠ 0 := dec_trivial,
-have H3 : (2:rat)*rat.inv 2 = (1:rat),
-  exact rat.mul_inv_cancel 2 H21,
-have H4 : (1:rat) = (2:rat)*(x:rat),
-  exact H3 ▸ H2,
-have H5 : ((((2:int)*x):int):rat)=((2:int):rat)*(x:rat),
-  simp [rat.cast_mul],
-have H6 : ↑ ((2:int)*x) = (↑1:rat),
-  exact eq.trans H5 (eq.symm H4),
-clear H H2 H21 H3 H4 H5,
-have H7 : 2*x=1,
-  exact rat.of_int_inj (2*x) 1 H6,
-clear H6,
-have H8 : (2*x) % 2 = 0,
-  simp [@int.add_mul_mod_self 0],
-have H9 : (1:int) % 2 = 0,
-  apply @eq.subst ℤ  (λ t, t%2 =0) _ _ H7 H8,
-have H10 : (1:int) % 2 ≠ 0,
-  exact dec_trivial,
-contradiction,
+  ... = (2:ℚ)* 2⁻¹ : eq.symm (mul_inv_cancel (by norm_num))
+  ... = (2*x) : by rw[H],
+clear H,
+rw [←int.cast_mul,int.cast_inj] at H6,
+have H : (1:ℤ) = 0,
+exact calc (1:ℤ) = 1 % 2 : eq.symm (int.mod_eq_of_lt (by norm_num) (by norm_num))
+... = (2*x) % 2 : eq.symm (by rw [←H6]) 
+... = 0 : by simp,
+revert H,
+norm_num,
 end
 
 -- set_option pp.all true
