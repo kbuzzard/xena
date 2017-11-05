@@ -402,6 +402,21 @@ noncomputable def square_root (x:ℝ) (H_x_nonneg : x ≥ 0) : ℝ := classical.
 -- example : (0:ℝ) ≤ 2 := by rw [←rat.cast_zero,rat.cast_bit0,rat.cast_bit1],
 -- #check (square_root 2 _) -- (by {unfold ge;exact dec_trivial}))
 
+-- Next is what Mario says I should do (at least in terms of where the proof that x>=0 goes)
+
+noncomputable def sqrt_abs (x : ℝ) : ℝ := square_root (abs x) (abs_nonneg x)
+
+noncomputable theorem sqrt_squared (x : ℝ) (Hx_nonneg : 0 ≤ x) : (@sqrt_abs x) ^ 2 = x :=
+begin
+admit,
+end
+
+
+
+noncomputable theorem sqrt_mul_self {x : ℝ} : (@sqrt_abs x) * (@sqrt_abs x) = x :=
+begin
+admit
+end
 
 meta def sqrt_tac : tactic unit := `[assumption <|> norm_num]
 noncomputable def sqrt (r : ℝ) (h : r ≥ 0 . sqrt_tac) : ℝ :=
