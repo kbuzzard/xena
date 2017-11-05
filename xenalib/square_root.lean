@@ -1,97 +1,122 @@
-import analysis.real init.classical tactic.norm_num
+/-
+Copyright (c) 2017 Kevin Buzzard. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Author : Kevin Buzzard
 
-namespace M1F
+A square root function.
+
+1) The non-computable function
+
+  square_root : Π (x : ℝ), x ≥ 0 → ℝ
+
+returns the non-negative square root of x, defined as the sup of all
+the reals whose square is at most x.
+
+2) The non-computable function
+
+sqrt_abs : ℝ → ℝ
+
+sends a real number x to the non-negative square root of abs x (a.k.a. |x|).
+
+-/
+
+/-
+The real numbers ℝ.
+
+They are constructed as the topological completion of ℚ. With the following step
+s:
+(1) prove that ℚ forms a uniform space.
+(2) subtraction and addition are uniform continuous functions in this space
+(3) for multiplication and inverse this only holds on bounded subsets
+(4) ℝ is defined as separated Cauchy filters over ℚ (the separation requires a q
+uotient construction)
+(5) extend the uniform continuous functions along the completion
+(6) proof field properties using the principle of extension of identities
+
+TODO
+
+generalizations:
+* topological groups & rings
+* order topologies
+* Archimedean fields
+
+-/
+
+import analysis.real tactic.norm_num
+-- analysis.real -- for reals
+-- tactic.norm_num -- because I want to do proofs of things like 1/4 < 1 in ℝ quickly
+-- init.classical -- don't know why yet.
+
+-- Can I just dump the below things into Lean within no namespace?
+
+theorem pow_two_eq_mul_self {α : Type} [monoid α] {x : α} : x ^ 2 = x * x :=
+by simp [pow_nat, has_pow_nat.pow_nat, monoid.pow]
+
+theorem mul_self_eq_pow_two {α : Type} [monoid α] {x : α} : x * x = x ^ 2 :=
+eq.symm pow_two_eq_mul_self
+
+-- #check @abs_sub_square -- why is that even there?
+
+/-
+
+Possibly more useful:
+
+#check @nonneg_le_nonneg_of_squares_le
+nonneg_le_nonneg_of_squares_le :
+  ∀ {α : Type u_1} [_inst_1 : linear_ordered_ring α] {a b : α}, b ≥ 0 → a * a ≤ b * b → a ≤ b
+-/
+
+namespace square_root -- I have no idea whether this is the right thing to do
+
+open square_root
 
 
 
-theorem floor_real_exists : ∀ (x : ℝ), ∃ (n : ℤ), ↑n ≤ x ∧ x < n+1 :=
+theorem square_inj_on_nonneg {x y : ℝ} : (x ≥ 0) → (y ≥ 0) → (x^2 = y^2) → (x=y) :=
 begin
-intro x,
-have H : ∃ (q : ℚ), x < ↑q ∧ ↑q < x + 1,
-  exact @exists_rat_btwn x (x+1) (by simp [zero_lt_one]),
-cases H with q Hq,
-cases classical.em (x < rat.floor q) with Hb Hs,
-  exact ⟨rat.floor q - 1,
-  begin
-  split,
-    simp [rat.floor_le q,Hq.right],
-    suffices H7 : (↑q:real) ≤ x+1,
-      exact calc (↑(rat.floor q):ℝ) = (↑((rat.floor q):ℚ):ℝ) : by simp
-      ... ≤ (↑q:ℝ) : rat.cast_le.mpr (rat.floor_le q)
-      ... ≤ x+1 : H7,
-    exact le_of_lt Hq.right,
-  simp,
-  rw [←add_assoc],
-  simp [Hb]
-  end
-  ⟩,
+assume H_x_ge_zero : x ≥ 0,
+assume H_y_ge_zero : y ≥ 0,
+assume H : x ^ 2 = y ^ 2,
+rw [pow_two_eq_mul_self,pow_two_eq_mul_self,mul_self_eq_mul_self_iff] at H,
+cases H with Heq Hneg,
+  exact Heq,
+have H2 : x = 0 ∧ y = 0,
 
-  exact ⟨rat.floor q,
-    begin
-    split,
-      {
-        have H : (x < ↑(rat.floor q)) ∨ (x ≥ ↑(rat.floor q)),
-          exact lt_or_ge x ↑(rat.floor q),
-        cases H with F T,
-          exact false.elim (Hs F),
-          exact T
-      },
-    {
-      clear Hs,
-      have H1 : x < ↑q,
-        { exact Hq.left },
-      clear Hq,
+admit,
+end
 
-      -- insanity starts here
 
-      suffices H2 : q < ↑((rat.floor q)+(1:ℤ)),
-        have H3 : ¬ (rat.floor q + 1 ≤ rat.floor q),
-          intro H4,
-          suffices H5 : rat.floor q < rat.floor q + 1,
-            exact (lt_iff_not_ge (rat.floor q) ((rat.floor q)+1)).mp H5 H4,
-        -- exact (lt_iff_not_ge q (((rat.floor q) + 1):int):rat).mpr,
-        simp,
-        tactic.swap,
-        apply (lt_iff_not_ge q _).mpr,
-        intro H2,
-        have H3 : (rat.floor q) + 1 ≤ rat.floor q,
-          exact rat.le_floor.mpr H2,
-          have H4: (1:ℤ) > 0,
-            exact int.one_pos,
-          suffices H5 : (rat.floor q) + 1 > rat.floor q,
-            exact (lt_iff_not_ge (rat.floor q) (rat.floor q + 1)).mp H5 H3,
-            -- rw [add_comm (rat.floor q) (1:ℤ)],
-            -- exact add_lt_add_left H4 (rat.floor q),add_zero (rat.floor q)],
-            have H6 :rat.floor q + 0 < rat.floor q + 1,
-            exact (add_lt_add_left H4 (rat.floor q)),
-            exact @eq.subst _ (λ y, y < rat.floor q + 1) _ _ (add_zero (rat.floor q)) H6,
-      clear H3,
-      suffices H3 : of_rat q < ↑(rat.floor q) + 1,
-        -- exact lt.trans H1 H3,
-        exact calc x < ↑q : H1
-        ... = of_rat q : coe_rat_eq_of_rat q
-        ... < ↑(rat.floor q) + 1 : H3,
-      clear H1,
-      rw [←coe_rat_eq_of_rat],
-      have H : (↑(rat.floor q):ℝ) + (1:ℝ) = (((rat.floor q):ℚ):ℝ) + (((1:ℤ):ℚ):ℝ),
-        simp,
-      rw [H,←rat.cast_add,rat.cast_lt,←int.cast_add],
-      exact H2
-    }
-    end⟩
+#check id
+
+#check @add_eq_zero_iff_eq_zero_and_eq_zero_of_nonneg_of_nonneg
+#check @add_eq_zero_iff_eq_zero_of_nonneg
+#check @add_eq_zero_iff_eq_zero_and_eq_zero_of_nonneg_of_nonneg'
+
+#check add_eq_zero_iff_neg_eq
+--   add_eq_zero_iff_neg_eq : ?M_3 + ?M_4 = 0 ↔ -?M_3 = ?M_4
+
+#check nonneg_of_neg_nonpos
+-- nonneg_of_neg_nonpos : -?M_3 ≤ 0 → 0 ≤ ?M_3
+-/
+
+have H_x_le_zero : x ≤ 0, exact calc x=-y : Hneg ... ≤ 0 : neg_nonpos.mpr H_y_ge_zero,
+have H_x_eq_zero : x = 0, exact eq_iff_le_and_le.2 ⟨H_x_le_zero, H_x_ge_zero⟩,
+exact (eq.symm (calc y=-x : eq.symm (neg_eq_iff_neg_eq.1 (eq.symm Hneg))
+                ... = 0 : neg_eq_zero.2 H_x_eq_zero 
+                ... = x : eq.symm (H_x_eq_zero))),
 end
 
 theorem square_cont_at_zero : ∀ (r:ℝ), r>0 → ∃ (eps:ℝ),(eps>0) ∧ eps^2<r :=
 begin
-intros r Hrgt0,
+intros r Hr_gt_0,
 cases classical.em (r<1) with Hrl1 Hrnl1,
   have H : r^2<r,
     unfold pow_nat has_pow_nat.pow_nat monoid.pow,
     simp,
-    exact calc r*r < r*1 : mul_lt_mul_of_pos_left Hrl1 Hrgt0
+    exact calc r*r < r*1 : mul_lt_mul_of_pos_left Hrl1 Hr_gt_0
     ... = r : mul_one r,
   existsi r,
-  exact ⟨Hrgt0,H⟩,
+  exact ⟨Hr_gt_0,H⟩,
 have Hrge1 : r ≥ 1,
   exact le_of_not_lt Hrnl1,
 cases le_iff_eq_or_lt.mp Hrge1 with r1 rg1,
@@ -357,29 +382,7 @@ have H3 : ¬ (q^2>r),
   exact Heq
 end
 
-theorem square_is_pow_two {α : Type} [monoid α] {x : α} : x^2 = x*x :=
-begin
-unfold pow_nat has_pow_nat.pow_nat monoid.pow,
-simp
-end
 
-theorem square_inj_on_nonneg (x y : ℝ) : (x ≥ 0) → (y ≥ 0) → (x^2 = y^2) → (x=y) :=
-begin
-assume H_x_ge_zero : x ≥ 0,
-assume H_y_ge_zero : y ≥ 0,
-assume H_x_pow_two_eq_y_pow_two : x^2 = y^2,
-have H : x*x = y*y,
-  rwa [square_is_pow_two,square_is_pow_two] at H_x_pow_two_eq_y_pow_two,
-have H_eq_or_neg : x = y ∨ x = -y,
-  exact (mul_self_eq_mul_self_iff _ _).mp H,
-cases H_eq_or_neg with Heq Hneg,
-  exact Heq,
-have H_x_le_zero : x ≤ 0, exact calc x=-y : Hneg ... ≤ 0 : neg_nonpos.mpr H_y_ge_zero,
-have H_x_eq_zero : x = 0, exact eq_iff_le_and_le.2 ⟨H_x_le_zero, H_x_ge_zero⟩,
-exact (eq.symm (calc y=-x : eq.symm (neg_eq_iff_neg_eq.1 (eq.symm Hneg))
-                ... = 0 : neg_eq_zero.2 H_x_eq_zero 
-                ... = x : eq.symm (H_x_eq_zero))),
-end
 
 -- #check exists_square_root
 -- exists_square_root : ∀ (r : ℝ), r ≥ 0 → (∃ (q : ℝ), q ≥ 0 ∧ q ^ 2 = r)
@@ -393,7 +396,7 @@ suffices H_unique : ∀ (s:ℝ), s ≥ 0 ∧ s ^ 2 = r → s = q,
   exact ⟨q,⟨H_q_squared_is_r.left,⟨H_q_squared_is_r.right,H_unique⟩⟩⟩, 
 intro s,
 assume H_s_ge_zero_and_square_is_r,
-exact square_inj_on_nonneg s q H_s_ge_zero_and_square_is_r.left H_q_squared_is_r.left (eq.trans H_s_ge_zero_and_square_is_r.right (eq.symm H_q_squared_is_r.right))
+exact square_inj_on_nonneg H_s_ge_zero_and_square_is_r.left H_q_squared_is_r.left (eq.trans H_s_ge_zero_and_square_is_r.right (eq.symm H_q_squared_is_r.right))
 end
 
 noncomputable def square_root (x:ℝ) (H_x_nonneg : x ≥ 0) : ℝ := classical.some (exists_square_root x H_x_nonneg)
@@ -415,7 +418,7 @@ end
 
 noncomputable theorem sqrt_mul_self {x : ℝ} : (@sqrt_abs x) * (@sqrt_abs x) = x :=
 begin
-admit
+admit,
 end
 
 meta def sqrt_tac : tactic unit := `[assumption <|> norm_num]
@@ -435,136 +438,5 @@ example : s2^2=2 := sqrt_proof 2
 
 -/
 
-lemma rat.zero_eq_int_zero (z : int) : ↑ z = (0:rat) → z = 0 :=
-begin
-simp [rat.mk_eq_zero,nat.one_pos,rat.coe_int_eq_mk]
-end 
-
-lemma rat.of_int_inj (z₁ z₂ : int) : (z₁ : rat) = (z₂ : rat) → z₁ = z₂ :=
-begin
-intro H12,
-have H2 : ↑(z₁ - z₂) = (0:rat),
-exact calc
-↑(z₁ - z₂) = (↑z₁ - ↑z₂ : ℚ)  : by simp --  (rat.cast_sub z₁ z₂)
-...               = (↑ z₂ - ↑ z₂:ℚ)  : by rw H12
-... = (0 : rat) : by simp,
-have H3 : z₁ - z₂ = 0,
-exact rat.zero_eq_int_zero (z₁ -z₂) H2,
-clear H12 H2,
-exact sub_eq_zero.mp H3
-end
-
-lemma rational_half_not_an_integer : ¬ (∃ y : ℤ, 1/2 = (y:rat)) :=
-begin
-apply not_exists.2,
-rw [one_div_eq_inv],
-assume x:ℤ,
-intro H,
-unfold has_inv.inv at H, -- why does this become such an effort?
-unfold division_ring.inv at H,
-unfold field.inv at H,
-unfold linear_ordered_field.inv at H,
-unfold discrete_linear_ordered_field.inv at H,
-unfold discrete_field.inv at H,
-have H2 : ((2:rat)*rat.inv 2) = (2:rat)*x,
-  simp [H],
-have H21 : (2:rat)≠ 0 := dec_trivial,
-have H3 : (2:rat)*rat.inv 2 = (1:rat),
-  exact rat.mul_inv_cancel 2 H21,
-have H4 : (1:rat) = (2:rat)*(x:rat),
-  exact H3 ▸ H2,
-have H5 : ((((2:int)*x):int):rat)=((2:int):rat)*(x:rat),
-  simp [rat.cast_mul],
-have H6 : ↑ ((2:int)*x) = (↑1:rat),
-  exact eq.trans H5 (eq.symm H4),
-clear H H2 H21 H3 H4 H5,
-have H7 : 2*x=1,
-  exact rat.of_int_inj (2*x) 1 H6,
-clear H6,
-have H8 : (2*x) % 2 = 0,
-  simp [@int.add_mul_mod_self 0],
-have H9 : (1:int) % 2 = 0,
-  apply @eq.subst ℤ  (λ t, t%2 =0) _ _ H7 H8,
-have H10 : (1:int) % 2 ≠ 0,
-  exact dec_trivial,
-contradiction,
-end
-
--- set_option pp.all true
-
-lemma real_half_not_an_integer : ¬ (∃ y : ℤ, ((1/2):ℝ) = (y:ℝ)) :=
-begin
-assume H_real : (∃ y : ℤ, ((1/2):ℝ) = (y:ℝ)),
-cases H_real with a Ha, 
-suffices H2 : ((1:ℤ):ℝ) = ((2:ℤ):ℝ)*((a:ℤ):ℝ),
-  rw [←int.cast_mul,int.cast_inj] at H2,
-  have H8 : (2*a) % 2 = 0,
-    simp [@int.add_mul_mod_self 0],
-  have H9 : (1:int) % 2 = 0,
-    apply @eq.subst ℤ  (λ t, t%2 =0) _ _ (eq.symm H2) H8,
-  have H10 : (1:int) % 2 ≠ 0,
-    exact dec_trivial,
-  contradiction,
-have H20: (2:ℝ) ≠ 0, {norm_num},
-have H1 : (↑a:ℝ) * 2 = 1,
-  exact mul_eq_of_eq_div (a:ℝ) 1 H20 (eq.symm Ha),
-have H2 : 1 = 2 * (↑a:ℝ),
-  rw [mul_comm] at H1,
-  exact eq.symm (H1),
-have H3 : (1:ℝ) = ((1:ℤ):ℝ), by simp,
-have H4 : (2:ℝ) = ((2:ℤ):ℝ), by simp,
-rwa [←H3,←H4],
-end
-
-definition is_irrational (x : ℝ) := ¬ (∃ (q : ℚ), (q:ℝ) = x)
-
-end M1F
-
-/-
-no longer needed:
-
--- Helpful simp lemmas for reals: thanks to Sebastian Ullrich
-
-lemma of_rat_lt_of_rat {q₁ q₂ : ℚ} : of_rat q₁ < of_rat q₂ ↔ q₁ < q₂ := 
-begin
-simp [lt_iff_le_and_ne, of_rat_le_of_rat]
-end
-
-run_cmd mk_simp_attr `real_simps
-attribute [real_simps] of_rat_zero of_rat_one of_rat_neg of_rat_add of_rat_sub of_rat_mul
-attribute [real_simps] of_rat_inv of_rat_le_of_rat of_rat_lt_of_rat
-@[real_simps] lemma of_rat_bit0 (a : ℚ) : bit0 (of_rat a) = of_rat (bit0 a) := of_rat_add
-@[real_simps] lemma of_rat_bit1 (a : ℚ) : bit1 (of_rat a) = of_rat (bit1 a) :=
-by simp [bit1, bit0, of_rat_add,of_rat_one]
-@[real_simps] lemma of_rat_div {r₁ r₂ : ℚ} : of_rat r₁ / of_rat r₂ = of_rat (r₁ / r₂) :=
-by simp [has_div.div, algebra.div] with real_simps
-
--- new version (doesn't work yet):
-
-run_cmd mk_simp_attr `real_simps2
-attribute [real_simps2] rat.cast_zero rat.cast_one rat.cast_neg rat.cast_add rat.cast_sub rat.cast_mul
-attribute [real_simps2] rat.cast_inv rat.cast_le rat.cast_lt rat.cast_bit0 rat.cast_bit1 rat.cast_div
-
--- equality works beautifully
-
-example : (6:real) + 9 = 15 := by norm_num
-example : (2:real)/4 + 4 = 3*3/2 := by norm_num
-
--- inequalities I can still do with the deprecated(?) functions
-
-example : (((3:real)/4)-12)<6 := by simp with real_simps;exact dec_trivial
-example : (5:real) ≠ 8 := by simp with real_simps;exact dec_trivial
-example : (10:real) > 7 := by unfold gt;simp with real_simps;exact dec_trivial 
-
--- but at the time of writing I can't get them to work with the new ones.
-
--- example : (((3:real)/4)-12)<6 := by simp with real_simps2;exact dec_trivial -- fails
-example : (((3:real)/4)-12)<6 := by norm_num -- excessive memory consumption 
-
--- example : (5:real) ≠ 8 := by simp with real_simps2;exact dec_trivial -- fails
-example : (5:real) ≠ 8 := by norm_num  -- excessive memory consumption
-
--- example : (10:real) > 7 := by unfold gt;simp with real_simps2;exact dec_trivial -- fails
-example : (10:real) > 7 := by norm_num -- (deterministic) timeout
-
--/
+end square_root
+example : add_eq_zero_iff_eq_zero_and_eq_zero_of_nonneg_of_nonneg = add_eq_zero_iff_eq_zero_of_nonneg := sorry

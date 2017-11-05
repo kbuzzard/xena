@@ -541,15 +541,33 @@ revert H,
 norm_num,
 end
 
+theorem imp_of_not_or {A B : Prop} : (A ∨ B) → (¬ A) → B :=
+begin
+intros Hor HnBofA,
+cases Hor,
+  contradiction,
+exact a
+end
+
+
 theorem Q6 : M1F.sqrt 2 + M1F.sqrt 6 < M1F.sqrt 15 :=
 begin
 let s2 := M1F.sqrt 2,
-change M1F.sqrt 2 with s2,
+change M1F.sqrt 2 with s2, --
 let s6 := M1F.sqrt 6,
-change M1F.sqrt 6 with s6,
+change M1F.sqrt 6 with s6, -- 
 let s15 := M1F.sqrt 15,
-change M1F.sqrt 15 with s15,
-cases (lt_or_ge (s2 + s6) (s15)) with Hlt Hfalse,
+change M1F.sqrt 15 with s15, --  I just want names for these variables.
+have Hs15 : s15^2 = 15,
+  exact (M1F.sqrt_allinfo 15).right.left, -- 
+have Hs2 : s2^2 = 2,
+  exact (M1F.sqrt_allinfo 2).right.left, -- 
+have Hs6 : s6^2 = 6, 
+  exact (M1F.sqrt_allinfo 6).right.left, -- I know I'll need these things at some point.
+apply imp_of_not_or (lt_or_ge (s2 + s6) (s15)),
+
+
+cases (lt_or_ge (s2 + s6) (s15)) with Htrue Hfalse,
   assumption,
 exfalso,
 have H2 : s15 ≥ 0,
