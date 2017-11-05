@@ -20,28 +20,6 @@ sends a real number x to the non-negative square root of abs x (a.k.a. |x|).
 
 -/
 
-/-
-The real numbers ℝ.
-
-They are constructed as the topological completion of ℚ. With the following step
-s:
-(1) prove that ℚ forms a uniform space.
-(2) subtraction and addition are uniform continuous functions in this space
-(3) for multiplication and inverse this only holds on bounded subsets
-(4) ℝ is defined as separated Cauchy filters over ℚ (the separation requires a q
-uotient construction)
-(5) extend the uniform continuous functions along the completion
-(6) proof field properties using the principle of extension of identities
-
-TODO
-
-generalizations:
-* topological groups & rings
-* order topologies
-* Archimedean fields
-
--/
-
 import analysis.real tactic.norm_num
 -- analysis.real -- for reals
 -- tactic.norm_num -- because I want to do proofs of things like 1/4 < 1 in ℝ quickly
@@ -54,6 +32,14 @@ by simp [pow_nat, has_pow_nat.pow_nat, monoid.pow]
 
 theorem mul_self_eq_pow_two {α : Type} [monoid α] {x : α} : x * x = x ^ 2 :=
 eq.symm pow_two_eq_mul_self
+
+theorem imp_of_not_or {A B : Prop} : (A ∨ B) → (¬ A) → B :=
+begin
+intros Hor HnBofA,
+cases Hor,
+  contradiction,
+exact a
+end
 
 -- #check @abs_sub_square -- why is that even there?
 
@@ -81,145 +67,84 @@ rw [pow_two_eq_mul_self,pow_two_eq_mul_self,mul_self_eq_mul_self_iff] at H,
 cases H with Heq Hneg,
   exact Heq,
 have H2 : x = 0 ∧ y = 0,
-
-admit,
+  exact (add_eq_zero_iff_eq_zero_of_nonneg H_x_ge_zero H_y_ge_zero).1 (add_eq_zero_iff_eq_neg.2 Hneg), 
+rw [H2.left,H2.right],
 end
 
-
-#check id
-
-#check @add_eq_zero_iff_eq_zero_and_eq_zero_of_nonneg_of_nonneg
-#check @add_eq_zero_iff_eq_zero_of_nonneg
-#check @add_eq_zero_iff_eq_zero_and_eq_zero_of_nonneg_of_nonneg'
-
-#check add_eq_zero_iff_neg_eq
---   add_eq_zero_iff_neg_eq : ?M_3 + ?M_4 = 0 ↔ -?M_3 = ?M_4
-
-#check nonneg_of_neg_nonpos
--- nonneg_of_neg_nonpos : -?M_3 ≤ 0 → 0 ≤ ?M_3
--/
-
-have H_x_le_zero : x ≤ 0, exact calc x=-y : Hneg ... ≤ 0 : neg_nonpos.mpr H_y_ge_zero,
-have H_x_eq_zero : x = 0, exact eq_iff_le_and_le.2 ⟨H_x_le_zero, H_x_ge_zero⟩,
-exact (eq.symm (calc y=-x : eq.symm (neg_eq_iff_neg_eq.1 (eq.symm Hneg))
-                ... = 0 : neg_eq_zero.2 H_x_eq_zero 
-                ... = x : eq.symm (H_x_eq_zero))),
-end
-
-theorem square_cont_at_zero : ∀ (r:ℝ), r>0 → ∃ (eps:ℝ),(eps>0) ∧ eps^2<r :=
+theorem square_cont_at_zero : ∀ (r : ℝ), r > 0 → 
+                          ∃ (eps : ℝ), (eps > 0) ∧ eps ^ 2 < r :=
 begin
 intros r Hr_gt_0,
-cases classical.em (r<1) with Hrl1 Hrnl1,
+cases lt_or_ge r 1 with Hrl1 Hrge1,
   have H : r^2<r,
     unfold pow_nat has_pow_nat.pow_nat monoid.pow,
-    simp,
-    exact calc r*r < r*1 : mul_lt_mul_of_pos_left Hrl1 Hr_gt_0
+    exact calc r*(r*1) = r*r : by simp
+    ... < r*1 : mul_lt_mul_of_pos_left Hrl1 Hr_gt_0
     ... = r : mul_one r,
   existsi r,
   exact ⟨Hr_gt_0,H⟩,
-have Hrge1 : r ≥ 1,
-  exact le_of_not_lt Hrnl1,
 cases le_iff_eq_or_lt.mp Hrge1 with r1 rg1,
-  existsi ((1/2):ℝ),
-  split,
-    suffices H : 0 < ((1/2):ℝ),
-      exact H,
-    { norm_num },  
   rw [←r1],
-  { norm_num },
-clear Hrnl1 Hrge1,
+  exact ⟨((1/2):ℝ),by norm_num⟩, 
 existsi (1:ℝ),
 split,
   exact zero_lt_one,
-unfold pow_nat has_pow_nat.pow_nat monoid.pow,
-simp,
-exact rg1
+suffices : 1<r, by simpa,
+exact rg1,
 end
+
+#check @nonneg_le_nonneg_of_squares_le
+ -- ∀ {α : Type u_1} [_inst_1 : linear_ordered_ring α] {a b : α}, 
+ -- b ≥ 0 → a * a ≤ b * b → a ≤ b
 
 theorem exists_square_root (r:ℝ) (rnneg : r ≥ 0) : ∃ (q : ℝ), (q ≥ 0) ∧ q^2=r :=
 begin
 cases le_iff_eq_or_lt.mp rnneg with r0 rpos,
   rw [←r0],
-  have H : (0:ℝ)≥ 0 ∧ (0:ℝ)^2 = 0,
-  split,
-  exact le_of_eq (by simp),
-  unfold pow_nat has_pow_nat.pow_nat monoid.pow,
-  simp,
-  exact ⟨(0:ℝ),H⟩,
-  clear rnneg,
-let s := { x:ℝ | x^2 ≤ r},
-have H0 : (0:ℝ) ∈ s,
-  simp,
-  unfold pow_nat has_pow_nat.pow_nat monoid.pow,
-  simp,
+  exact ⟨(0:ℝ),by norm_num⟩,
+clear rnneg,
+let S := { x:ℝ | x^2 ≤ r},
+-- S non-empty
+have H0 : (0:ℝ) ∈ S,
+  suffices : 0 ≤ r, by simpa [pow_two_eq_mul_self],
   exact le_of_lt rpos,
-have H1 : max r 1 ∈ upper_bounds s,
+-- S has upper bound
+have H1 : max r 1 ∈ upper_bounds S,
   cases classical.em (r ≤ 1) with rle1 rgt1,
-    unfold upper_bounds,
-    unfold set_of,
-    intro t,
-    intro Ht,
+    intros t Ht,
     suffices H : t ≤ 1,
       exact le_trans H (le_max_right r 1),
-    have H : t^2 ≤ 1,
-      exact le_trans Ht rle1,
-    cases classical.em (t≤1) with tle1 tgt1,
-      exact tle1,
-    have H2: t > 1,
-      exact lt_of_not_ge tgt1,
-    exfalso,
-    have H3 : t*t>1,
-      exact calc 1<t : H2
-      ... = t*1 : eq.symm (mul_one t)
-      ... < t*t : mul_lt_mul_of_pos_left H2 (lt_trans zero_lt_one H2),
-    unfold pow_nat has_pow_nat.pow_nat monoid.pow at H,
-    simp at H,
-    exact not_lt_of_ge H H3,
-
+    exact nonneg_le_nonneg_of_squares_le (zero_le_one) (by rw [mul_one,←pow_two_eq_mul_self];exact (le_trans Ht rle1)),
   have H : 1<r,
     exact lt_of_not_ge rgt1,
-  unfold upper_bounds,
-  unfold set_of,
-  intro t,
-  intro Ht,
+  clear rgt1,
+  intros t Ht,
   suffices H : t ≤ r,
     exact le_trans H (le_max_left r 1),
-  cases classical.em (t≤r) with Hl Hg,
-    exact Hl,
-  have H1 : r<t,
-    exact lt_of_not_ge Hg,
-  have H2 : t^2 ≤ r,
-    exact Ht,
-  clear H0 Ht s Hg rgt1,
-  exfalso,
-  have H3 : 1<t,
-    exact lt_trans H H1,
-  have H4 : t^2 < t,
-    exact lt_of_le_of_lt H2 H1,
-  have H5 : t < t^2,
-    exact calc t = 1*t : eq.symm (one_mul t)
-    ... < t*t : mul_lt_mul_of_pos_right H3 (lt_trans zero_lt_one H3)
-    ... = t^2 : by {unfold pow_nat has_pow_nat.pow_nat monoid.pow,simp},
-  have H6 : t < t,
-    exact lt_trans H5 H4,
-  have H7 : ¬ (t=t), 
-    exact ne_of_lt H6,
-  exact H7 (rfl),
-have H : ∃ (x : ℝ), is_lub s x,
+  -- need to prove t^2<=r implies t<=r
+  apply imp_of_not_or (lt_or_ge r t),
+  assume H1 : r<t,
+  apply not_le_of_gt H1,
+  apply nonneg_le_nonneg_of_squares_le (le_of_lt rpos),
+  exact le_of_lt (calc t*t=t^2 : mul_self_eq_pow_two
+  ... ≤ r : Ht
+  ... = r*1 : eq.symm (mul_one r)
+  ... < r*r : mul_lt_mul_of_pos_left H rpos),
+-- get LUB
+have H : ∃ (x : ℝ), is_lub S x,
   exact exists_supremum_real H0 H1,
 cases H with q Hq,
 existsi q,
-unfold is_lub at Hq,
-unfold is_least at Hq,
-split,
-  exact Hq.left 0 H0,
 have Hqge0 : 0 ≤ q,
   exact Hq.left 0 H0,
+split,
+  exact Hqge0,
+-- I tidied the code up, up to here; the rest is my original effort.
 -- idea is to prove q^2=r by showing not < or >
 -- first not <
 have H2 : ¬ (q^2<r),
   intro Hq2r,
-  have H2 : q ∈ upper_bounds s,
+  have H2 : q ∈ upper_bounds S,
     exact Hq.left,
   clear Hq H0 H1,
   unfold upper_bounds at H2,
@@ -233,7 +158,7 @@ have H2 : ¬ (q^2<r),
   have H4 : ∀ eps > 0,(q+eps)^2>r,
     intros eps Heps,
     exact lt_of_not_ge (H3 (q+eps) ((lt_add_iff_pos_right q).mpr Heps)),
-  clear H3 H2 s,
+  clear H3 H2 S,
   cases le_iff_eq_or_lt.mp Hqge0 with Hq0 Hqg0,
     cases (square_cont_at_zero r rpos) with eps Heps,
     specialize H4 eps,
@@ -278,7 +203,7 @@ exact not_lt_of_ge (le_of_lt H1) Hn1,
 -- now not >
 have H3 : ¬ (q^2>r),
   intro Hq2r,
-  have H3 : q ∈ lower_bounds (upper_bounds s),
+  have H3 : q ∈ lower_bounds (upper_bounds S),
     exact Hq.right,
   clear Hq H0 H1 H2,
   have Hqg0 : 0 < q,
@@ -296,7 +221,7 @@ have H3 : ¬ (q^2>r),
     unfold set_of at H3,
     unfold has_mem.mem set.mem has_mem.mem at H3,
     intros eps Heps,
-    have H : ¬ ((q-eps) ∈ (upper_bounds s)),
+    have H : ¬ ((q-eps) ∈ (upper_bounds S)),
       intro H,
       have H2 : q ≤ q-eps,
         exact H3 (q-eps) H,
@@ -311,13 +236,13 @@ have H3 : ¬ (q^2>r),
       exact Hf2 (by simp),
     unfold upper_bounds at H,
     unfold has_mem.mem set.mem has_mem.mem set_of at H,
-    have H2 : ∃ (b:ℝ), ¬ (s b → b ≤ q-eps),
+    have H2 : ∃ (b:ℝ), ¬ (S b → b ≤ q-eps),
       exact classical.not_forall.mp H, 
     cases H2 with b Hb,
     clear H,
-    cases classical.em (s b) with Hsb Hsnb,
+    cases classical.em (S b) with Hsb Hsnb,
       tactic.swap,
-      have Hnb : s b → b ≤ q - eps,
+      have Hnb : S b → b ≤ q - eps,
         intro Hsb,
         exfalso,
         exact Hsnb Hsb,
@@ -399,37 +324,42 @@ assume H_s_ge_zero_and_square_is_r,
 exact square_inj_on_nonneg H_s_ge_zero_and_square_is_r.left H_q_squared_is_r.left (eq.trans H_s_ge_zero_and_square_is_r.right (eq.symm H_q_squared_is_r.right))
 end
 
-noncomputable def square_root (x:ℝ) (H_x_nonneg : x ≥ 0) : ℝ := classical.some (exists_square_root x H_x_nonneg)
+noncomputable def square_root (x:ℝ) (H_x_nonneg : x ≥ 0) : ℝ := classical.some (exists_unique_square_root x H_x_nonneg)
 
--- set_option pp.notation false
--- example : (0:ℝ) ≤ 2 := by rw [←rat.cast_zero,rat.cast_bit0,rat.cast_bit1],
--- #check (square_root 2 _) -- (by {unfold ge;exact dec_trivial}))
+#check square_root
+
+-- #reduce (square_root 2 (by norm_num)) -- oops
 
 -- Next is what Mario says I should do (at least in terms of where the proof that x>=0 goes)
 
 noncomputable def sqrt_abs (x : ℝ) : ℝ := square_root (abs x) (abs_nonneg x)
 
-noncomputable theorem sqrt_squared (x : ℝ) (Hx_nonneg : 0 ≤ x) : (@sqrt_abs x) ^ 2 = x :=
+def square_root_proof (x:ℝ) (h : x ≥ 0) : (square_root x h) ^ 2 = x := 
+(classical.some_spec (exists_unique_square_root x h)).right.left
+
+#check square_root_proof
+
+def square_root_allinfo (x:ℝ) (h : x ≥ 0) := 
+classical.some_spec (exists_unique_square_root x h)
+
+theorem sqrt_abs_squared (x : ℝ) (Hx_nonneg : 0 ≤ x) : (sqrt_abs x) ^ 2 = x :=
 begin
-admit,
+have H0 : sqrt_abs x ^ 2 = abs x,
+  exact square_root_proof (abs x) (abs_nonneg x),
+rw [H0],
+exact abs_of_nonneg Hx_nonneg,
 end
 
-
-
-noncomputable theorem sqrt_mul_self {x : ℝ} : (@sqrt_abs x) * (@sqrt_abs x) = x :=
+theorem sqrt_abs_mul_self (x : ℝ) (Hx_nonneg : 0 ≤ x) : (@sqrt_abs x) * (sqrt_abs x) = x :=
 begin
-admit,
+rw [mul_self_eq_pow_two],
+exact sqrt_abs_squared x Hx_nonneg,
 end
 
 meta def sqrt_tac : tactic unit := `[assumption <|> norm_num]
 noncomputable def sqrt (r : ℝ) (h : r ≥ 0 . sqrt_tac) : ℝ :=
 classical.some (exists_unique_square_root r h)
 
-def sqrt_proof (r:ℝ) (h : r ≥ 0 . sqrt_tac) := 
-(classical.some_spec (exists_unique_square_root r h)).right.left
-
-def sqrt_allinfo (r:ℝ) (h : r ≥ 0 . sqrt_tac) := 
-classical.some_spec (exists_unique_square_root r h)
 
 /- example of usage:
 
@@ -439,4 +369,3 @@ example : s2^2=2 := sqrt_proof 2
 -/
 
 end square_root
-example : add_eq_zero_iff_eq_zero_and_eq_zero_of_nonneg_of_nonneg = add_eq_zero_iff_eq_zero_of_nonneg := sorry
