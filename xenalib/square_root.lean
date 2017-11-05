@@ -93,9 +93,9 @@ suffices : 1<r, by simpa,
 exact rg1,
 end
 
-#check @nonneg_le_nonneg_of_squares_le
- -- ∀ {α : Type u_1} [_inst_1 : linear_ordered_ring α] {a b : α}, 
- -- b ≥ 0 → a * a ≤ b * b → a ≤ b
+-- #check @nonneg_le_nonneg_of_squares_le
+-- ∀ {α : Type u_1} [_inst_1 : linear_ordered_ring α] {a b : α}, 
+-- b ≥ 0 → a * a ≤ b * b → a ≤ b
 
 theorem exists_square_root (r:ℝ) (rnneg : r ≥ 0) : ∃ (q : ℝ), (q ≥ 0) ∧ q^2=r :=
 begin
@@ -326,8 +326,6 @@ end
 
 noncomputable def square_root (x:ℝ) (H_x_nonneg : x ≥ 0) : ℝ := classical.some (exists_unique_square_root x H_x_nonneg)
 
-#check square_root
-
 -- #reduce (square_root 2 (by norm_num)) -- oops
 
 -- Next is what Mario says I should do (at least in terms of where the proof that x>=0 goes)
@@ -336,8 +334,6 @@ noncomputable def sqrt_abs (x : ℝ) : ℝ := square_root (abs x) (abs_nonneg x)
 
 def square_root_proof (x:ℝ) (h : x ≥ 0) : (square_root x h) ^ 2 = x := 
 (classical.some_spec (exists_unique_square_root x h)).right.left
-
-#check square_root_proof
 
 def square_root_allinfo (x:ℝ) (h : x ≥ 0) := 
 classical.some_spec (exists_unique_square_root x h)
@@ -350,7 +346,7 @@ rw [H0],
 exact abs_of_nonneg Hx_nonneg,
 end
 
-theorem sqrt_abs_mul_self (x : ℝ) (Hx_nonneg : 0 ≤ x) : (@sqrt_abs x) * (sqrt_abs x) = x :=
+theorem sqrt_abs_mul_self (x : ℝ) (Hx_nonneg : 0 ≤ x) : (sqrt_abs x) * (sqrt_abs x) = x :=
 begin
 rw [mul_self_eq_pow_two],
 exact sqrt_abs_squared x Hx_nonneg,
