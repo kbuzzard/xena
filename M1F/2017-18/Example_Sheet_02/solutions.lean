@@ -541,7 +541,6 @@ revert H,
 norm_num,
 end
 
-
 theorem Q6 : M1F.sqrt 2 + M1F.sqrt 6 < M1F.sqrt 15 :=
 begin
 let s2 := M1F.sqrt 2,
@@ -550,14 +549,15 @@ let s6 := M1F.sqrt 6,
 change M1F.sqrt 6 with s6,
 let s15 := M1F.sqrt 15,
 change M1F.sqrt 15 with s15,
-cases (lt_or_ge (s2 + s6) (s15)),
+cases (lt_or_ge (s2 + s6) (s15)) with Hlt Hfalse,
   assumption,
 exfalso,
 have H2 : s15 ≥ 0,
 exact (M1F.sqrt_allinfo 15).left,
-have H3 : s15^2 = 15,
-  exact (M1F.sqrt_allinfo 15).right.left,
-
+-- have H3 : s15^2 = 15,
+--   exact (M1F.sqrt_allinfo 15).right.left,
+have H1 : s15*s15 ≤ (s2+s6)*(s2+s6) := calc
+s15*s15 ≤ (s2+s6)*s15 : mul_le_mul_of_nonneg_r
 end
 
 
