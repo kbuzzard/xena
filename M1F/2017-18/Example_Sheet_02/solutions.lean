@@ -1,4 +1,4 @@
-import xenalib.M1Fstuff algebra.group_power
+import xenalib.M1Fstuff algebra.group_power xenalib.square_root
 
 -- automatic coercions to reals  
 
@@ -363,13 +363,16 @@ end
 
 -- square root of 3
 
-def exists_sqrt_3 := M1F.exists_unique_square_root 3 (by norm_num) 
+def exists_sqrt_3 := square_root.exists_unique_square_root 3 (by norm_num) 
 
 -- #check exists_sqrt_3
 -- exists_sqrt_3 : ∃ (q : ℝ), q ≥ 0 ∧ q ^ 2 = 3 ∧ ∀ (s : ℝ), s ≥ 0 ∧ s ^ 2 = 3 → s = q
 
 noncomputable def sqrt3 := classical.some (exists_sqrt_3)
 def sqrt3_proof := classical.some_spec (exists_sqrt_3)
+
+-- #check sqrt3_proof
+
 
 example : sqrt3^2 = 3 := sqrt3_proof.right.left
 
@@ -381,7 +384,7 @@ unfold M1F.is_irrational,
 intro H,
 cases H with q Hq,
 have Hq2 : q*q = (3:ℚ),
-  rw [←@rat.cast_inj ℝ,rat.cast_mul,Hq,←M1F.square_is_pow_two],
+  rw [←@rat.cast_inj ℝ,rat.cast_mul,Hq,mul_self_eq_pow_two],
   unfold sqrt3,
   rw [sqrt3_proof.right.left],
   norm_num,
@@ -434,7 +437,7 @@ clear Hq2 H0 H1,
 have H0 : nat.coprime (int.nat_abs n) d0,
   exact q.cop,
 have H3 : n*n=n^2,
-  exact eq.symm (M1F.square_is_pow_two),
+  exact mul_self_eq_pow_two,
 rw [H3] at H2,
 have H1 : (3:ℤ) ∣ n^2,
   exact ⟨d*d,eq.symm H2⟩,
@@ -446,7 +449,7 @@ rw [mul_assoc] at H2,
 have H6 : d * d = n1 * (3 * n1),
   exact eq_of_mul_eq_mul_left (by norm_num) H2,clear H2,
   rw [mul_comm n1,mul_assoc] at H6,
-  rw [←M1F.square_is_pow_two] at H6,
+  rw [mul_self_eq_pow_two] at H6,
 have H2 : (3:ℤ) ∣ d^2,
   exact ⟨n1 * n1, H6⟩,
 clear H1 H6,
@@ -541,53 +544,117 @@ revert H,
 norm_num,
 end
 
-theorem imp_of_not_or {A B : Prop} : (A ∨ B) → (¬ A) → B :=
+theorem Q6 : square_root.sqrt_abs 2 + square_root.sqrt_abs 6 < square_root.sqrt_abs 15 :=
 begin
-intros Hor HnBofA,
-cases Hor,
-  contradiction,
-exact a
-end
-
-
-theorem Q6 : M1F.sqrt 2 + M1F.sqrt 6 < M1F.sqrt 15 :=
-begin
-let s2 := M1F.sqrt 2,
-change M1F.sqrt 2 with s2, --
-let s6 := M1F.sqrt 6,
-change M1F.sqrt 6 with s6, -- 
-let s15 := M1F.sqrt 15,
-change M1F.sqrt 15 with s15, --  I just want names for these variables.
+let s2 := square_root.sqrt_abs 2,
+change square_root.sqrt_abs 2 with s2, --
+let s6 := square_root.sqrt_abs 6,
+change square_root.sqrt_abs 6 with s6, -- 
+let s15 := square_root.sqrt_abs 15,
+change square_root.sqrt_abs 15 with s15, --  I just want names for these variables.
 have Hs15 : s15^2 = 15,
-  exact (M1F.sqrt_allinfo 15).right.left, -- 
+  exact square_root.sqrt_abs_squared 15 (by norm_num),
+rw [pow_two_eq_mul_self] at Hs15, 
 have Hs2 : s2^2 = 2,
-  exact (M1F.sqrt_allinfo 2).right.left, -- 
+  exact square_root.sqrt_abs_squared 2 (by norm_num), 
+rw [pow_two_eq_mul_self] at Hs2, 
 have Hs6 : s6^2 = 6, 
-  exact (M1F.sqrt_allinfo 6).right.left, -- I know I'll need these things at some point.
-apply imp_of_not_or (lt_or_ge (s2 + s6) (s15)),
-
-
-cases (lt_or_ge (s2 + s6) (s15)) with Htrue Hfalse,
-  assumption,
-exfalso,
+  exact square_root.sqrt_abs_squared 6 (by norm_num), -- I know I'll need these things at some point.
+rw [pow_two_eq_mul_self] at Hs6, 
+apply imp_of_not_or (le_or_gt s15 (s2 + s6)),
+intro H1,
+-- now square both sides of H1
 have H2 : s15 ≥ 0,
-exact (M1F.sqrt_allinfo 15).left,
--- have H3 : s15^2 = 15,
---   exact (M1F.sqrt_allinfo 15).right.left,
-have H1 : s15*s15 ≤ (s2+s6)*(s2+s6) := calc
-s15*s15 ≤ (s2+s6)*s15 : mul_le_mul_of_nonneg_r
+exact square_root.sqrt_abs_ge_zero 15,
+have H3 : s15*s15 ≤ (s2+s6)*(s2+s6) := mul_self_le_mul_self H2 H1,
+  rw [Hs15,add_mul_self_eq,Hs2,Hs6] at H3,
+  rw [←sub_le_iff_le_add,add_comm,←sub_le_iff_le_add] at H3,
+revert H3,
+norm_num,
+intro H3, 
+have H4 : 7*7 ≤ (s2*(s6*2))*(s2*(s6*2)) := mul_self_le_mul_self (by norm_num) H3,
+have H5 : (49:ℝ) ≤ 48 := calc
+49 = 7 * 7 : by norm_num
+... ≤ s2 * (s6 * 2) * (s2 * (s6 * 2)) : H4
+... = (s2*s2)*(s6*s6)*(2*2) : by simp
+... = (2:ℝ)*6*(2*2) : by rw [Hs2,Hs6]
+... = 48 : by norm_num,
+revert H5,
+norm_num,
+end
+
+/- Q7 : are the following numbers rational or irrational
+
+(a) sqrt(2)+sqrt(3/2)
+(b) 1+sqrt(2)+sqrt(3/2)
+(c) 2sqrt(18)-3sqrt(8)
+-/
+
+theorem Q7a : M1F.is_irrational (square_root.sqrt_abs 2 + square_root.sqrt_abs (3/2)) :=
+begin
+
+let s2 := square_root.sqrt_abs 2,
+change square_root.sqrt_abs 2 with s2, 
+have Hs2 : s2^2 = 2,
+  exact square_root.sqrt_abs_squared 2 (by norm_num), 
+rw [pow_two_eq_mul_self] at Hs2, 
+
+let s3o2 := square_root.sqrt_abs (3/2),
+change square_root.sqrt_abs (3/2) with s3o2, 
+have Hs3o2 : s3o2^2 = 3/2,
+  exact square_root.sqrt_abs_squared (3/2) (by norm_num), 
+rw [pow_two_eq_mul_self] at Hs3o2, 
+
+intro H,cases H with q Hq,
+
+have H1 : (q:ℝ)*q = 2 + 2*s2*s3o2 + (3/2) := calc
+(q:ℝ)*q = (s2 + s3o2)*(s2+s3o2) : by rw [Hq]
+... = _ : by rw [add_mul_self_eq]
+... =  2 + 2*s2*s3o2 + (3/2) : by rw [Hs2,Hs3o2],
+
+rw [←sub_eq_iff_eq_add,add_comm,←sub_eq_iff_eq_add] at H1,
+
+let r:ℚ := q*q-3/2-2,
+have H2 : (r:ℝ)=↑q * ↑q - 3 / 2 - 2,
+norm_num,
+rw [←H2] at H1,
+
+let s:ℚ := r/2,
+
+have H2not0 : (2:ℝ) ≠ 0 := by norm_num,
+have Htemp : (2*(s2*s3o2))/2 = s2*s3o2 := mul_div_cancel_left (s2*s3o2) H2not0,
+rw ←mul_assoc at Htemp,
+have H3 : (s:ℝ)*s=3 := calc
+(s:ℝ)*s=(r/2)*(r/2) : by simp
+... = ((2*s2*s3o2)/2)*((2*s2*s3o2)/2) : by rw [H1]
+... = (s2*s3o2)*(s2*s3o2) : by rw [Htemp] -- simp [H2not0,mul_assoc,mul_div_cancel_left] -- rw [mul_assoc,mul_div_cancel_left,mul_assoc,mul_div_cancel_left];exact H2not0
+... = (s2*s2)*(s3o2*s3o2) : by simp
+... = 2*(3/2) : by rw [Hs2,Hs3o2]
+... = 3 : by norm_num,
+
+let t:ℚ := abs s,
+
+have H4 : (t:ℝ)*t=3,
+  change t with abs s,
+  rwa [←rat.cast_mul,abs_mul_abs_self,rat.cast_mul],
+
+have H4 : (t:ℝ) = sqrt3,
+  apply sqrt3_proof.right.right t,
+  split,
+    change t with abs s,
+    rw [rat.cast_abs],
+    exact abs_nonneg (s:ℝ),
+  rwa [pow_two_eq_mul_self],
+
+have Htemp2 :M1F.is_irrational (t:ℝ),
+  rw [H4],
+  exact Q3b,
+
+apply Htemp2,
+existsi t,
+refl,
 end
 
 
-/-
-noncomputable def sqrt3 := classical.some (exists_sqrt_3)
-def sqrt3_proof := classical.some_spec (exists_sqrt_3)
-
-example : sqrt3^2 = 3 := sqrt3_proof.right.left
-
-def exists_sqrt_3 := M1F.exists_unique_square_root 3 (by unfold ge;simp with real_simps;exact dec_trivial) 
-
-
--/
 
 end M1F_Sheet02

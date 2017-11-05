@@ -338,6 +338,9 @@ def square_root_proof (x:ℝ) (h : x ≥ 0) : (square_root x h) ^ 2 = x :=
 def square_root_allinfo (x:ℝ) (h : x ≥ 0) := 
 classical.some_spec (exists_unique_square_root x h)
 
+theorem sqrt_abs_ge_zero (x : ℝ) : sqrt_abs x ≥ 0 :=
+(classical.some_spec (exists_unique_square_root (abs x) (abs_nonneg x))).left
+
 theorem sqrt_abs_squared (x : ℝ) (Hx_nonneg : 0 ≤ x) : (sqrt_abs x) ^ 2 = x :=
 begin
 have H0 : sqrt_abs x ^ 2 = abs x,

@@ -155,6 +155,3 @@ definition is_irrational (x : ℝ) := ¬ (∃ (q : ℚ), (q:ℝ) = x)
 
 end M1F
 
-/-
-no longer needed:
-
