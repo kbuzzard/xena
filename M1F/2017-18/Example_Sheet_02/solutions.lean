@@ -378,17 +378,12 @@ example : sqrt3^2 = 3 := sqrt3_proof.right.left
 
 noncomputable example : monoid ℝ := by apply_instance
 
-theorem Q3b : M1F.is_irrational (sqrt3) :=
+set_option pp.all true
+
+theorem no_rational_squared_is_three : ¬ (∃ (q:ℚ),q^2=3) := 
 begin
-unfold M1F.is_irrational,
-intro H,
-cases H with q Hq,
-have Hq2 : q*q = (3:ℚ),
-  rw [←@rat.cast_inj ℝ,rat.cast_mul,Hq,mul_self_eq_pow_two],
-  unfold sqrt3,
-  rw [sqrt3_proof.right.left],
-  norm_num,
-clear Hq,
+intro H0,cases H0 with q Hq2,
+rw [pow_two_eq_mul_self] at Hq2,
 let n:=q.num,
 let d0:=q.denom,
 have Hq_is_n_div_d : q=n/d0,
@@ -496,6 +491,27 @@ clear H1,
 revert H0,
 norm_num,
 end
+
+theorem Q3b : M1F.is_irrational (sqrt3) :=
+begin
+unfold M1F.is_irrational,
+intro H,
+cases H with q Hq,
+have Hq2 : q*q = (3:ℚ),
+  rw [←@rat.cast_inj ℝ,rat.cast_mul,Hq,mul_self_eq_pow_two],
+  unfold sqrt3,
+  rw [sqrt3_proof.right.left],
+  norm_num,
+clear Hq,
+rw [mul_self_eq_pow_two] at Hq2,
+apply no_rational_squared_is_three,
+existsi q,
+exact Hq2,
+end
+
+-- #print no_rational_squared_is_three -- interesting with pp.all true
+
+
 
 theorem Q4a : ¬ (∀ (x y : ℝ), M1F.is_irrational x → M1F.is_irrational y → M1F.is_irrational (x+y)) :=
 begin
@@ -689,5 +705,9 @@ exact calc
 ... = 8*3*3/2/2 : by rw [square_root.sqrt_abs_mul_self 8 (by norm_num)]
 ... = 18 : by norm_num,
 end
+
+
+#print Q3b
+
 
 end M1F_Sheet02
