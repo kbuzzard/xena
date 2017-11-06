@@ -655,6 +655,29 @@ existsi t,
 refl,
 end
 
+theorem Q7b : M1F.is_irrational (1+square_root.sqrt_abs 2+square_root.sqrt_abs (3/2)) :=
+begin
+intro H,
+apply Q7a,
+cases H with q Hq,
+existsi (q-1),
+rw [rat.cast_sub,Hq],
+simp,
+end
+
+theorem Q7c : exists q:ℚ, (q:ℝ) = 2*square_root.sqrt_abs 18 - 3 * square_root.sqrt_abs 8 :=
+begin
+existsi (0:ℚ),
+rw [rat.cast_zero],apply eq.symm,
+rw [sub_eq_zero_iff_eq,mul_comm],
+-- apply eq.symm,
+apply mul_eq_of_eq_div,
+  norm_num,
+
+end
+
+
+
 
 
 end M1F_Sheet02
