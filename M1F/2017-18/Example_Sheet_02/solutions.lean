@@ -673,11 +673,21 @@ rw [sub_eq_zero_iff_eq,mul_comm],
 -- apply eq.symm,
 apply mul_eq_of_eq_div,
   norm_num,
-
+apply eq.symm,
+apply square_root.sqrt_abs_unique,
+  { norm_num},
+split,
+  apply div_nonneg_of_nonneg_of_pos _ _,
+    apply mul_nonneg _ _,
+      norm_num,
+    apply square_root.sqrt_abs_ge_zero _,
+  norm_num,
+-- rw [div_eq_mul_inv],
+exact calc
+3 * square_root.sqrt_abs 8 / 2 * (3 * square_root.sqrt_abs 8 / 2)  
+   = (square_root.sqrt_abs 8) * (square_root.sqrt_abs 8) * 3 * 3 / 2 / 2 : by simp [div_eq_mul_inv]
+... = 8*3*3/2/2 : by rw [square_root.sqrt_abs_mul_self 8 (by norm_num)]
+... = 18 : by norm_num,
 end
-
-
-
-
 
 end M1F_Sheet02

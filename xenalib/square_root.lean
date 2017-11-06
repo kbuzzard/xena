@@ -341,6 +341,17 @@ classical.some_spec (exists_unique_square_root x h)
 theorem sqrt_abs_ge_zero (x : ℝ) : sqrt_abs x ≥ 0 :=
 (classical.some_spec (exists_unique_square_root (abs x) (abs_nonneg x))).left
 
+theorem sqrt_abs_unique (x : ℝ) (Hx_nonneg : 0 ≤ x) : ∀ (s : ℝ), s ≥ 0 ∧ s ^ 2 = x → s = sqrt_abs x :=
+begin
+have H : ∀ (s : ℝ), s ≥ 0 ∧ s ^ 2 = abs x → s = square_root (abs x) (abs_nonneg x),
+  exact (classical.some_spec (exists_unique_square_root (abs x) (abs_nonneg x))).right.right,
+intro s,
+intro Hs,
+rw [eq.symm (abs_of_nonneg Hx_nonneg)] at Hs,
+exact H s Hs,
+end
+
+
 theorem sqrt_abs_squared (x : ℝ) (Hx_nonneg : 0 ≤ x) : (sqrt_abs x) ^ 2 = x :=
 begin
 have H0 : sqrt_abs x ^ 2 = abs x,
