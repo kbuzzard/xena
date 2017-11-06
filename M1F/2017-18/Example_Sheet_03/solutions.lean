@@ -6,29 +6,30 @@ import xenalib.M1Fstuff algebra.group_power xenalib.square_root
 constant fake_reals : Type
 
 @[instance] constant fake_reals_field : field fake_reals
+@[instance] constant fake_reals_have_lt : has_lt fake_reals
+@[instance] noncomputable definition fake_reals_have_le : has_le fake_reals := ⟨λ a b, (a<b) ∨ (a=b)⟩
+axiom A1 {a b t : fake_reals} : a < b → a+t < b+t
+axiom A2 {a b c : fake_reals} : a < b → b < c → a < c
+axiom A3 {a b : fake_reals} : (a < b ∨ a = b ∨ b < a) 
+                                   ∧ (a < b → ¬ (a = b)) 
+                                   ∧ (a < b → ¬ (b < a)) 
+                                   ∧ (a = b → ¬ (b < a))
+axiom A4 {a b : fake_reals} : a > 0 → b > 0  → (a*b) > 0
 
-#check filter
+
+
+-- we define a<=b to mean a<b or a=b. Axiom 3 says that at most one occurs.
 
 section M1F_Sheet03
 
--- Informally, real_field is the assertion that our
--- new real type is actually a linearly ordered field.
--- This means, amongst other things, that now, given
--- two real numbers a and b (i.e. two things of type real)
--- we should be able to add, subtract and multiply them,
--- and also see if a is less than b.
--- We might have to mention real_field, which is somehow
--- the dictionary of all these facts.
-
- -- note to self -- how to make this a Q-algebra?
- -- Oh! Can't do this because no Q or R!
-
-
--- #check ((↑(2:nat)):real)
-
-example : ∀ a b : real, a * b = b * a := 
+theorem Q1 : ∀ x y : fake_reals, 0<x ∧ 0<y → 0<(x+y) :=
 begin
-exact mul_comm
+intros x y Hxy,
+have H : y < x+y := calc
+y = 0 + y : by simp [zero_add]
+... < x+y : A1 Hxy.left, 
+exact A2 Hxy.right H,
 end
+
 
 end M1F_Sheet03
