@@ -91,7 +91,7 @@ end
 
 -- #check @lt_of_sub_pos
 
-theorem mul_pos_lt_of_lt {x y c : fake_reals} : (x > y) → (c > 0) → c*x>c*y :=
+theorem mul_pos_lt_of_lt {x y c : fake_reals} : (y < x) → (0 < c) → c*y < c*x :=
 begin
 intros Hx_gt_y Hc_gt_zero,
 have Hsub_gt_zero : 0 < (x-y),
@@ -225,17 +225,89 @@ section M1F_Sheet03
 theorem three_not_zero : (3:ℕ) ≠ 0 := by norm_num
 theorem two_not_zero : (2:ℕ) ≠ 0 := by norm_num
 
-def t3_stuff := A6 3000000000000 (by norm_num) ↑3 (n_pos 3 (three_not_zero))
-def t2_stuff := A6 2000000000000 (by norm_num) ↑2 (n_pos 2 (two_not_zero))
+-- set_option pp.notation false
+
+theorem pow_pos_of_pos (x : fake_reals) (n : ℕ) : (0 < x) → (0 < n) → 0 < x^n :=
+begin
+intros Hx_pos Hn_pos,
+cases n with m,
+  revert Hn_pos,norm_num,
+clear Hn_pos,
+induction m with p Hp,
+  simp [Hx_pos],
+exact A4 Hx_pos Hp,
+end
+
+theorem pow_lt_of_lt (x y : fake_reals) (n : ℕ) : (0 < x) → (x < y) → (0 < n) → x ^ n < y^n :=
+begin
+intros Hx_pos Hx_lt_y Hn_pos,
+cases n with m,
+  exfalso, revert Hn_pos,norm_num,
+induction m with p Hp,
+  simp [Hx_lt_y],
+have H : x^ nat.succ p < y^nat.succ p := Hp (nat.zero_lt_succ p),
+clear Hp Hn_pos,
+change x ^ nat.succ (nat.succ p) with x * (x^nat.succ p),
+change y ^ nat.succ (nat.succ p) with y * (y^nat.succ p),
+
+have H1: x * (x ^ nat.succ p) < y * (x ^ nat.succ p) := calc
+x * (x ^ nat.succ p) = (x ^ nat.succ p) * x : by rw [mul_comm]
+... < (x ^ nat.succ p) * y : mul_pos_lt_of_lt Hx_lt_y (pow_pos_of_pos x (nat.succ p) Hx_pos (nat.zero_lt_succ p)) 
+... = y * (x ^ nat.succ p) : by rw [mul_comm],
+
+have H2 : y * (x ^ nat.succ p) < y * (y ^ nat.succ p) := mul_pos_lt_of_lt H (A2 Hx_pos Hx_lt_y),
+
+exact A2 H1 H2
+end
+
+def n:ℕ := 1000000000000
+def t3_stuff := A6 (3*n) (mul_pos (by norm_num) (by change n with 1000000000000;norm_num)) ↑3 (n_pos 3 (three_not_zero))
+def t2_stuff := A6 (2*n) (mul_pos (by norm_num) (by change n with 1000000000000;norm_num)) ↑2 (n_pos 2 (two_not_zero))
 noncomputable def t2 := classical.some t2_stuff
 noncomputable def t3 := classical.some t3_stuff
-noncomputable def t2_facts := classical.some_spec t2_stuff
-noncomputable def t3_facts := classical.some_spec t3_stuff
-
+def t2_facts := classical.some_spec t2_stuff
+def t3_facts := classical.some_spec t3_stuff
 
 theorem Q3a : t3 > t2 := -- these are both fake reals.
 begin
-admit,
+have H3 : t3 ^ (6*n) = ↑9,
+  change 6 with 2*3,
+  rw [mul_assoc,mul_comm,pow_mul],
+  have Htemp : t3 ^ (3*n) = ↑3 := t3_facts.right.left,  
+  rw [Htemp],
+  norm_num,
+have H2 : t2 ^ (6*n) = ↑8,
+  change 6 with 3*2,
+  rw [mul_assoc,mul_comm,pow_mul],
+  have Htemp : t2 ^ (2*n) = ↑2 := t2_facts.right.left,  
+  rw [Htemp],
+  norm_num,
+have Hlt : t2 ^ (6*n) < t3 ^ (6*n),
+  rw [H2,H3],
+  change 8 with 0+8,
+  change 9 with 1+8,
+  rw [nat.cast_add,nat.cast_add,nat.cast_zero,nat.cast_one],
+  exact A1 one_pos,
+clear H2 H3,
+have Hneq : ¬ (t2^(6*n) = t3^(6*n)),
+  exact A3.right.left Hlt,
+have Hngt : ¬ (t2^(6*n) > t3^(6*n)),
+  exact A3.right.right.left Hlt,
+cases (@A3 t2 t3).left with Hlt Hge,
+  exact Hlt,
+exfalso,
+cases Hge with Heq Hgt,
+  rw Heq at Hneq,
+  apply Hneq,
+  trivial,
+apply Hngt,
+apply pow_lt_of_lt,
+    exact t3_facts.left,
+  exact Hgt,
+apply mul_pos,
+  norm_num,
+change n with 1000000000000,
+norm_num,
 end
 
 
