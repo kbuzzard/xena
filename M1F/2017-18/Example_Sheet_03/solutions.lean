@@ -261,8 +261,10 @@ exact A2 H1 H2
 end
 
 def n:ℕ := 1000000000000
-def t3_stuff := A6 (3*n) (mul_pos (by norm_num) (by change n with 1000000000000;norm_num)) ↑3 (n_pos 3 (three_not_zero))
-def t2_stuff := A6 (2*n) (mul_pos (by norm_num) (by change n with 1000000000000;norm_num)) ↑2 (n_pos 2 (two_not_zero))
+
+
+def t3_stuff := A6 3000000000000 (by norm_num) ↑3 (n_pos 3 (three_not_zero))
+def t2_stuff := A6 2000000000000 (by norm_num) ↑2 (n_pos 2 (two_not_zero))
 noncomputable def t2 := classical.some t2_stuff
 noncomputable def t3 := classical.some t3_stuff
 def t2_facts := classical.some_spec t2_stuff
@@ -273,13 +275,19 @@ begin
 have H3 : t3 ^ (6*n) = ↑9,
   change 6 with 2*3,
   rw [mul_assoc,mul_comm,pow_mul],
-  have Htemp : t3 ^ (3*n) = ↑3 := t3_facts.right.left,  
+  have H3trill : 3*n=3000000000000 := by change n with 1000000000000;norm_num,
+  have Htemp : t3 ^ (3*n) = ↑3,
+    rw [H3trill],
+    exact t3_facts.right.left,  
   rw [Htemp],
   norm_num,
 have H2 : t2 ^ (6*n) = ↑8,
   change 6 with 3*2,
   rw [mul_assoc,mul_comm,pow_mul],
-  have Htemp : t2 ^ (2*n) = ↑2 := t2_facts.right.left,  
+  have H2trill : 2*n=2000000000000 := by change n with 1000000000000;norm_num,
+  have Htemp : t2 ^ (2*n) = ↑2,
+    rw [H2trill],
+    exact t2_facts.right.left,  
   rw [Htemp],
   norm_num,
 have Hlt : t2 ^ (6*n) < t3 ^ (6*n),
