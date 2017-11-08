@@ -11,13 +11,13 @@ constant fake_reals : Type
 @[instance] noncomputable definition fake_reals_have_le : has_le fake_reals := ⟨λ a b, (a<b) ∨ (a=b)⟩
 axiom A1 {a b t : fake_reals} : a < b → a+t < b+t
 axiom A2 {a b c : fake_reals} : a < b → b < c → a < c
-axiom A3 {a b : fake_reals} : (a < b ∨ a = b ∨ b < a) 
-                                   ∧ (a < b → ¬ (a = b)) 
-                                   ∧ (a < b → ¬ (b < a)) 
+axiom A3 {a b : fake_reals} : (a < b ∨ a = b ∨ b < a)
+                                   ∧ (a < b → ¬ (a = b))
+                                   ∧ (a < b → ¬ (b < a))
                                    ∧ (a = b → ¬ (b < a))
 axiom A4 {a b : fake_reals} : a > 0 → b > 0  → (a*b) > 0
 
-axiom A0 : (0 : fake_reals) ≠ (1 : fake_reals) 
+axiom A0 : (0 : fake_reals) ≠ (1 : fake_reals)
 
 theorem one_pos : (1:fake_reals) > 0 :=
 begin
@@ -43,7 +43,7 @@ end
 
 section M1F_Sheet03
 
--- set_option pp.all true 
+-- set_option pp.all true
 
 
 
@@ -52,7 +52,7 @@ begin
 intros x y Hxy,
 have H : y < x+y := calc
 y = 0 + y : by simp [zero_add]
-... < x+y : A1 Hxy.left, 
+... < x+y : A1 Hxy.left,
 exact A2 Hxy.right H,
 end
 
@@ -71,7 +71,7 @@ have H1 : ↑(nat.succ p) > (0:fake_reals),
   exact Hp H0,
 intro H,clear Hp H0 H,
   rw [nat.succ_eq_add_one,nat.cast_add,nat.cast_one],
-  exact Q1 (nat.succ p) 1 ⟨H1,one_pos⟩, 
+  exact Q1 (nat.succ p) 1 ⟨H1,one_pos⟩,
 end
 -- a) We proved in lectures that if x > y and c > 0 then cx > cy. Deduce from this that the
 -- product of a positive number and a negative number is negative.
@@ -120,7 +120,7 @@ exact calc x * y = -x * -y : by rw [neg_eq_neg_one_mul',@neg_eq_neg_one_mul' y,�
 ... > 0 : A4 Hneg_x_pos Hneg_y_pos,
 end
 
-theorem Q2b {x y : fake_reals} : x < 0 → y < 0 → x * y > 0 := pos_eq_neg_mul_neg 
+theorem Q2b {x y : fake_reals} : x < 0 → y < 0 → x * y > 0 := pos_eq_neg_mul_neg
 
 theorem zero_not_pos : ¬ ((0:fake_reals) < 0) := (@A3 0 0).right.right.right (rfl)
 
@@ -153,7 +153,7 @@ theorem Q2c : ∀ x y : fake_reals, x * y = 0 → x = 0 ∨ y = 0 :=
 
 end M1F_Sheet03
 
-axiom A5 : ∀ x : fake_reals, x > 0 → ∃ y : fake_reals, 
+axiom A5 : ∀ x : fake_reals, x > 0 → ∃ y : fake_reals,
                  y > 0 ∧ y*y=x ∧ ∀ z : fake_reals, z > 0 ∧ z*z=x → z=y
 
 section M1F_Sheet03
@@ -196,11 +196,11 @@ end
 
 end M1F_Sheet03
 
-axiom A6 : ∀ n : ℕ, n > 0 → 
-             ∀ x : fake_reals, x > 0 → 
-               ∃ y : fake_reals, 
-                 y > 0 
-                ∧ y ^ n = x 
+axiom A6 : ∀ n : ℕ, n > 0 →
+             ∀ x : fake_reals, x > 0 →
+               ∃ y : fake_reals,
+                 y > 0
+                ∧ y ^ n = x
                 ∧ ∀ z : fake_reals, z > 0 ∧ z ^ n = x → z = y
 
 
@@ -239,7 +239,7 @@ change y ^ nat.succ (nat.succ p) with y * (y^nat.succ p),
 
 have H1: x * (x ^ nat.succ p) < y * (x ^ nat.succ p) := calc
 x * (x ^ nat.succ p) = (x ^ nat.succ p) * x : by rw [mul_comm]
-... < (x ^ nat.succ p) * y : mul_pos_lt_of_lt Hx_lt_y (pow_pos_of_pos x (nat.succ p) Hx_pos (nat.zero_lt_succ p)) 
+... < (x ^ nat.succ p) * y : mul_pos_lt_of_lt Hx_lt_y (pow_pos_of_pos x (nat.succ p) Hx_pos (nat.zero_lt_succ p))
 ... = y * (x ^ nat.succ p) : by rw [mul_comm],
 
 have H2 : y * (x ^ nat.succ p) < y * (y ^ nat.succ p) := mul_pos_lt_of_lt H (A2 Hx_pos Hx_lt_y),
@@ -265,7 +265,7 @@ have H3 : t3 ^ (6*n) = ↑9,
   have H3trill : 3*n=3000000000000 := by change n with 1000000000000;norm_num,
   have Htemp : t3 ^ (3*n) = ↑3,
     rw [H3trill],
-    exact t3_facts.right.left,  
+    exact t3_facts.right.left,
   rw [Htemp],
   norm_num,
 have H2 : t2 ^ (6*n) = ↑8,
@@ -274,7 +274,7 @@ have H2 : t2 ^ (6*n) = ↑8,
   have H2trill : 2*n=2000000000000 := by change n with 1000000000000;norm_num,
   have Htemp : t2 ^ (2*n) = ↑2,
     rw [H2trill],
-    exact t2_facts.right.left,  
+    exact t2_facts.right.left,
   rw [Htemp],
   norm_num,
 have Hlt : t2 ^ (6*n) < t3 ^ (6*n),
@@ -354,7 +354,10 @@ change pow_nat 2 1 with 2,
 trivial,
 end
 
-
+theorem Q4 : { x : ℝ // x ≠ 0 ∧ 3*x + 1/x < 4 } = ℝ :=
+begin
+admit,
+end
 
 end M1F_Sheet03
 
