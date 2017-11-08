@@ -19,19 +19,6 @@ axiom A4 {a b : fake_reals} : a > 0 → b > 0  → (a*b) > 0
 
 axiom A0 : (0 : fake_reals) ≠ (1 : fake_reals) 
 
--- set_option pp.all true
-
-variable R : Type
-variable [comm_ring R]
-example : (-1:R) * (-1) = 1 :=
-begin
-rw [←neg_eq_neg_one_mul], -- goal now reads "1=1"
--- trivial -- doesn't work because goal is actually --1 = 1.
-rw [neg_neg],
-end
-
--- #check @has_neg.neg
-
 theorem one_pos : (1:fake_reals) > 0 :=
 begin
 cases (@A3 0 1).left with H1pos H1nonpos,
@@ -316,6 +303,55 @@ apply mul_pos,
   norm_num,
 change n with 1000000000000,
 norm_num,
+end
+
+-- I've done the next two parts with integers, on the basis that
+-- inequality on the reals extends inequality on the integers.
+
+-- ambiguous overload for power ^ symbol :-(
+-- Could mean nat.pow or pow_nat.
+
+-- Here's something that's in core lean for nat.pow
+-- and we need for pow_nat.
+
+theorem pow_lt_pow_of_lt {x i j : ℕ} : x > 1 → i < j → pow_nat x i < pow_nat x j :=
+begin
+rw [←nat.pow_eq_pow_nat,←nat.pow_eq_pow_nat],
+intro H,
+exact nat.pow_lt_pow_of_lt_right H,
+end
+
+theorem Q3b : pow_nat 10000 100 < pow_nat 100 10000 :=
+begin
+have H : 10000 = pow_nat 100 2,
+  { norm_num },
+have H2 : pow_nat 10000 100=pow_nat (pow_nat 100 2) 100,
+  rw [H],
+rw [H2,←pow_mul],
+have H3 : 2*100 = 200,
+  { norm_num},
+rw [H3],
+apply pow_lt_pow_of_lt,
+  { norm_num },
+norm_num,
+end
+
+theorem Q3ci : pow_nat (pow_nat 2 11) 2 = pow_nat 2 22 :=
+begin
+rw [←pow_mul],
+change 11*2 with 22,
+trivial,
+end
+
+theorem Q3cii : pow_nat (pow_nat 2 (pow_nat 2 21)) 2 = pow_nat 2 (pow_nat 2 22) :=
+begin
+rw [←pow_mul],
+suffices H : pow_nat 2 22 = (pow_nat 2 21) * 2,
+  rw [H],
+change 22 with 21+1,
+rw [pow_add],
+change pow_nat 2 1 with 2,
+trivial,
 end
 
 
