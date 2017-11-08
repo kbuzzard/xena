@@ -16,11 +16,48 @@ axiom A3 {a b : fake_reals} : (a < b ∨ a = b ∨ b < a)
                                    ∧ (a = b → ¬ (b < a))
 axiom A4 {a b : fake_reals} : a > 0 → b > 0  → (a*b) > 0
 
+axiom A0 : (0 : fake_reals) ≠ (1 : fake_reals) 
+
+set_option pp.all true
+
+variable R : Type
+variable [comm_ring R]
+example : (-1:R) * (-1) = 1 :=
+begin
+rw [←neg_eq_neg_one_mul], -- goal now reads "1=1"
+-- trivial -- doesn't work because goal is actually --1 = 1.
+rw [neg_neg],
+end
+
+-- #check @has_neg.neg
+
+
+
 
 
 -- we define a<=b to mean a<b or a=b. Axiom 3 says that at most one occurs.
 
 section M1F_Sheet03
+
+-- set_option pp.all true 
+
+theorem one_pos : (1:fake_reals) > 0 :=
+begin
+cases (@A3 0 1).left with H1pos H1nonpos,
+  assumption,
+cases H1nonpos with H1zero H1neg,
+  exfalso,
+  exact A0 H1zero,
+have H : (1:fake_reals) + (-1) < 0 + (-1),
+  exact A1 H1neg,
+  rw [add_neg_self,zero_add] at H,
+have H2 : (-1:fake_reals) * (-1) > 0,
+  exact A4 H H,
+rw [←neg_eq_neg_one_mul] at H2,
+-- exact H2, -- oops
+rw [neg_neg] at H2,
+exact H2,
+end
 
 theorem Q1 : ∀ x y : fake_reals, 0<x ∧ 0<y → 0<(x+y) :=
 begin
@@ -80,28 +117,29 @@ end
 
 theorem Q2b {x y : fake_reals} : x < 0 → y < 0 → x * y > 0 := pos_eq_neg_mul_neg 
 
+theorem zero_not_pos : ¬ ((0:fake_reals) < 0) := (@A3 0 0).right.right.right (rfl)
+
 theorem fake_reals_integral_domain {x y : fake_reals} : x * y = 0 → x = 0 ∨ y = 0 :=
 begin
-have Hzero_not_pos : ¬ ((0:fake_reals) < 0) := (@A3 0 0).right.right.right (rfl),
 intro Hxy_zero,
 cases (@A3 0 x).left with Hx_pos Hx_nonpos,
   cases (@A3 0 y).left with Hy_pos Hy_nonpos,
     exfalso,
-    exact Hzero_not_pos (calc 0 < x * y : A4 Hx_pos Hy_pos ... = 0 : Hxy_zero),
+    exact zero_not_pos (calc 0 < x * y : A4 Hx_pos Hy_pos ... = 0 : Hxy_zero),
   cases Hy_nonpos with Hy_0 Hy_neg,
     right,exact eq.symm Hy_0,
   exfalso,
-  apply Hzero_not_pos,
+  apply zero_not_pos,
   exact calc 0 = x*y : eq.symm Hxy_zero ... <0 : Q2a Hx_pos Hy_neg,
 cases Hx_nonpos with Hx_0 Hx_neg,
   left,exact eq.symm Hx_0,
 cases (@A3 0 y).left with Hy_pos Hy_nonpos,
   exfalso,
-  apply Hzero_not_pos,
+  apply zero_not_pos,
   exact calc 0=x*y : eq.symm Hxy_zero ... = y*x : by rw[mul_comm] ... <0 : Q2a Hy_pos Hx_neg,
 cases Hy_nonpos with Hy_0 Hy_neg,
   right,exact eq.symm Hy_0,
-exfalso, apply Hzero_not_pos,
+exfalso, apply zero_not_pos,
 exact calc 0 < x * y : Q2b Hx_neg Hy_neg ... = 0 : Hxy_zero,
 end
 
@@ -130,15 +168,48 @@ split,
   exact Hy.right.left,
 intro z,
 intro Hz2,
-rw ←Hy.right.left at Hz2,
-admit,
+have Hz2_eq_y2 : z*z = y*y := eq.symm Hy.right.left ▸ Hz2,
+have Hcases : (0 < z ∨ 0 = z ∨ z < 0) := (@A3 0 z).left,
+cases Hcases with Hz_neg Hz_nonneg,
+  left,
+  exact Hy.right.right z ⟨Hz_neg,Hz2⟩,
+cases Hz_nonneg with Hz_0 Hz_pos,
+  exfalso,
+  rw [←Hz_0,mul_zero] at Hz2,
+  rw [←Hz2] at Hx_pos,
+  revert Hx_pos,
+  exact zero_not_pos,
+right,
+apply eq.symm,
+apply neg_eq_iff_neg_eq.1,
+apply Hy.right.right,
+split,
+  have H : z + (-z) < 0 + (-z) := A1 Hz_pos,
+  rwa [add_neg_self,zero_add] at H,
+simp [Hz2],
 end
 
-/- Q2
-d) For this part you may assume that if x > 0 is a real number, then there is a unique positive
-real number y > 0 such that y 2 = x. Prove that there are exactly two real numbers z such that
-z 2 = x, and figure out what they are. Hint: use (c).
--/
+end M1F_Sheet03
+
+axiom A6 : ∀ n : ℕ, n > 0 → 
+             ∀ x : fake_reals, x > 0 → 
+               ∃ y : fake_reals, 
+                 y > 0 
+                ∧ y ^ n = x 
+                ∧ ∀ z : fake_reals, z > 0 ∧ z ^ n = x → z = y
+
+
+section M1F_Sheet03
+
+-- some definitions before Q3a
+
+
+
+def t3 := some (A6 3000000000000 (by norm_num) 3 ())
+
+theorem Q3a :
 
 
 end M1F_Sheet03
+
+
