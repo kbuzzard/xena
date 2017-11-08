@@ -7,6 +7,7 @@ constant fake_reals : Type
 
 @[instance] constant fake_reals_comm_ring : comm_ring fake_reals
 @[instance] constant fake_reals_have_lt : has_lt fake_reals
+-- we define a<=b to mean a<b or a=b. Axiom 3 says that at most one occurs.
 @[instance] noncomputable definition fake_reals_have_le : has_le fake_reals := ⟨λ a b, (a<b) ∨ (a=b)⟩
 axiom A1 {a b t : fake_reals} : a < b → a+t < b+t
 axiom A2 {a b c : fake_reals} : a < b → b < c → a < c
@@ -18,7 +19,7 @@ axiom A4 {a b : fake_reals} : a > 0 → b > 0  → (a*b) > 0
 
 axiom A0 : (0 : fake_reals) ≠ (1 : fake_reals) 
 
-set_option pp.all true
+-- set_option pp.all true
 
 variable R : Type
 variable [comm_ring R]
@@ -30,16 +31,6 @@ rw [neg_neg],
 end
 
 -- #check @has_neg.neg
-
-
-
-
-
--- we define a<=b to mean a<b or a=b. Axiom 3 says that at most one occurs.
-
-section M1F_Sheet03
-
--- set_option pp.all true 
 
 theorem one_pos : (1:fake_reals) > 0 :=
 begin
@@ -59,6 +50,16 @@ rw [neg_neg] at H2,
 exact H2,
 end
 
+
+
+
+
+section M1F_Sheet03
+
+-- set_option pp.all true 
+
+
+
 theorem Q1 : ∀ x y : fake_reals, 0<x ∧ 0<y → 0<(x+y) :=
 begin
 intros x y Hxy,
@@ -68,10 +69,27 @@ y = 0 + y : by simp [zero_add]
 exact A2 Hxy.right H,
 end
 
+theorem n_pos : ∀ n : ℕ, n ≠ 0 → (n : fake_reals) > 0 :=
+begin
+intro n,
+cases n with m,
+  by norm_num,
+induction m with p Hp,
+  intro,rw [nat.cast_one],
+  exact one_pos,
+have H0 : nat.succ p ≠ 0,
+  intro H,
+  exact nat.no_confusion H,
+have H1 : ↑(nat.succ p) > (0:fake_reals),
+  exact Hp H0,
+intro H,clear Hp H0 H,
+  rw [nat.succ_eq_add_one,nat.cast_add,nat.cast_one],
+  exact Q1 (nat.succ p) 1 ⟨H1,one_pos⟩, 
+end
 -- a) We proved in lectures that if x > y and c > 0 then cx > cy. Deduce from this that the
 -- product of a positive number and a negative number is negative.
 
-#check @lt_of_sub_pos
+-- #check @lt_of_sub_pos
 
 theorem mul_pos_lt_of_lt {x y c : fake_reals} : (x > y) → (c > 0) → c*x>c*y :=
 begin
@@ -204,10 +222,22 @@ section M1F_Sheet03
 -- some definitions before Q3a
 
 
+theorem three_not_zero : (3:ℕ) ≠ 0 := by norm_num
+theorem two_not_zero : (2:ℕ) ≠ 0 := by norm_num
 
-def t3 := some (A6 3000000000000 (by norm_num) 3 ())
+def t3_stuff := A6 3000000000000 (by norm_num) ↑3 (n_pos 3 (three_not_zero))
+def t2_stuff := A6 2000000000000 (by norm_num) ↑2 (n_pos 2 (two_not_zero))
+noncomputable def t2 := classical.some t2_stuff
+noncomputable def t3 := classical.some t3_stuff
+noncomputable def t2_facts := classical.some_spec t2_stuff
+noncomputable def t3_facts := classical.some_spec t3_stuff
 
-theorem Q3a :
+
+theorem Q3a : t3 > t2 := -- these are both fake reals.
+begin
+admit,
+end
+
 
 
 end M1F_Sheet03
