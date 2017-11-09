@@ -356,6 +356,16 @@ end
 
 -- set_option pp.notation false 
 
+#print sub_neg_of_lt
+#check @lt_of_sub_neg
+universe u 
+#print ordered_comm_group
+theorem lt_iff_sub_neg : ∀ {α : Type u} [ordered_comm_group α] {a b : α}, a - b < 0 ↔ a < b :=
+begin
+admit
+end
+
+
 theorem Q4 : { x : ℝ | x ≠ 0 ∧ 3*x + 1/x < 4 } = {x : ℝ | x<0 ∨ ( ((1:ℝ)/3)<x ∧ x<1) } :=
 begin
 apply funext,
@@ -363,40 +373,28 @@ intro x,
 apply propext,
 -- unfolded goal is x ≠ 0 ∧ 3 * x + 1 / x < 4 ↔ x < 0 ∨ 1 / 3 < x ∧ x < 1
 -- I should now prove 3x+1/x-4 = (3x^2-1-4x)/x=(3x-1)(x-1)/x
-
-
-/-
-split
-  intro H,
--- H : x ≠ 0 ∧ 3 * x + 1 / x < 4
-  have Hx_squared_pos : 0 < x*x,
+have Hkey : x ≠ 0 → 3*x+1/x-4 = (3*x-1)*(x-1)/x,
+  have Htemp : (4:ℝ)=(3:ℝ)+(1:ℝ) := by norm_num,
+  rw [Htemp],
+  intro Hx_ne_0,
+  apply eq_div_of_mul_eq _ _ Hx_ne_0,
+  simp [Hx_ne_0,mul_add,add_mul],
+/- is this useful?
+have Hx_squared_pos : 0 < x*x,
     cases lt_or_gt_of_ne H.left with Hx_lt_0 Hx_gt_0,
       exact mul_pos_of_neg_of_neg Hx_lt_0 Hx_lt_0,
     exact mul_pos Hx_gt_0 Hx_gt_0,
-  have H2 : (3*x+1/x)*(x*x)<4*(x*x),
-    exact mul_lt_mul_of_pos_right H.right Hx_squared_pos,
-  have H3 :  x + x * (x * (x * 3)) < x * (x * 4),
-    simpa [add_mul,H.left] using H2,
-  have H4 : x+  x * (x * (x * 3)) - x * (x * 4) < 0,
-    exact sub_neg_of_lt H3,
-  have Htriv : (4:ℝ) = (3:ℝ) + (1:ℝ),
-    norm_num,
-  rw [Htriv] at H4,
-  have H5 : x*(3*x-1)*(x-1)<0,
-    suffices Htemp : x * (3 * x - 1) * (x - 1) = x + x * (x * (x * 3)) - x * (x * (3 + 1)),
-      rwa [Htemp],
-    simp [add_mul,mul_add],
-
-    /-
-    suffices H6 : x*(3*x-1)*(x-1) = x+  x * (x * (x * 3)) - x * (x * 4),
-      rwa [H6],
-    suffices H7 : -(x * x) + (x * (x * (x * 3)) + -(x * (x * 3))) = x * (x * (x * 3)) + -(x * (x * 4)),
-      simpa [add_mul,mul_add,mul_one] using H7,
-    rw [add_comm,add_assoc,add_left_cancel_iff,←neg_add,neg_eq_iff_neg_eq,neg_neg],
-    rw [←mul_assoc,←mul_assoc],
-    change (4:ℝ) with (3:ℝ)+(1:ℝ),
-      -/ 
 -/
+have sub_neg_iff_lt []
+rw [sub_neg_of_lt],
+split,
+intro Hleft,
+have Hx_ne_0 := Hleft.left,
+have Hx_eq := Hleft.right,
+clear Hleft,
+have Hx_eq2 := sub_neg_of_lt Hx_eq,
+rw [Hkey Hx_ne_0] at Hx_eq2,
+
       repeat {admit},     
 end
 
