@@ -19,6 +19,22 @@ structure graph2 :=
 (undirected: ∀ a b: fin deg, edge a b ↔ edge b a)
 (no_loops : ∀ a: fin deg, ¬ edge a a)
 
+definition complete_graph (n: nat) : graph2 :=
+{
+    deg := n,
+    edge := λ a b, a ≠ b,
+    undirected := λ a b, ⟨ne.symm,ne.symm⟩,
+    no_loops := λ a, ne.irrefl
+}
+
+definition empty_graph (n: nat) : graph2 :=
+{
+    deg := n,
+    edge := λ a b, false,
+    undirected := λ a b, iff.refl false,
+    no_loops := λ a, id
+}
+
 def add_vertex : graph2 → graph2
 | ⟨d, e, u, n⟩ := {
     deg := d + 1,
