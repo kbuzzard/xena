@@ -354,7 +354,7 @@ change pow_nat 2 1 with 2,
 trivial,
 end
 
-theorem Q4 : { x : ℝ // x ≠ 0 ∧ 3*x + 1/x < 4 } = ℝ :=
+theorem Q4 : { x : ℝ // x ≠ 0 ∧ 3*x + 1/x < 4 } = {x : ℝ // x=6} :=
 begin
 admit,
 end
