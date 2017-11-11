@@ -489,8 +489,36 @@ split,
     norm_num at H6,
     exact H6,
   exfalso,
-  
+  have H3 : x-2 < x-2 := calc
+  x-2 ≤ abs(x-2) : le_abs_self (x-2)
+  ... < abs(x-4) : H
+  ... = x-4 : abs_of_nonneg (_) 
+  ... < x-2 : (sub_lt_sub_iff_left x).2 _,
+      exact lt_irrefl (x-2) H3,
+    exact sub_nonneg_of_le H2,
+  { norm_num },
+intro Hx_lt_3,
+suffices : abs (x-2) < 4-x,
+  apply lt_of_lt_of_le this,
+  rw [←neg_sub x 4],
+  exact neg_le_abs_self (x-4),
+apply (abs_lt).2,
+split,
+  rw [neg_sub],
+  exact (sub_lt_sub_iff_left x).2 (by norm_num),
+  apply @lt_trans _ _ (x-2) 1 (4-x),
+  exact calc _ < 3-2 : (sub_lt_sub_iff_right (2:ℝ)).2 Hx_lt_3
+  ... =1 : by norm_num,
+apply lt_of_sub_pos,
+have := sub_pos_of_lt Hx_lt_3,
+have H : (4:ℝ)=3+1 := by norm_num,
+rw [H],
+suffices H2 : 3+1-x-1 = 3-x,
+  rw [H2],
+  assumption,
+simp,
 end
+
 
 
 end M1F_Sheet03
