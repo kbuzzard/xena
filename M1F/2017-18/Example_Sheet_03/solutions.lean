@@ -356,14 +356,11 @@ end
 
 -- set_option pp.notation false 
 
-#print sub_neg_of_lt
-#check @lt_of_sub_neg
 universe u 
-#print ordered_comm_group
-theorem lt_iff_sub_neg : ∀ {α : Type u} [ordered_comm_group α] {a b : α}, a - b < 0 ↔ a < b :=
-begin
-admit
-end
+
+theorem lt_iff_sub_neg {α : Type} [ordered_comm_group α] {a b : α} :
+   a - b < 0 ↔  a < b := ⟨lt_of_sub_neg,sub_neg_of_lt⟩ 
+
 
 
 theorem Q4 : { x : ℝ | x ≠ 0 ∧ 3*x + 1/x < 4 } = {x : ℝ | x<0 ∨ ( ((1:ℝ)/3)<x ∧ x<1) } :=
@@ -385,18 +382,116 @@ have Hx_squared_pos : 0 < x*x,
       exact mul_pos_of_neg_of_neg Hx_lt_0 Hx_lt_0,
     exact mul_pos Hx_gt_0 Hx_gt_0,
 -/
-have sub_neg_iff_lt []
-rw [sub_neg_of_lt],
+have H : 3*x+1/x-4<0 ↔ 3*x+1/x<4, 
+  exact lt_iff_sub_neg,
+unfold set_of,
+rw [←H],
 split,
-intro Hleft,
-have Hx_ne_0 := Hleft.left,
-have Hx_eq := Hleft.right,
-clear Hleft,
-have Hx_eq2 := sub_neg_of_lt Hx_eq,
-rw [Hkey Hx_ne_0] at Hx_eq2,
-
-      repeat {admit},     
+  intro Hleft,
+  have Hx_ne_0 := Hleft.left,
+  have Hx_eq := Hleft.right,
+  clear Hleft,
+  rw [Hkey Hx_ne_0] at Hx_eq,
+  cases lt_or_ge x 0 with Hx_lt_0 Hx_ge_0,
+    left,assumption,
+  right,
+  have Hx_gt_0 := lt_of_le_of_ne Hx_ge_0 (ne.symm Hx_ne_0),
+  clear Hx_ge_0,
+  cases lt_or_ge ((1:ℝ)/3) x with H1 H2,
+    split,exact H1,
+    have H2 := mul_neg_of_neg_of_pos Hx_eq Hx_gt_0,
+    rw [div_eq_mul_inv,mul_assoc,(inv_mul_cancel Hx_ne_0),mul_one] at H2,
+    have H3 : 3*x>1 := 
+      calc 3*x>3*(1/3) : mul_lt_mul_of_pos_left H1 (by norm_num)
+      ...          =1 : by norm_num,
+    have H4 : 3*x-1>0 := 
+      calc 3*x-1 > 1-1 : (sub_lt_sub_iff_right _).2 _
+           ... =0 : by simp,
+    have H5 : x-1<0 := neg_of_mul_neg_left H2 (le_of_lt H4),
+    rwa [lt_iff_sub_neg] at H5,
+    exact H3,
+  exfalso,
+  have H3 : 3*x ≤ 3*(1/3) := (mul_le_mul_left (by norm_num)).2 H2,
+  rw [one_div_eq_inv,@mul_inv_cancel ℝ _ 3 (by norm_num)] at H3,
+  have H4 : 3*x-1 ≤ 0 := sub_nonpos_of_le H3,
+  have H5 : x-1 < 0 := calc x-1 ≤ (1/3)-1 : (sub_le_sub_iff_right 1).2 H2
+    ... < 0 : by norm_num, 
+  have H6: (3*x-1)*(x-1) ≥ 0 := mul_nonneg_of_nonpos_of_nonpos H4 (le_of_lt H5),
+  exact not_le_of_gt Hx_eq (div_nonneg_of_nonneg_of_pos H6 Hx_gt_0),
+intro H2,
+cases H2 with H3 H3,
+  have Hx_ne_0 := ne_of_lt H3,
+  split,
+    assumption,
+  rw [Hkey Hx_ne_0],
+  apply div_neg_of_pos_of_neg _ H3,
+  apply mul_pos_of_neg_of_neg,
+    apply sub_neg_of_lt,
+    exact calc 3*x<0 : mul_neg_of_pos_of_neg (by norm_num) H3
+    ... < 1 : zero_lt_one,
+  apply sub_neg_of_lt,
+  exact calc x<0 : H3
+    ... < 1 : zero_lt_one,
+have Hx_gt_0 : 0 < x := calc (0:ℝ) < 1/3 : by norm_num ... < x: H3.left,
+split, exact ne_of_gt Hx_gt_0,
+rw [Hkey (ne_of_gt Hx_gt_0)],
+apply div_neg_of_neg_of_pos _ Hx_gt_0,
+have H4 := H3.left,
+rw [one_div_eq_inv] at H4,
+have H4 := mul_lt_mul_of_pos_right H4 _,
+  rw [inv_mul_cancel] at H4,
+    apply mul_neg_of_pos_of_neg,
+      rw [mul_comm] at H4,
+      exact sub_pos_of_lt H4,
+    exact sub_neg_of_lt H3.right,
+  repeat {norm_num},
 end
+
+theorem Q5a (t x:ℝ) (H:t>0) : abs x < t ↔ -t < x ∧ x < t := 
+begin
+exact abs_lt,
+end
+
+theorem Q5b (x:ℝ) : abs(x+1)<3 ↔ -4<x ∧ x<2 :=
+begin
+rw [abs_lt],
+split;intro H;split,
+  have H2 :-(4:ℝ) = -3 - 1 := by norm_num,
+  rw H2,
+  simp [H.left],
+
+  have H2 : (2:ℝ) = 3 - 1 := by norm_num,
+  rw H2,
+  simp [H.right],
+
+  have H2 : -(3:ℝ) = -4 + 1 := by norm_num,
+  rw H2,
+  exact (add_lt_add_iff_right 1).2 H.left,
+
+  have H2 : (3:ℝ) = 2 + 1 := by norm_num,
+  rw H2,
+  exact (add_lt_add_iff_right 1).2 H.right,
+end
+
+theorem Q5c (x:ℝ) : abs (x-2) < abs (x-4) ↔ x < 3 :=
+begin
+split,
+  intro H,
+  cases lt_or_ge x 4 with H2 H2,
+    rw [abs_of_neg (sub_neg_of_lt H2)] at H,
+    have H3 : x-2 < -(x-4) := calc x-2 ≤ abs (x-2) : le_abs_self (x-2) ... < -(x-4) : H,
+    rw [neg_sub] at H3,
+    have H4 := sub_neg_of_lt H3,
+    rw [sub_sub,add_sub] at H4,
+    have H5 : (2:ℝ)+4=6 := by norm_num,
+    rw [H5,←sub_add,sub_add_eq_add_sub,←two_mul,lt_iff_sub_neg] at H4,
+    have H6 : 2⁻¹ * (2*x) < 2⁻¹ * 6 := mul_lt_mul_of_pos_left H4 (by norm_num),
+    norm_num at H6,
+    exact H6,
+  exfalso,
+  
+end
+
 
 end M1F_Sheet03
 
