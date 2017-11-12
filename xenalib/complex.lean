@@ -1,16 +1,40 @@
-import analysis.real 
-
-namespace complex 
+import analysis.real
+noncomputable theory
+-- because reals are noncomputable
+local attribute [instance] classical.decidable_inhabited classical.prop_decidable
+-- because I don't know how to do inverses
+-- sensibly otherwise
 
 structure complex : Type :=
 (re : ℝ) (im : ℝ)
 
 notation `ℂ` := complex
 
+-- definition goes outside namespace, then everything else in it?
+
+namespace complex
+
+-- checks for equality -- should I need these?
+
+theorem eta (z : complex) : complex.mk z.re z.im = z :=
+  cases_on z (λ _ _, rfl)
+theorem eq_iff_re_eq_and_im_eq (z w : complex) : z=w ↔ z.re=w.re ∧ z.im=w.im :=
+begin
+split,
+  intro H,rw [H],split;trivial,
+intro H,rw [←eta z,←eta w,H.left,H.right],
+end
+
+-- Am I right in
+-- thinking that the end user should not need to
+-- have to use this function?
+
 def of_real : ℝ → ℂ := λ x, { re := x, im := 0 }
 
-instance coe_real_complex : has_coe ℝ ℂ := ⟨of_real⟩
 
+-- does one name these instances or not?
+
+instance coe_real_complex : has_coe ℝ ℂ := ⟨of_real⟩
 instance : has_zero complex := ⟨of_real 0⟩
 instance : has_one complex := ⟨of_real 1⟩
 instance inhabited_complex : inhabited complex := ⟨0⟩
@@ -23,66 +47,69 @@ end
 
 def i := complex.mk 0 1
 
-/-
-instance : has_add ℝ := ⟨lift_rat_op (+)⟩
-instance : has_neg ℝ := ⟨lift_rat_fun has_neg.neg⟩
-instance : has_sub ℝ := ⟨λx y, x + - y⟩
-instance : has_mul ℝ := ⟨lift_rat_op (*)⟩
-instance : has_inv ℝ := ⟨λa:ℝ, if a = 0 then 0 else lift_rat_fun has_inv.inv a⟩
+def add : complex → complex → complex :=
+λ z w, { re :=z.re+w.re, im:=z.im+w.im}
+
+def neg : complex → complex :=
+λ z, { re := -z.re, im := -z.im}
+
+def mul : complex → complex → complex :=
+λ z w, { re := z.re*w.re - z.im*w.im,
+         im := z.im*w.re + z.re*w.im}
+
+def squared_norm : complex → real :=
+λ z, z.re*z.re+z.im*z.im
+
+def inv : complex → complex :=
+λ z, if z = 0 then 0
+  else { re := z.re / squared_norm z,
+         im := -z.im / squared_norm z }
+
+instance : has_add complex := ⟨complex.add⟩
+instance : has_neg complex := ⟨complex.neg⟩
+instance : has_sub complex := ⟨λx y, x + - y⟩
+instance : has_mul complex := ⟨complex.mul⟩
+instance : has_inv complex := ⟨complex.inv⟩
 instance : has_div ℝ := ⟨λx y, x * y⁻¹⟩
 
-lemma of_rat_zero : 0 = of_rat 0 := rfl
+-- I don't know how to set up
+-- real.cast_zero etc (look to see
+-- how it's done in real.lean?)
 
-lemma of_rat_one : 1 = of_rat 1 := rfl
+-- real.cast_zero
+-- one
+-- neg
+-- add
+-- sub
+-- mul
+-- in
 
-lemma of_rat_neg {r : ℚ} : - of_rat r = of_rat (- r) :=
-lift_rat_fun_of_rat $ continuous_iff_tendsto.mp (continuous_of_uniform uniform_continuous_neg_rat) r
+-- local attribute [simp] those 7 functions?
+-- set_option pp.notation false
 
-lemma of_rat_add {r₁ r₂ : ℚ} : of_rat r₁ + of_rat r₂ = of_rat (r₁ + r₂) :=
-lift_rat_op_of_rat_of_rat $
-  continuous_iff_tendsto.mp (continuous_of_uniform uniform_continuous_add_rat) (r₁, r₂)
-
-lemma of_rat_sub {r₁ r₂ : ℚ} : of_rat r₁ - of_rat r₂ = of_rat (r₁ - r₂) :=
-by simp [has_sub.sub, of_rat_add, of_rat_neg]
-
-lemma of_rat_mul {r₁ r₂ : ℚ} : of_rat r₁ * of_rat r₂ = of_rat (r₁ * r₂) :=
-lift_rat_op_of_rat_of_rat tendsto_mul_rat
-
-lemma of_rat_inv {r : ℚ} : (of_rat r)⁻¹ = of_rat r⁻¹ :=
-show (if of_rat r = 0 then 0 else lift_rat_fun has_inv.inv (of_rat r)) = of_rat r⁻¹,
-  from if h : r = 0 then by simp [h, inv_zero, of_rat_zero]
-    else
-      have of_rat r ≠ 0, from h ∘ dense_embedding_of_rat.inj _ _,
-      by simp [this]; exact lift_rat_fun_of_rat (tendsto_inv_rat h)
-
-local attribute [simp] of_rat_zero of_rat_one of_rat_neg of_rat_add of_rat_sub of_rat_mul of_rat_inv
-
-instance : add_comm_group ℝ :=
+instance : add_comm_group complex :=
 { add_comm_group .
   zero         := 0,
   add          := (+),
   neg          := has_neg.neg,
-  zero_add     := is_closed_property dense_embedding_of_rat.closure_image_univ
-    (is_closed_eq (continuous_add_real continuous_const continuous_id) continuous_id)
-    begin intros, show of_rat 0 + of_rat a = of_rat a, rw [of_rat_add], simp end,
-  add_zero     := is_closed_property dense_embedding_of_rat.closure_image_univ
-    (is_closed_eq (continuous_add_real continuous_id continuous_const) continuous_id)
-    begin intros, show of_rat a + of_rat 0 = of_rat a, rw [of_rat_add], simp end,
-  add_comm     := is_closed_property2 dense_embedding_of_rat
-    (is_closed_eq (continuous_add_real continuous_fst continuous_snd) (continuous_add_real continuous_snd continuous_fst))
-    (by simp),
-  add_assoc    := is_closed_property3 dense_embedding_of_rat
-    (is_closed_eq (continuous_add_real
-        (continuous_add_real continuous_fst $ continuous_compose continuous_snd continuous_fst) $
-        continuous_compose continuous_snd continuous_snd)
-      (continuous_add_real continuous_fst $
-        continuous_add_real (continuous_compose continuous_snd continuous_fst) $
-        continuous_compose continuous_snd continuous_snd))
-    (by intros; simp),
-  add_left_neg := is_closed_property dense_embedding_of_rat.closure_image_univ
-    (is_closed_eq (continuous_add_real continuous_neg_real continuous_id) continuous_const)
-    (by simp) }
-
+  zero_add     := begin
+    intro z,
+    apply (eq_iff_re_eq_and_im_eq _ _).2,
+    split;apply zero_add
+  end,
+  add_zero     := begin
+    intro z,
+    apply (eq_iff_re_eq_and_im_eq _ _).2,
+    split;apply add_zero
+  end,
+  add_comm     := _,
+  add_assoc    := begin
+  intros a b c,
+  admit,
+  end,
+  add_left_neg := _
+}
+/-
 lemma two_eq_of_rat_two : 2 = of_rat 2 := by simp [bit0, -of_rat_add, of_rat_add.symm]
 
 instance : decidable_linear_ordered_comm_group ℝ :=
