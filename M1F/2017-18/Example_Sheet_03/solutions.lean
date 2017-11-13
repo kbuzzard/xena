@@ -305,6 +305,7 @@ change n with 1000000000000,
 norm_num,
 end
 
+
 -- I've done the next two parts with integers, on the basis that
 -- inequality on the reals extends inequality on the integers.
 

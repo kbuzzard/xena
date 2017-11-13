@@ -378,8 +378,6 @@ example : sqrt3^2 = 3 := sqrt3_proof.right.left
 
 noncomputable example : monoid ℝ := by apply_instance
 
-set_option pp.all true
-
 theorem no_rational_squared_is_three : ¬ (∃ (q:ℚ),q^2=3) := 
 begin
 intro H0,cases H0 with q Hq2,
@@ -492,6 +490,8 @@ revert H0,
 norm_num,
 end
 
+#print rat
+
 theorem Q3b : M1F.is_irrational (sqrt3) :=
 begin
 unfold M1F.is_irrational,
@@ -511,6 +511,7 @@ end
 
 -- #print no_rational_squared_is_three -- interesting with pp.all true
 
+#print Q3b
 
 
 theorem Q4a : ¬ (∀ (x y : ℝ), M1F.is_irrational x → M1F.is_irrational y → M1F.is_irrational (x+y)) :=
