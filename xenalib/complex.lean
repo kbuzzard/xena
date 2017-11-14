@@ -76,7 +76,7 @@ instance : has_neg complex := ⟨complex.neg⟩
 instance : has_sub complex := ⟨λx y, x + - y⟩
 instance : has_mul complex := ⟨complex.mul⟩
 instance : has_inv complex := ⟨complex.inv⟩
-instance : has_div ℝ := ⟨λx y, x * y⁻¹⟩
+instance : has_div complex := ⟨λx y, x * y⁻¹⟩
 
 lemma proj_zero_re : (0:complex).re=0 := rfl
 lemma proj_zero_im : (0:complex).im=0 := rfl
@@ -90,6 +90,8 @@ lemma proj_add_re (z w: complex) : (z+w).re=z.re+w.re := rfl
 lemma proj_add_im (z w: complex) : (z+w).im=z.im+w.im := rfl
 lemma proj_neg_re (z: complex) : (-z).re=-z.re := rfl
 lemma proj_neg_im (z: complex) : (-z).im=-z.im := rfl
+lemma proj_neg_re' (z: complex) : (neg z).re=-z.re := rfl
+lemma proj_neg_im' (z: complex) : (neg z).im=-z.im := rfl
 lemma proj_sub_re (z w : complex) : (z-w).re=z.re-w.re := rfl
 lemma proj_sub_im (z w : complex) : (z-w).im=z.im-w.im := rfl
 lemma proj_mul_re (z w: complex) : (z*w).re=z.re*w.re-z.im*w.im := rfl
@@ -99,7 +101,7 @@ lemma proj_of_real_im (r:real) : (of_real r).im = 0 := rfl
 local attribute [simp] proj_zero_re proj_zero_im proj_one_re proj_one_im
 local attribute [simp] proj_i_re proj_i_im proj_conj_re proj_conj_im
 local attribute [simp] proj_add_re proj_add_im proj_neg_re proj_neg_im
-local attribute [simp] proj_sub_re proj_sub_im
+local attribute [simp] proj_neg_re' proj_neg_im' proj_sub_re proj_sub_im
 local attribute [simp] proj_mul_re proj_mul_im proj_of_real_re proj_of_real_im
 
 lemma norm_squared_pos_of_nonzero (z : complex) (H : z ≠ 0) : norm_squared z > 0 :=
@@ -136,18 +138,18 @@ lemma of_real_zero : (0:complex) = of_real 0 := rfl
 lemma of_real_one : (1:complex) = of_real 1 := rfl
 
 -- amateurish but it works!
-meta def minicrush : tactic unit := do
+meta def crunch : tactic unit := do
 `[intros],
 `[rw [eq_iff_re_eq_and_im_eq]],
-`[split;simp]
+`[split;simp[add_mul,mul_add]]
 
-lemma of_real_neg (r : real) : -of_real r = of_real (-r) := by minicrush
+lemma of_real_neg (r : real) : -of_real r = of_real (-r) := by crunch
 
-lemma of_real_add (r s: real) : of_real r + of_real s = of_real (r+s) := by minicrush
+lemma of_real_add (r s: real) : of_real r + of_real s = of_real (r+s) := by crunch
 
-lemma of_real_sub (r s:real) : of_real r - of_real s = of_real(r-s) := by minicrush
+lemma of_real_sub (r s:real) : of_real r - of_real s = of_real(r-s) := by crunch
 
-lemma of_real_mul (r s:real) : of_real r * of_real s = of_real (r*s) := by minicrush
+lemma of_real_mul (r s:real) : of_real r * of_real s = of_real (r*s) := by crunch
 
 lemma of_real_inv (r:real) : (of_real r)⁻¹ = of_real (r⁻¹) :=
 begin
@@ -173,46 +175,28 @@ rw [abs_mul_abs_self],
   simp,
 end
 
+lemma add_comm : ∀ (a b : ℂ), a + b = b + a := by crunch
+
 local attribute [simp] of_real_zero of_real_one of_real_neg of_real_add
 local attribute [simp] of_real_sub of_real_mul of_real_inv
 
-instance : add_comm_group complex :=
-{ add_comm_group .
+instance : discrete_field complex :=
+{ discrete_field .
   zero         := 0,
   add          := (+),
-  neg          := has_neg.neg,
-  zero_add     := by minicrush,
-  add_zero     := by minicrush,
-  add_comm     := by minicrush,
-  add_assoc    := by minicrush,
-  add_left_neg := by minicrush
-}
-
-instance : discrete_field complex :=
-{ complex.add_comm_group with
+  neg          := complex.neg,
+  zero_add     := by crunch,
+  add_zero     := by crunch,
+  add_comm     := by crunch,
+  add_assoc    := by crunch,
+  add_left_neg := by crunch,
   one              := 1,
   mul              := (*),
   inv              := has_inv.inv,
-  mul_one          := begin
-    intros,
-    apply eq_of_re_eq_and_im_eq,
-    split;simp,
-  end,
-  one_mul          := begin
-    intros,
-    apply eq_of_re_eq_and_im_eq,
-    split;simp,
-  end,
-  mul_comm         := begin
-    intros,
-    apply eq_of_re_eq_and_im_eq,
-    split;simp,
-  end,
-  mul_assoc        := begin
-    intros,
-    apply eq_of_re_eq_and_im_eq,
-    split;simp [add_mul,mul_add],
-  end,
+  mul_one          := by crunch,
+  one_mul          := by crunch,
+  mul_comm         := by crunch,
+  mul_assoc        := by crunch,
   left_distrib     := begin
     intros,
     apply eq_of_re_eq_and_im_eq,
@@ -229,7 +213,6 @@ instance : discrete_field complex :=
       revert this,
       apply zero_ne_one,
     rw [←H],
-    trivial,
     end,
   mul_inv_cancel   := begin
     intros z H,
@@ -271,7 +254,6 @@ instance : discrete_field complex :=
   split;simp [zero_div],
   end,
   has_decidable_eq := by apply_instance }
-
 
 -- instance : topological_ring complex := missing
 

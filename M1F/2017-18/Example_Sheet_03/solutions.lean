@@ -518,6 +518,13 @@ suffices H2 : 3+1-x-1 = 3-x,
 simp,
 end
 
+-- probably these should be done with "fake complexes", defined
+-- using addition and multiplication on R^2. But given that I
+-- just actually wrote a proper implementation of the complexes
+-- in Lean, I am just going to use them, but still give the
+-- proofs which I was looking for rather than just noting that
+-- Lean knows complexes are associative etc.
+
 theorem Q6a : ∀ p q r : complex, (p+q)+r=p+(q+r) :=
 begin
 intros,
@@ -546,5 +553,31 @@ repeat {rw [complex.proj_mul_re,complex.proj_mul_im]},
 simp,
 end
 
-theorem Q7 (z : complex) (H : z^2=-1) : z=complex.i 
+theorem Q7 (z : complex) (H : z^2=-1) : z=complex.i ∨ z = -complex.i :=
+begin
+rw [pow_two_eq_mul_self] at H,
+have Him : (z*z).im = 0,
+  rw [H],
+  rw [complex.proj_neg_im,complex.proj_one_im,neg_zero],
+have Hre : (z*z).re = -1,
+  rw [H],
+  rw [complex.proj_neg_re,complex.proj_one_re],
+rw [complex.proj_mul_im,mul_comm,←two_mul,mul_eq_zero] at Him,
+cases Him with Hfalse Him,
+  revert Hfalse,norm_num,
+rw [mul_eq_zero] at Him,
+rw [complex.proj_mul_re] at Hre,
+cases Him with Hfalse Htrue,
+  rw [Hfalse,mul_zero,sub_zero] at Hre,
+  have : -(1:ℝ)≥0 := calc -1 = z.re*z.re : eq.symm Hre ... ≥ 0 : mul_self_nonneg _,
+  norm_num at this,
+rw [Htrue] at Hre,
+have H1 : z.im*z.im=1, simpa using Hre,
+have H2 : z.im = 1 ∨ z.im = -1 := (mul_self_eq_one_iff z.im).1 H1,
+cases H2 with Hi Hmi,
+  left,rw [complex.eq_iff_re_eq_and_im_eq,Htrue,Hi],split;refl, 
+  right,rw [complex.eq_iff_re_eq_and_im_eq,Htrue,Hmi],split;
+    simp [complex.proj_neg_re,complex.proj_neg_im,complex.proj_i_re,complex.proj_i_im], 
+end
+
 end M1F_Sheet03
