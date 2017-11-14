@@ -50,10 +50,10 @@ instance : has_zero complex := ⟨of_real 0⟩
 instance : has_one complex := ⟨of_real 1⟩
 instance inhabited_complex : inhabited complex := ⟨0⟩
 
+def i : complex := {re := 0, im := 1}
 
--- def i := complex.mk 0 1
+def conjugate (z : complex) : complex := {re := z.re, im := -(z.im)}
 
-/-- complex addition-/
 def add : complex → complex → complex :=
 λ z w, { re :=z.re+w.re, im:=z.im+w.im}
 
@@ -78,16 +78,28 @@ instance : has_mul complex := ⟨complex.mul⟩
 instance : has_inv complex := ⟨complex.inv⟩
 instance : has_div ℝ := ⟨λx y, x * y⁻¹⟩
 
-
+lemma proj_zero_re : (0:complex).re=0 := rfl
+lemma proj_zero_im : (0:complex).im=0 := rfl
+lemma proj_one_re : (1:complex).re=1 := rfl
+lemma proj_one_im : (1:complex).im=0 := rfl
+lemma proj_i_re : i.re=0 := rfl
+lemma proj_i_im : i.im=1 := rfl
+lemma proj_conj_re (z : complex) : (conjugate z).re = z.re := rfl
+lemma proj_conj_im (z : complex) : (conjugate z).im = -z.im := rfl
 lemma proj_add_re (z w: complex) : (z+w).re=z.re+w.re := rfl
 lemma proj_add_im (z w: complex) : (z+w).im=z.im+w.im := rfl
 lemma proj_neg_re (z: complex) : (-z).re=-z.re := rfl
 lemma proj_neg_im (z: complex) : (-z).im=-z.im := rfl
+lemma proj_sub_re (z w : complex) : (z-w).re=z.re-w.re := rfl
+lemma proj_sub_im (z w : complex) : (z-w).im=z.im-w.im := rfl
 lemma proj_mul_re (z w: complex) : (z*w).re=z.re*w.re-z.im*w.im := rfl
 lemma proj_mul_im (z w: complex) : (z*w).im=z.re*w.im+z.im*w.re := rfl
 lemma proj_of_real_re (r:real) : (of_real r).re = r := rfl
 lemma proj_of_real_im (r:real) : (of_real r).im = 0 := rfl
-local attribute [simp] proj_add_re proj_add_im proj_neg_re proj_neg_im 
+local attribute [simp] proj_zero_re proj_zero_im proj_one_re proj_one_im
+local attribute [simp] proj_i_re proj_i_im proj_conj_re proj_conj_im
+local attribute [simp] proj_add_re proj_add_im proj_neg_re proj_neg_im
+local attribute [simp] proj_sub_re proj_sub_im
 local attribute [simp] proj_mul_re proj_mul_im proj_of_real_re proj_of_real_im
 
 lemma norm_squared_pos_of_nonzero (z : complex) (H : z ≠ 0) : norm_squared z > 0 :=
@@ -123,45 +135,19 @@ end
 lemma of_real_zero : (0:complex) = of_real 0 := rfl
 lemma of_real_one : (1:complex) = of_real 1 := rfl
 
--- set_option trace.simplify.rewrite true
--- set_option trace.simplify true
--- set_option pp.notation false
+-- amateurish but it works!
+meta def minicrush : tactic unit := do
+`[intros],
+`[rw [eq_iff_re_eq_and_im_eq]],
+`[split;simp]
 
-/- how does one do this??
-meta def splat : tactic unit :=
-begin
-rw [eq_iff_re_eq_and_im_eq],
-split;simp
-end
--/
+lemma of_real_neg (r : real) : -of_real r = of_real (-r) := by minicrush
 
-lemma of_real_neg (r : real) : -of_real r = of_real (-r) := 
-begin
-rw [eq_iff_re_eq_and_im_eq],
-split;simp
-end
+lemma of_real_add (r s: real) : of_real r + of_real s = of_real (r+s) := by minicrush
 
-lemma of_real_add (r s: real) : of_real r + of_real s = of_real (r+s) :=
-begin
-rw [eq_iff_re_eq_and_im_eq],
-split;simp
-end
+lemma of_real_sub (r s:real) : of_real r - of_real s = of_real(r-s) := by minicrush
 
-lemma of_real_sub (r s:real) : of_real r - of_real s = of_real(r-s) :=
-begin
-rw [eq_iff_re_eq_and_im_eq],
-split,
-  refl,
-suffices : (0:ℝ)-0=0,
-exact this,
-simp,
-end
-
-lemma of_real_mul (r s:real) : of_real r * of_real s = of_real (r*s) :=
-begin
-rw [eq_iff_re_eq_and_im_eq],
-split;simp,
-end
+lemma of_real_mul (r s:real) : of_real r * of_real s = of_real (r*s) := by minicrush
 
 lemma of_real_inv (r:real) : (of_real r)⁻¹ = of_real (r⁻¹) :=
 begin
@@ -195,31 +181,11 @@ instance : add_comm_group complex :=
   zero         := 0,
   add          := (+),
   neg          := has_neg.neg,
-  zero_add     := begin
-    intro z,
-    rw eq_iff_re_eq_and_im_eq,
-    split;simp
-  end,
-  add_zero     := begin
-    intro z,
-    rw eq_iff_re_eq_and_im_eq,
-    split;simp
-  end,
-  add_comm     := begin
-    intros,
-    rw eq_iff_re_eq_and_im_eq,
-    split;simp
-  end,
-  add_assoc    := begin
-    intros,
-    rw eq_iff_re_eq_and_im_eq,
-    split;simp,
-  end,
-  add_left_neg := begin
-    intros,
-    apply eq_of_re_eq_and_im_eq,
-    split;simp,
-  end
+  zero_add     := by minicrush,
+  add_zero     := by minicrush,
+  add_comm     := by minicrush,
+  add_assoc    := by minicrush,
+  add_left_neg := by minicrush
 }
 
 instance : discrete_field complex :=
@@ -257,7 +223,7 @@ instance : discrete_field complex :=
     apply eq_of_re_eq_and_im_eq,
     split;simp [add_mul,mul_add,add_comm_group.add],
   end,
-  zero_ne_one      := begin 
+  zero_ne_one      := begin
     intro H,
     suffices : (0:complex).re = (1:complex).re,
       revert this,
@@ -305,6 +271,7 @@ instance : discrete_field complex :=
   split;simp [zero_div],
   end,
   has_decidable_eq := by apply_instance }
+
 
 -- instance : topological_ring complex := missing
 

@@ -1,5 +1,4 @@
-import xenalib.M1Fstuff algebra.group_power xenalib.square_root
-
+import xenalib.M1Fstuff algebra.group_power xenalib.square_root xenalib.complex
 
 -- Need to start off with some fake reals to do Q1,2
 
@@ -305,7 +304,6 @@ change n with 1000000000000,
 norm_num,
 end
 
-
 -- I've done the next two parts with integers, on the basis that
 -- inequality on the reals extends inequality on the integers.
 
@@ -520,8 +518,33 @@ suffices H2 : 3+1-x-1 = 3-x,
 simp,
 end
 
+theorem Q6a : ∀ p q r : complex, (p+q)+r=p+(q+r) :=
+begin
+intros,
+apply complex.eq_of_re_eq_and_im_eq,
+split,
+  repeat {rw [complex.proj_add_re]},
+  exact @add_assoc ℝ _ _ _ _,
+repeat {rw [complex.proj_add_im]},
+exact @add_assoc ℝ _ _ _ _,
+end 
 
+theorem Q6b : ∀ p q : complex, p*q=q*p :=
+begin
+intros,
+apply complex.eq_of_re_eq_and_im_eq,
+repeat {rw [complex.proj_mul_re,complex.proj_mul_im]},
+split;simp,
+end 
 
+theorem Q6c : ∀ p q : complex, complex.conjugate p * complex.conjugate q = complex.conjugate (p*q) :=
+begin
+intros,
+unfold complex.conjugate,
+apply complex.eq_of_re_eq_and_im_eq,
+repeat {rw [complex.proj_mul_re,complex.proj_mul_im]},
+simp,
+end
+
+theorem Q7 (z : complex) (H : z^2=-1) : z=complex.i 
 end M1F_Sheet03
-
-
