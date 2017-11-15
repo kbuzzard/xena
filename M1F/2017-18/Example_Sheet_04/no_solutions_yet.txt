@@ -1,0 +1,51 @@
+Example sheet 4 is extremely problematic from a Lean point of view.
+A lot of the infrastructure I need is not there, and even if I implement
+it I will only be able to do some of the questions.
+
+INFRASTRUCTURE
+
+Let me first talk about the infrastructure issues. De Moivre's theorem
+is used again and again in this sheet. To prove it I will need to define
+sine, cosine, and complex exponentials as power series, and then show
+that they can be manipulated in the usual manner. Before this one would
+need a robust theory of convergent series and sequences, which I think
+might have just appeared in Lean. I will also need to define pi
+(as the smallest positive zero of sin) which will involve proving that
+sin is continuous, and proving the intermediate value theorem. Having
+defined pi I will need to compute explicit values of sin(q*pi) and cos(q*pi)
+for various rational numbers q (e.g. 1, 1/2, 1/3, 1/4) because these
+things are used both explicitly and implicitly (for example Q3 implicitly
+uses the fact that sin(pi/4)=cos(pi/4)=1/sqrt(2)). I will need to prove
+the binomial theorem (although this will be child's play
+in comparison with this stuff above). 
+
+Setting up the infrastructure needed to prove basic results about
+cosine and sine which every mathematics student knows before they
+come to university will hence take a vast amount
+of time and, given that I am already behind (it's mid-November and sheet 5
+is out), and that there are other issues with this sheet as well,
+I think it might be best if I skip the sheet entirely at this point.
+
+OTHER ISSUES.
+
+The other reason I hesitate to embark upon sheet 4 is that even if
+I put in the vast number of hours needed to build all the infrastructure
+above, I will still not be able to do all of the questions. Here are
+the issues I will not be able to deal with.
+
+Q1 is problematic for Lean. Two things go into mathematics -- proofs, and
+ideas. Lean is good at proofs, but the ideas in Q1 are far too high-level
+or Lean. My answer to (e) is that (b) and (d) are not rigorous proofs by any
+means, but they are very important ideas. 
+
+Q2 is also problematic. Implementing the infrastructure issues will
+enable me to prove cos(3t)=4cos(t)^4-3cos(t). However what actually happens
+when one presses the inverse cosine button on a calculator? Some
+explicit algorithm to compute the inverse cosine is invoked. I have
+no interest in coding such an algorithm, either in Lean or in
+any other programming language.
+
+Questions 3 to 5 should be possible, but only after all the infrastructure
+issues have been resolved.
+
+CONCLUSION : I will think about this sheet later.
