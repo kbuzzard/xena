@@ -1,9 +1,19 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Author: Kevin Buzzard
+
+The complex numbers, modelled as R^2 in the obvious way.
+
+Natural next step: one could prove that complexes are a topological ring.
+-/
 import analysis.real
 noncomputable theory
 -- because reals are noncomputable
 local attribute [instance] classical.decidable_inhabited classical.prop_decidable
--- because I don't know how to do inverses
--- sensibly otherwise
+-- because I don't know how to do inverses sensibly otherwise;
+-- I needed to know that if z was non-zero then either its real part
+-- was non-zero or its imaginary part was non-zero.
 
 structure complex : Type :=
 (re : ℝ) (im : ℝ)
@@ -14,7 +24,7 @@ notation `ℂ` := complex
 
 namespace complex
 
--- checks for equality -- should I need these?
+-- handy checks for equality etc
 
 theorem eta (z : complex) : complex.mk z.re z.im = z :=
   cases_on z (λ _ _, rfl)
@@ -33,7 +43,6 @@ end
 
 lemma proj_re (r0 i0 : real) : (complex.mk r0 i0).re = r0 := rfl
 lemma proj_im (r0 i0 : real) : (complex.mk r0 i0).im = i0 := rfl
-
 
 local attribute [simp] eq_iff_re_eq_and_im_eq proj_re proj_im
 
@@ -77,6 +86,9 @@ instance : has_sub complex := ⟨λx y, x + - y⟩
 instance : has_mul complex := ⟨complex.mul⟩
 instance : has_inv complex := ⟨complex.inv⟩
 instance : has_div complex := ⟨λx y, x * y⁻¹⟩
+
+-- I was astounded to find that at some point there was a typo in has_div but
+-- this didn't cause any problems at all in the below. 
 
 lemma proj_zero_re : (0:complex).re=0 := rfl
 lemma proj_zero_im : (0:complex).im=0 := rfl
