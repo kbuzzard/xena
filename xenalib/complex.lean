@@ -10,9 +10,10 @@ Natural next step: one could prove that complexes are a topological ring.
 import analysis.real
 noncomputable theory
 -- because reals are noncomputable
+
 local attribute [instance] classical.decidable_inhabited classical.prop_decidable
 -- because I don't know how to do inverses sensibly otherwise;
--- I needed to know that if z was non-zero then either its real part
+-- e.g. I needed to know that if z was non-zero then either its real part
 -- was non-zero or its imaginary part was non-zero.
 
 structure complex : Type :=
@@ -29,10 +30,14 @@ namespace complex
 theorem eta (z : complex) : complex.mk z.re z.im = z :=
   cases_on z (λ _ _, rfl)
 
+-- very useful
+
 theorem eq_of_re_eq_and_im_eq (z w : complex) : z.re=w.re ∧ z.im=w.im → z=w :=
 begin
 intro H,rw [←eta z,←eta w,H.left,H.right],
 end
+
+-- simp version
 
 theorem eq_iff_re_eq_and_im_eq (z w : complex) : z=w ↔ z.re=w.re ∧ z.im=w.im :=
 begin
@@ -59,9 +64,15 @@ instance : has_zero complex := ⟨of_real 0⟩
 instance : has_one complex := ⟨of_real 1⟩
 instance inhabited_complex : inhabited complex := ⟨0⟩
 
-def i : complex := {re := 0, im := 1}
+-- dangerously short variable name so I protected it.
+-- It's never used in the library (other than in the projection
+-- commands) but I think end users will use it.
+
+protected def i : complex := {re := 0, im := 1}
 
 def conjugate (z : complex) : complex := {re := z.re, im := -(z.im)}
+
+-- Are these supposed to be protected too?
 
 def add : complex → complex → complex :=
 λ z w, { re :=z.re+w.re, im:=z.im+w.im}
@@ -87,15 +98,18 @@ instance : has_mul complex := ⟨complex.mul⟩
 instance : has_inv complex := ⟨complex.inv⟩
 instance : has_div complex := ⟨λx y, x * y⁻¹⟩
 
--- I was astounded to find that at some point there was a typo in has_div but
--- this didn't cause any problems at all in the below. 
+-- I was initially astounded to find that at some point there was a typo in has_div but
+-- this didn't cause any problems at all. I have since understood what is
+-- going on: "/" is never used in the field axioms, only ^{-1} .
+
+-- These are very useful for proofs in the library so I make them local simp lemmas.
 
 lemma proj_zero_re : (0:complex).re=0 := rfl
 lemma proj_zero_im : (0:complex).im=0 := rfl
 lemma proj_one_re : (1:complex).re=1 := rfl
 lemma proj_one_im : (1:complex).im=0 := rfl
-lemma proj_i_re : i.re=0 := rfl
-lemma proj_i_im : i.im=1 := rfl
+lemma proj_i_re : complex.i.re=0 := rfl
+lemma proj_i_im : complex.i.im=1 := rfl
 lemma proj_conj_re (z : complex) : (conjugate z).re = z.re := rfl
 lemma proj_conj_im (z : complex) : (conjugate z).im = -z.im := rfl
 lemma proj_add_re (z w: complex) : (z+w).re=z.re+w.re := rfl
@@ -149,7 +163,7 @@ end
 lemma of_real_zero : (0:complex) = of_real 0 := rfl
 lemma of_real_one : (1:complex) = of_real 1 := rfl
 
--- amateurish but it works!
+-- amateurish definition of killer tactic but it works!
 meta def crunch : tactic unit := do
 `[intros],
 `[rw [eq_iff_re_eq_and_im_eq]],
@@ -170,7 +184,7 @@ split,
   suffices : r/(r*r+0*0) = r⁻¹,
   exact this,
   cases classical.em (r=0) with Heq Hne,
-  -- this sucks
+  -- this is taking longer than it should be.
     rw [Heq],
     simp [inv_zero,div_zero],
   rw [mul_zero,add_zero,div_mul_left r Hne,inv_eq_one_div],
@@ -189,6 +203,7 @@ end
 
 lemma add_comm : ∀ (a b : ℂ), a + b = b + a := by crunch
 
+-- I don't think I ever use these actually.
 local attribute [simp] of_real_zero of_real_one of_real_neg of_real_add
 local attribute [simp] of_real_sub of_real_mul of_real_inv
 
@@ -209,16 +224,8 @@ instance : discrete_field complex :=
   one_mul          := by crunch,
   mul_comm         := by crunch,
   mul_assoc        := by crunch,
-  left_distrib     := begin
-    intros,
-    apply eq_of_re_eq_and_im_eq,
-    split;simp [add_mul,mul_add,add_comm_group.add],
-  end,
-  right_distrib    := begin
-    intros,
-    apply eq_of_re_eq_and_im_eq,
-    split;simp [add_mul,mul_add,add_comm_group.add],
-  end,
+  left_distrib     := by crunch,
+  right_distrib    := by crunch,
   zero_ne_one      := begin
     intro H,
     suffices : (0:complex).re = (1:complex).re,
@@ -259,7 +266,9 @@ instance : discrete_field complex :=
       by simpa,
     rw [←mul_div_assoc,←mul_div_assoc,div_add_div_same],
     simp [zero_div],
-  end, -- it worked without modification!
+  end, -- it worked without modification! 
+  -- Presumably I could just have proved mul_comm outside the verification that C is a field
+  -- and then used that too?
   inv_zero         := begin
   unfold has_inv.inv inv add_comm_group.zero,
   apply eq_of_re_eq_and_im_eq,
@@ -270,4 +279,3 @@ instance : discrete_field complex :=
 -- instance : topological_ring complex := missing
 
 end complex
-
