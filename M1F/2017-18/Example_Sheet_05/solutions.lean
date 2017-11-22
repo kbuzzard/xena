@@ -123,6 +123,8 @@ end
 #check @eq_of_add_eq_add_right
 #check @eq.refl
 
+
+
 theorem Q3b (n : ℕ) : 8 ∣ 11^n - 3^n :=
 begin
 induction n with d Hd,
