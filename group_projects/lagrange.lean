@@ -30,8 +30,6 @@ variables m n : ℕ
 definition is_injective (f : α → β) : Prop :=
   ∀ {a1 a2 : α}, f a1 = f a2 → a1 = a2
 
-#print is_injective
-
 definition is_surjective (f : α → β) : Prop :=
   ∀ b, ∃ a, f a = b
 
