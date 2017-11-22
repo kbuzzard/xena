@@ -463,8 +463,9 @@ cases Hd'' with c H,
 existsi (a+1),
 existsi b,
 existsi c,
-rw [nat.succ_eq_add_one,mul_add],
-simp * at *,
-
-  
+rw [nat.succ_eq_add_one,mul_add,mul_add,mul_one],
+rw [add_comm (6*a) 6,add_assoc,add_assoc],
+rw add_assoc at H,
+rw H,
+simp,
 end
