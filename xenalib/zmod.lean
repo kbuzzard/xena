@@ -58,12 +58,48 @@ admit,
 end
 )
 
-def neg : Zmod n → Zmod n :=
-λ z, { re := -z.re, im := -z.im}
+sorry
 
-def mul : Zmod n → Zmod n → Zmod n :=
-λ z w, { re := z.re*w.re - z.im*w.im,
-         im := z.re*w.im + z.im*w.re}
+#check @quot.lift
+
+def neg {n : ℕ} : Zmod n → Zmod n :=
+quot.lift (λ z : ℤ, @of_int n (-z)) 
+(begin 
+introv H,
+cases H with k Hk,
+-- goal is of_int (-a) = of_int (-b)
+apply quot.sound,
+existsi -k,
+simp [Hk],
+end)
+
+def mul_by_m { n : ℕ} (m : ℤ) : Zmod n → Zmod n :=
+quot.lift (λ z : ℤ, of_int (m*z))
+(begin 
+introv H,
+cases H with k Hk,
+apply quot.sound,
+existsi k*m,
+simp [Hk,mul_add],
+end)
+
+def mul { n : ℕ } : Zmod n → Zmod n → Zmod n :=
+quot.lift (mul_by_m)
+(begin
+introv H,
+cases H with k Hk,
+apply funext,
+intro c,
+unfold mul_by_m,
+have Hclift : ∃ ctilde : ℤ, of_int (ctilde) = c,
+  exact quot.exists_rep c,
+cases Hclift with ctilde Hctilde,
+exact quot.sound 
+end)
+
+
+
+
 instance {n : ℕ} : add_comm_group (Zmod n)  :=
 { add_comm_group .
   zero         := 0,
