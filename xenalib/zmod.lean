@@ -29,9 +29,10 @@ rw [Hk],
 rw [add_sub_add_left_eq_sub],
 end)
 
-#print axioms add_m -- used all the axioms!
+--#print axioms add_m -- used all the axioms!
 
 --set_option pp.all true 
+/-
 universe u
 
 theorem quot_preim { α : Sort u } {r : α → α → Prop} :
@@ -41,11 +42,12 @@ theorem quot_preim { α : Sort u } {r : α → α → Prop} :
 theorem quot_preim' { α : Sort u } {r : α → α → Prop} :
 ∀ abar : quot r, ∃ a : α, quot.mk r a = abar :=
 λ abar, quot.ind (λ x : α,⟨x,rfl⟩) abar
-
-
+-/
+--#check @quot.lift
+--#check quot.exists_rep -- same thing
 
 def add {n : ℕ} : Zmod n → Zmod n → Zmod n :=
-quot.lift (λ m, add_m m) (
+@quot.lift ℤ (cong_mod n) (Zmod n → Zmod n) (λ m, add_m m) (
 begin
 introv H,
 -- goal now add_m a = add_m b
@@ -53,14 +55,16 @@ apply funext,intro c,
 -- goal now add_m a (c mod n) = add_m b (c mod n)
 -- so of the form (x : Zmod n = y : Zmod n) 
 simp,unfold add_m,
+cases (quot.exists_rep c) with ctilde Hc,
+rw [←Hc],
 apply quot.sound,
-admit,
-end
-)
+cases H with k Hk,
+existsi k,
+rw [Hk],
+rw [add_sub_add_right_eq_sub],
+end)
 
-sorry
-
-#check @quot.lift
+--#check @quot.lift
 
 def neg {n : ℕ} : Zmod n → Zmod n :=
 quot.lift (λ z : ℤ, @of_int n (-z)) 
@@ -94,18 +98,154 @@ unfold mul_by_m,
 have Hclift : ∃ ctilde : ℤ, of_int (ctilde) = c,
   exact quot.exists_rep c,
 cases Hclift with ctilde Hctilde,
-exact quot.sound 
+rw [←Hctilde],
+apply quot.sound,
+existsi (ctilde*k),
+rw [mul_assoc,Hk,mul_sub],
+simp, 
 end)
 
+instance {n : ℕ} : has_add (Zmod n) := ⟨Zmod.add⟩
+instance {n : ℕ} : has_neg (Zmod n) := ⟨Zmod.neg⟩
+instance {n : ℕ} : has_mul (Zmod n) := ⟨Zmod.mul⟩
 
-
-
+--set_option pp.notation false 
 instance {n : ℕ} : add_comm_group (Zmod n)  :=
 { add_comm_group .
   zero         := 0,
-  add          := (+),
+  add          := Zmod.add,
   neg          := has_neg.neg,
-  zero_add     := is_close
+  zero_add     := begin
+    intro a,
+    cases (quot.exists_rep a) with atilde Ha,
+    rw [←Ha],
+    apply quot.sound,
+    existsi (0:ℤ),
+    simp,
+  end,
+  add_assoc    := begin 
+    intros a b c,
+    cases (quot.exists_rep a) with atilde Ha,
+    cases (quot.exists_rep b) with btilde Hb,
+    cases (quot.exists_rep c) with ctilde Hc,
+  rw [←Ha,←Hb,←Hc],
+  apply quot.sound,
+  existsi (0:ℤ),
+  rw [zero_mul,add_assoc,sub_self],  
+  end,
+  add_zero     := begin
+      intro a,
+    cases (quot.exists_rep a) with atilde Ha,
+    rw [←Ha],
+    apply quot.sound,
+    existsi (0:ℤ),
+    simp,
+  end,
+  add_left_neg := begin
+    intro a,
+    cases (quot.exists_rep a) with atilde Ha,
+    rw [←Ha],
+    apply quot.sound,
+    existsi (0:ℤ),
+    simp,
+  end,
+  add_comm     := begin
+    intros a b,
+    cases (quot.exists_rep a) with atilde Ha,
+    cases (quot.exists_rep b) with btilde Hb,
+    rw [←Ha,←Hb],
+    apply quot.sound,
+    existsi (0:ℤ),
+  rw [zero_mul,add_comm,sub_self],
+  end
+}
+
+theorem of_int_add {n : ℕ} {a b : ℤ} : @of_int n a + @of_int n b = @of_int n (a+b) :=
+begin
+  apply quot.sound,
+  existsi (0:ℤ),
+  rw [zero_mul,add_comm,sub_self],
+end
+
+theorem of_int_mul {n : ℕ} {a b : ℤ} : @of_int n a * @of_int n b = @of_int n (a*b) :=
+begin
+  apply quot.sound,
+  existsi (0:ℤ),
+  simp,
+end
+
+--  set_option pp.all true
+
+instance {n : ℕ}: comm_ring (Zmod n) :=
+{ 
+  mul := Zmod.mul,
+  mul_assoc := begin
+      intros a b c,
+    cases (quot.exists_rep a) with atilde Ha,
+    cases (quot.exists_rep b) with btilde Hb,
+    cases (quot.exists_rep c) with ctilde Hc,
+  rw [←Ha,←Hb,←Hc],
+  apply quot.sound,
+  existsi (0:ℤ),
+  rw [zero_mul,mul_assoc,sub_self],  
+  end,
+  one := of_int 1,
+  one_mul := begin
+    intro a,
+    cases (quot.exists_rep a) with atilde Ha,
+    rw [←Ha],
+    apply quot.sound,
+    existsi (0:ℤ),
+    simp,
+  end,
+  mul_one := begin 
+     intro a,
+    cases (quot.exists_rep a) with atilde Ha,
+    rw [←Ha],
+    apply quot.sound,
+    existsi (0:ℤ),
+    simp,
+  end,
+  left_distrib := begin
+       intros a b c,
+    cases (quot.exists_rep a) with atilde Ha,
+    cases (quot.exists_rep b) with btilde Hb,
+    cases (quot.exists_rep c) with ctilde Hc,
+  rw [←Ha,←Hb,←Hc,←of_int,of_int_mul,of_int_mul,of_int_add,of_int_add,of_int_mul],
+  apply quot.sound,
+  existsi (0:ℤ),
+  rw [zero_mul,mul_add,sub_self],  
+  end,
+  right_distrib := begin
+       intros a b c,
+    cases (quot.exists_rep a) with atilde Ha,
+    cases (quot.exists_rep b) with btilde Hb,
+    cases (quot.exists_rep c) with ctilde Hc,
+  rw [←Ha,←Hb,←Hc,←of_int,of_int_mul,of_int_mul,of_int_add,of_int_add,of_int_mul], -- why did that happen?
+  apply quot.sound,
+  existsi (0:ℤ),
+  rw [zero_mul,add_mul,sub_self],  
+  end,
+  mul_comm := begin
+     intros a b,
+    cases (quot.exists_rep a) with atilde Ha,
+    cases (quot.exists_rep b) with btilde Hb,
+  rw [←Ha,←Hb],
+  apply quot.sound,
+  existsi (0:ℤ),
+  simp,
+  end,
+  ..Zmod.add_comm_group
+}
+
+example : (@of_int 10 7 + @of_int 10 8 = @of_int 10 5) :=
+begin
+rw [of_int_add],
+apply quot.sound,
+existsi (-1:ℤ),
+exact dec_trivial,
+end
+
 
 end Zmod
 
