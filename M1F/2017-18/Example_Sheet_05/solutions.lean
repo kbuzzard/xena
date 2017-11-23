@@ -123,6 +123,7 @@ end
 #check @eq_of_add_eq_add_right
 #check @eq.refl
 
+#check (by apply_instance : has_mul (fin 4))
 
 
 theorem Q3b (n : ℕ) : 8 ∣ 11^n - 3^n :=

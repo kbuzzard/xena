@@ -11,8 +11,6 @@ constant real : Type
 
 example : ∀ x y : real, x * y = y * x := mul_comm
 
-#check mul_assoc
-
 variable x : real
 variable n : nat
 
@@ -20,7 +18,7 @@ variable n : nat
 
 open nat 
 
-definition natural_power : real → nat → real
+noncomputable definition natural_power : real → nat → real
 | x 0 := 1
 | x (succ n) := (natural_power x n) * x
 

@@ -318,9 +318,8 @@ simp at H2,
 rw [mul_add,add_mul,add_mul,add_assoc,←add_assoc (2*n) _ _,mul_comm 2 n,←mul_add,add_neg_self,mul_zero,zero_add] at H2,
 unfold pow_nat has_pow_nat.pow_nat pow_nat monoid.pow at Hn2,
 have H3 : 3 ∣ n * (n * 1) - (n * n + 2 * -2),
-exact dvd_sub Hn2 H2,
+  exact dvd_sub Hn2 H2,
 simp at H3,
-rw [←add_assoc,add_neg_self,zero_add] at H3,
 have H4 : ¬ ((3:ℤ) ∣ 2*2),
   exact dec_trivial,
 exact H4 H3,
@@ -378,6 +377,7 @@ example : sqrt3^2 = 3 := sqrt3_proof.right.left
 
 noncomputable example : monoid ℝ := by apply_instance
 
+-- set_option pp.all true 
 theorem no_rational_squared_is_three : ¬ (∃ (q:ℚ),q^2=3) := 
 begin
 intro H0,cases H0 with q Hq2,
@@ -399,12 +399,10 @@ rw [rat.num_denom q] at Hq2,
 rw [rat.mk_eq_div] at Hq2,
 change q.denom with d0 at Hq2,
 change (d0:ℤ) with d at Hq2,
-have Hd_not_zero : ¬ (d=0),
+have Hd_not_zero : ¬ (d=↑(0:ℕ)),
   intro H0, apply Hd0_not_zero,
-  rw [←nat.cast_zero] at H0,
-  change d with (d0:ℤ) at H0,
-  rw [←@nat.cast_inj ℤ],
-  simp [H0], -- why doesn't exact work?
+  change d with ↑d0 at H0,
+  exact int.of_nat.inj H0,
 
 -- tidy up
 change q.num with n at Hq2,
@@ -490,7 +488,7 @@ revert H0,
 norm_num,
 end
 
-#print rat
+#check @rat.cast_inj 
 
 theorem Q3b : M1F.is_irrational (sqrt3) :=
 begin
@@ -498,7 +496,7 @@ unfold M1F.is_irrational,
 intro H,
 cases H with q Hq,
 have Hq2 : q*q = (3:ℚ),
-  rw [←@rat.cast_inj ℝ,rat.cast_mul,Hq,mul_self_eq_pow_two],
+  rw [←@rat.cast_inj ℝ _ _ (q*q) (3:ℚ),rat.cast_mul,Hq,mul_self_eq_pow_two],
   unfold sqrt3,
   rw [sqrt3_proof.right.left],
   norm_num,
