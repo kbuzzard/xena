@@ -22,11 +22,41 @@ introv H,cases H with k Hk,
 -- of_int (m+a) = of_int (m+b)
 -- i.e.
 -- quot.mk cong_mod n (m+a) = quot.mk cong_mod n (m+b)
--- ??
+-- so we just apply our axiom.
+apply quot.sound,
+existsi k,
+rw [Hk],
+rw [add_sub_add_left_eq_sub],
 end)
 
+#print axioms add_m -- used all the axioms!
+
+--set_option pp.all true 
+universe u
+
+theorem quot_preim { α : Sort u } {r : α → α → Prop} :
+∀ abar : quot r, ∃ a : α, quot.mk r a = abar :=
+@quot.ind _ _ (λ abar, ∃ a : α, quot.mk r a = abar) (λ x : α,⟨x,rfl⟩)
+
+theorem quot_preim' { α : Sort u } {r : α → α → Prop} :
+∀ abar : quot r, ∃ a : α, quot.mk r a = abar :=
+λ abar, quot.ind (λ x : α,⟨x,rfl⟩) abar
+
+
+
 def add {n : ℕ} : Zmod n → Zmod n → Zmod n :=
-λ z w, 
+quot.lift (λ m, add_m m) (
+begin
+introv H,
+-- goal now add_m a = add_m b
+apply funext,intro c,
+-- goal now add_m a (c mod n) = add_m b (c mod n)
+-- so of the form (x : Zmod n = y : Zmod n) 
+simp,unfold add_m,
+apply quot.sound,
+admit,
+end
+)
 
 def neg : Zmod n → Zmod n :=
 λ z, { re := -z.re, im := -z.im}
