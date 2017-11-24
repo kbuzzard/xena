@@ -1,4 +1,5 @@
 -- Integers mod n
+import algebra.group_power
 
 definition cong_mod (n : ℕ) : ℤ → ℤ → Prop :=
 λ a b, ∃ k:ℤ, k*↑n=b-a
@@ -13,6 +14,9 @@ instance coe_int_Zmod {n : ℕ} : has_coe ℤ (Zmod n) := ⟨of_int⟩
 instance {n : ℕ} : has_zero (Zmod n) := ⟨of_int 0⟩
 instance {n : ℕ} : has_one (Zmod n) := ⟨of_int 1⟩
 instance {n : ℕ} : inhabited (Zmod n) := ⟨0⟩
+
+theorem of_int_zero {n : ℕ} : (0 : (Zmod n))  = of_int 0 := rfl 
+theorem of_int_one {n : ℕ} : (1 : (Zmod n))  = of_int 1 := rfl 
 
 def add_m {n : ℕ} (m : ℤ) : Zmod n → Zmod n :=
 quot.lift (λ x, of_int (m+x)) (
@@ -174,6 +178,7 @@ begin
   simp,
 end
 
+
 --  set_option pp.all true
 
 instance {n : ℕ}: comm_ring (Zmod n) :=
@@ -237,6 +242,17 @@ instance {n : ℕ}: comm_ring (Zmod n) :=
   end,
   ..Zmod.add_comm_group
 }
+
+theorem of_int_pow {n : ℕ} {a : ℤ} { b: ℕ} : 
+  (@of_int n a)^b = (of_int (a^b)) :=
+begin
+induction b with d Hd,
+  exact Zmod.of_int_one,
+show of_int a * of_int a ^ d = of_int (a * a ^ d), 
+rw [Hd,Zmod.of_int_mul],
+end 
+
+-- need to check it's an equiv reln!
 
 example : (@of_int 10 7 + @of_int 10 8 = @of_int 10 5) :=
 begin

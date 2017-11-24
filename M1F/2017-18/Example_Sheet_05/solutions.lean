@@ -1,4 +1,4 @@
-import xenalib.zmod
+import xenalib.zmod algebra.group_power
 
 -- sheet 5 solns
 
@@ -87,7 +87,8 @@ rw [H],
 exact (Q1a 673 (dec_trivial)).left,
 end
 
-theorem Q2 (n : ℕ) : n ≥ 2 → 4^n > 3^n + 2^n :=
+-- aargh stupid overloaded ^
+theorem Q2 (n : ℕ) : n ≥ 2 → nat.pow 4 n > nat.pow 3 n + nat.pow 2 n :=
 begin
 intro H_n_ge_2,
 cases n with n1,
@@ -98,14 +99,14 @@ clear H_n_ge_2,
 induction n2 with d Hd,
   exact dec_trivial,
 let e := nat.succ (nat.succ d),
-show 4^e*4>3^e*3+2^e*2,
-change 4^nat.succ (nat.succ d) > 3^nat.succ (nat.succ d) + 2^nat.succ (nat.succ d)
-with 4^e>3^e+2^e at Hd,
+show nat.pow 4 e*4>nat.pow 3 e*3+nat.pow 2 e*2,
+change nat.pow 4 (nat.succ (nat.succ d)) > nat.pow 3 (nat.succ (nat.succ d)) + nat.pow 2 (nat.succ (nat.succ d))
+with nat.pow 4 e>nat.pow 3 e+nat.pow 2 e at Hd,
 exact calc
-4^e * 4 > (3^e + 2^e) * 4 : mul_lt_mul_of_pos_right Hd (dec_trivial)
-... = 3^e*4+2^e*4 : add_mul _ _ _
-... ≥ 3^e*3+2^e*4 : add_le_add_right (nat.mul_le_mul_left _ (dec_trivial)) _
-... ≥ 3^e*3+2^e*2 : add_le_add_left (nat.mul_le_mul_left _ (dec_trivial)) _,
+nat.pow 4 e * 4 > (nat.pow 3 e + nat.pow 2 e) * 4 : mul_lt_mul_of_pos_right Hd (dec_trivial)
+... = nat.pow 3 e*4+nat.pow 2 e*4 : add_mul _ _ _
+... ≥ nat.pow 3 e*3+nat.pow 2 e*4 : add_le_add_right (nat.mul_le_mul_left _ (dec_trivial)) _
+... ≥ nat.pow 3 e*3+nat.pow 2 e*2 : add_le_add_left (nat.mul_le_mul_left _ (dec_trivial)) _,
 end
 
 theorem Q3a (n : ℕ) : ∃ k, (n+1)+(n+2)+(n+3)+(n+4) = 4*k+2 :=
@@ -126,15 +127,58 @@ end
 --#check @eq.refl
 
 --#check (by apply_instance : has_mul (fin 4))
-
-#check cast 
-theorem Q3b (n : ℕ) : 8 ∣ 11^n - 3^n :=
+lemma of_nat_pow : ∀ a b: ℕ, int.of_nat(nat.pow a b)=pow_nat (int.of_nat a) b :=
 begin
+intros a b,
+induction b with k Hk,
+  simp [int.of_nat_one],
+unfold pow_nat nat.pow has_pow_nat.pow_nat monoid.pow,
+--show int.of_nat (a^k*a) = (int.of_nat a) * (int.of_nat a)^k,
+rw [int.of_nat_mul,mul_comm,Hk],
+refl,
+end
+
+theorem Q3b (n : ℕ) : 8 ∣ nat.pow 11 n - nat.pow 3 n :=
+begin
+have H : ∀ (e : ℕ), nat.pow 11 e ≥ nat.pow 3 e,
+intro e,
+induction e with d Hd,
+  exact dec_trivial,
+exact calc nat.pow 11 (nat.succ d) = nat.pow 11 d*11 : rfl
+... ≥ nat.pow 11 d * 3 : nat.mul_le_mul_left (nat.pow 11 d) (dec_trivial)
+... ≥ nat.pow 3 d * 3 : nat.mul_le_mul_right 3 Hd
+... = nat.pow 3 (nat.succ d) : rfl,
+
+have H311 : @Zmod.of_int 8 3 = Zmod.of_int 11,
+apply quot.sound,
+existsi (1:ℤ),
+exact dec_trivial,
 
 induction n with d Hd,
   exact ⟨0,rfl⟩,
--- too lazy to do this bit -- would be easy with calc
---
+
+cases Hd with k Hk,
+rw [←int.of_nat_eq_of_nat_iff] at Hk,
+rw [int.of_nat_sub (H d),int.of_nat_mul] at Hk,
+rw [of_nat_pow,of_nat_pow] at Hk,
+--have : (int.of_nat 11)^d - (int.of_nat 3)^d = 8 * (int.of_nat k),
+--exact Hk,
+have Heq : @Zmod.of_int 8 ((3:ℤ)^d) = Zmod.of_int ((11:ℤ)^d),
+apply quot.sound,
+existsi (k:ℤ),
+rw [mul_comm],
+exact eq.symm Hk,
+have H1 : @Zmod.of_int 8 ((3:ℤ)^(nat.succ d)) = Zmod.of_int (11^(nat.succ d)) := calc
+Zmod.of_int ((3:ℤ)^(nat.succ d)) = (Zmod.of_int 3)^(nat.succ d) : eq.symm Zmod.of_int_pow
+... = (Zmod.of_int 3) * (Zmod.of_int 3)^d : pow_succ (Zmod.of_int 3) d
+... = Zmod.of_int 3 * (Zmod.of_int (3^d)) : by rw [@Zmod.of_int_pow 8]
+... = Zmod.of_int 3 * (Zmod.of_int (11^d)) : by rw [Heq]
+... = Zmod.of_int 11 * (Zmod.of_int (11^d)) : by rw [H311]
+... = Zmod.of_int (11^(nat.succ d)) : rfl,
+
+unfold Zmod.of_int at H1,
+exact quot.
+have H2 : cong_mod 8 ((3:ℤ)^(nat.succ d)) ((11:ℤ)^(nat.succ d)) := quot.exact (cong_mod 8) H1,
 admit,
 end
 
@@ -145,6 +189,10 @@ change 4 with 1+1+1+1,
 rw [add_mul,add_mul,add_mul],
 simp,
 end
+
+example (α : Type) [comm_ring α] (a : α) (d : ℕ) : a^(nat.succ d) = a*a^d := rfl 
+example (α : Type) [comm_ring α] (a : α) (d : ℕ) : a*a^d = a^(nat.succ d) := rfl 
+
 
 theorem Q3cb (n : ℕ) : 8 ∣ 11^n - 3^n :=
 begin
@@ -188,14 +236,14 @@ change nat.succ (nat.succ (nat.succ (nat.succ (nat.succ (nat.succ (nat.succ d)))
 change nat.succ (nat.succ (nat.succ (nat.succ (nat.succ (nat.succ (nat.succ d)))))) with e at Hd,
 
 have He_ge_3 : nat.succ e ≥ 3 := by exact dec_trivial,
-exact calc 
+exact calc
 factorial (nat.succ e) = factorial e * (nat.succ e) : by unfold factorial
 ... ≥ factorial e * 3 : nat.mul_le_mul_left _ He_ge_3
 ... ≥ 3^e*3 : nat.mul_le_mul_right _ Hd
 ... = 3^nat.succ e : by unfold nat.pow,
-end 
+end
 
-theorem Q5 : (¬ (∃ a b c : ℕ, 6*a+9*b+20*c = 43)) 
+theorem Q5 : (¬ (∃ a b c : ℕ, 6*a+9*b+20*c = 43))
              ∧ ∀ m, m ≥ 44 → ∃ a b c : ℕ, 6*a+9*b+20*c = m :=
 begin
 split,
@@ -211,8 +259,8 @@ split,
         rw [mul_add],
         apply ne_of_gt,
         exact calc 6 * a + 9 * b + (20 * c + 20 * 3)
-                = 6*a + (9*b+(20*c+20*3)) : by simp 
-            ... ≥ 9 * b + (20 * c + 20 * 3) : nat.le_add_left (9 * b + (20 * c + 20 * 3)) (6*a) 
+                = 6*a + (9*b+(20*c+20*3)) : by simp
+            ... ≥ 9 * b + (20 * c + 20 * 3) : nat.le_add_left (9 * b + (20 * c + 20 * 3)) (6*a)
             ... ≥  20 * c + 20 * 3 : nat.le_add_left _ _
             ... ≥ 20*3 : nat.le_add_left _ _
             ... > 43 : dec_trivial,
@@ -277,7 +325,7 @@ split,
     exact calc 6 * a + 6 * 4 + 9 * 0 + 20 * 1
             ≥  6 * 4 + 9 * 0 + 20 * 1 : nat.le_add_left _ _
         ... > 43 : dec_trivial,
-  
+
 
   cases b with b,tactic.swap,
     cases b with b,tactic.swap,
@@ -350,7 +398,7 @@ split,
 
 -- now the opposite
 
--- proof that if m>=44 then it's 44+n 
+-- proof that if m>=44 then it's 44+n
 -- probably would have been easier to do by induction on 44
 
 intros m Hm,
@@ -432,7 +480,7 @@ rw [H.left],
 have Hrsmall := H.right,
 clear H n,
 
-/- 
+/-
 
 State now
 
