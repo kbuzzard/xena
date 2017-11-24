@@ -1,3 +1,5 @@
+import xenalib.zmod
+
 -- sheet 5 solns
 
 def Fib : ℕ → ℕ
@@ -120,14 +122,15 @@ simp at this,
 rw this,
 simp [add_mul],
 end
-#check @eq_of_add_eq_add_right
-#check @eq.refl
+--#check @eq_of_add_eq_add_right
+--#check @eq.refl
 
-#check (by apply_instance : has_mul (fin 4))
+--#check (by apply_instance : has_mul (fin 4))
 
-
+#check cast 
 theorem Q3b (n : ℕ) : 8 ∣ 11^n - 3^n :=
 begin
+
 induction n with d Hd,
   exact ⟨0,rfl⟩,
 -- too lazy to do this bit -- would be easy with calc

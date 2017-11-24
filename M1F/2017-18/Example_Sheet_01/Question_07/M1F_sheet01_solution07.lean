@@ -1,4 +1,4 @@
-import analysis.real xenalib.M1Fstuff
+import analysis.real xenalib.M1Fstuff tactic.norm_num
 
 -- real numbers live in here in Lean mathlib
 -- NB you need mathlib installed to get this working.
@@ -32,7 +32,7 @@ end
 -- set_option pp.all true
 -- #check @of_rat_mul
 
-set_option pp.notation false
+--set_option pp.notation false
 theorem part_b : of_rat (1/2) ∈ A ∪ B := 
 begin
 left,
@@ -41,7 +41,8 @@ left,
 -- (after a huge amount of unfolding)
 unfold has_mem.mem set.mem A set_of,
 have J : (3:real) = of_rat(3),
-simp with real_simps,
+rw [←coe_rat_eq_of_rat 3],
+simp,
 rewrite J,clear J,
 unfold pow_nat has_pow_nat.pow_nat monoid.pow,
 have J : (1:real) = of_rat(1),
@@ -49,7 +50,8 @@ have J : (1:real) = of_rat(1),
 rewrite J,clear J,
 rewrite (@of_rat_mul (1/2) 1),
 rewrite (of_rat_mul),
-apply of_rat_lt_of_rat.mpr,
+rewrite [←coe_rat_eq_of_rat,←coe_rat_eq_of_rat],
+rewrite rat.cast_lt,
 exact dec_trivial
 end
 
@@ -64,17 +66,20 @@ unfold A,
 unfold has_mem.mem set.mem set_of has_lt.lt preorder.lt,change x with of_rat (3/2),
 unfold partial_order.lt ordered_comm_monoid.lt discrete_linear_ordered_field.lt has_lt.lt,
 unfold preorder.lt partial_order.lt lattice.semilattice_inf.lt lattice.lattice.lt,
+unfold lattice.distrib_lattice.lt lattice.lattice.lt,
 unfold decidable_linear_order.lt decidable_linear_ordered_comm_group.lt,
 unfold pow_nat has_pow_nat.pow_nat monoid.pow,
 have J : (3:real) = of_rat(3),
-simp with real_simps,
+rw [←coe_rat_eq_of_rat 3],
+simp,
 rewrite J,clear J,
 have J : (1:real) = of_rat(1),
   apply of_rat_one,
 rewrite J,clear J,
 rewrite (of_rat_mul),
 rewrite (of_rat_mul),
-apply of_rat_lt_of_rat.mpr,
+rewrite [←coe_rat_eq_of_rat,←coe_rat_eq_of_rat],
+rewrite rat.cast_lt,
 simp,
 exact dec_trivial,
 have H3 : ¬ (x ∈ C),
@@ -82,10 +87,13 @@ unfold C,
 unfold has_mem.mem set.mem set_of has_lt.lt preorder.lt,change x with of_rat (3/2),
 unfold partial_order.lt ordered_comm_monoid.lt discrete_linear_ordered_field.lt has_lt.lt,
 unfold preorder.lt partial_order.lt lattice.semilattice_inf.lt lattice.lattice.lt,
+unfold lattice.distrib_lattice.lt,
+unfold lattice.lattice.lt,
 unfold decidable_linear_order.lt decidable_linear_ordered_comm_group.lt,
 unfold pow_nat has_pow_nat.pow_nat monoid.pow,
 have J : (3:real) = of_rat(3),
-simp with real_simps,
+rw [←coe_rat_eq_of_rat 3],
+simp,
 rewrite J,clear J,
 have J : (1:real) = of_rat(1),
   apply of_rat_one,
@@ -210,18 +218,20 @@ cases H2 with xm1 xrest,
 -- need to prove of_rat(-1)^3<3
 have H2 : ((-1):ℝ)^3 < 3,
 unfold pow_nat has_pow_nat.pow_nat monoid.pow,
-simp with real_simps,exact dec_trivial,
+{norm_num},
 -- apply (@eq.subst ℝ (λ x,x^3<3) x (of_rat(-1)) xm1),
 exact @eq.subst ℝ (λ t, t^3<3) (-1) x (eq.symm xm1) H2,
 cases xrest with x0 x1,
 have H2 : of_rat(0)^3 < 3,
 unfold pow_nat has_pow_nat.pow_nat monoid.pow,
-simp with real_simps,exact dec_trivial,
+rw [←coe_rat_eq_of_rat],
+{norm_num},
 -- apply (@eq.subst ℝ (λ x,x^3<3) x (of_rat(-1)) xm1),
 exact @eq.subst ℝ (λ t, t^3<3) (of_rat(0)) x (eq.symm x0) H2,
 have H2 : of_rat(1)^3 < 3,
 unfold pow_nat has_pow_nat.pow_nat monoid.pow,
-simp with real_simps,exact dec_trivial,
+rw [←coe_rat_eq_of_rat],
+{norm_num},
 -- apply (@eq.subst ℝ (λ x,x^3<3) x (of_rat(-1)) xm1),
 exact @eq.subst ℝ (λ t, t^3<3) (of_rat(1)) x (eq.symm x1) H2,
 
@@ -234,23 +244,19 @@ end
 lemma two_in_C : (-2:real) ∈ C :=
 begin
 unfold has_mem.mem set.mem C pow_nat has_pow_nat.pow_nat monoid.pow set_of,
-simp with real_simps,
-repeat {rewrite of_rat_mul},
-exact dec_trivial
+{norm_num},
 end
 
 lemma two_not_in_A : (-2:real) ∉ A :=
 begin
 unfold has_mem.mem set.mem A pow_nat has_pow_nat.pow_nat monoid.pow set_of,
-simp with real_simps,
+norm_num,
 end
 
 lemma two_not_in_B : (-2:real) ∉ B :=
 begin
 unfold has_mem.mem set.mem B pow_nat has_pow_nat.pow_nat monoid.pow set_of,
-simp with real_simps,
-intros y J,
-exact dec_trivial,
+norm_num,
 end
 
 theorem part_e : ¬ (C ⊆ A ∪ B) := -- not true as C contains -2
