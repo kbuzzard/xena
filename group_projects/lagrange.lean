@@ -123,7 +123,6 @@ assume X_size_m_and_n,
 have X_size_m, from X_size_m_and_n.left,
 have X_size_n, from X_size_m_and_n.right,
 
-
 end
 
 definition subset (s : α → Prop) := { a : α // s a }

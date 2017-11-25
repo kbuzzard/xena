@@ -11,6 +11,7 @@ import analysis.real xenalib.M1Fstuff tactic.norm_num
 
 -- #check M1F.real_half_not_an_integer
 
+local infix ` ^ ` := monoid.pow 
 
 def A : set ℝ := { x | x^2 < 3}
 def B : set ℝ := {x | (∃ y : ℤ, x = ↑y) ∧ x^2 < 3}
@@ -44,7 +45,7 @@ have J : (3:real) = of_rat(3),
 rw [←coe_rat_eq_of_rat 3],
 simp,
 rewrite J,clear J,
-unfold pow_nat has_pow_nat.pow_nat monoid.pow,
+unfold monoid.pow,
 have J : (1:real) = of_rat(1),
   apply of_rat_one,
 rewrite J,clear J,
@@ -68,7 +69,7 @@ unfold partial_order.lt ordered_comm_monoid.lt discrete_linear_ordered_field.lt 
 unfold preorder.lt partial_order.lt lattice.semilattice_inf.lt lattice.lattice.lt,
 unfold lattice.distrib_lattice.lt lattice.lattice.lt,
 unfold decidable_linear_order.lt decidable_linear_ordered_comm_group.lt,
-unfold pow_nat has_pow_nat.pow_nat monoid.pow,
+unfold monoid.pow,
 have J : (3:real) = of_rat(3),
 rw [←coe_rat_eq_of_rat 3],
 simp,
@@ -90,7 +91,7 @@ unfold preorder.lt partial_order.lt lattice.semilattice_inf.lt lattice.lattice.l
 unfold lattice.distrib_lattice.lt,
 unfold lattice.lattice.lt,
 unfold decidable_linear_order.lt decidable_linear_ordered_comm_group.lt,
-unfold pow_nat has_pow_nat.pow_nat monoid.pow,
+unfold monoid.pow,
 have J : (3:real) = of_rat(3),
 rw [←coe_rat_eq_of_rat 3],
 simp,
@@ -134,7 +135,7 @@ have H2 : exists y : ℤ, x = (y:ℝ),
 have H3 : x^2 < 3,
   exact H.right,
 cases H2 with y H4,
-unfold pow_nat has_pow_nat.pow_nat monoid.pow at H3,
+unfold monoid.pow at H3,
 simp at H3,
 have H5 : ((y:ℚ):ℝ) * ((y:ℚ):ℝ) < 3,
   exact (@eq.subst ℝ (λ z, z*z<(3:real)) x (y:ℚ) (by simp [H4]) H3),
@@ -217,19 +218,19 @@ unfold has_mem.mem set.mem C set_of,
 cases H2 with xm1 xrest,
 -- need to prove of_rat(-1)^3<3
 have H2 : ((-1):ℝ)^3 < 3,
-unfold pow_nat has_pow_nat.pow_nat monoid.pow,
+unfold monoid.pow,
 {norm_num},
 -- apply (@eq.subst ℝ (λ x,x^3<3) x (of_rat(-1)) xm1),
 exact @eq.subst ℝ (λ t, t^3<3) (-1) x (eq.symm xm1) H2,
 cases xrest with x0 x1,
 have H2 : of_rat(0)^3 < 3,
-unfold pow_nat has_pow_nat.pow_nat monoid.pow,
+unfold monoid.pow,
 rw [←coe_rat_eq_of_rat],
 {norm_num},
 -- apply (@eq.subst ℝ (λ x,x^3<3) x (of_rat(-1)) xm1),
 exact @eq.subst ℝ (λ t, t^3<3) (of_rat(0)) x (eq.symm x0) H2,
 have H2 : of_rat(1)^3 < 3,
-unfold pow_nat has_pow_nat.pow_nat monoid.pow,
+unfold monoid.pow,
 rw [←coe_rat_eq_of_rat],
 {norm_num},
 -- apply (@eq.subst ℝ (λ x,x^3<3) x (of_rat(-1)) xm1),
@@ -243,19 +244,19 @@ end
 
 lemma two_in_C : (-2:real) ∈ C :=
 begin
-unfold has_mem.mem set.mem C pow_nat has_pow_nat.pow_nat monoid.pow set_of,
+unfold has_mem.mem set.mem C monoid.pow set_of,
 {norm_num},
 end
 
 lemma two_not_in_A : (-2:real) ∉ A :=
 begin
-unfold has_mem.mem set.mem A pow_nat has_pow_nat.pow_nat monoid.pow set_of,
+unfold has_mem.mem set.mem A monoid.pow set_of,
 norm_num,
 end
 
 lemma two_not_in_B : (-2:real) ∉ B :=
 begin
-unfold has_mem.mem set.mem B pow_nat has_pow_nat.pow_nat monoid.pow set_of,
+unfold has_mem.mem set.mem B monoid.pow set_of,
 norm_num,
 end
 
