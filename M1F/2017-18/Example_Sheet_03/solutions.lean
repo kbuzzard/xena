@@ -1,4 +1,5 @@
 import xenalib.M1Fstuff algebra.group_power xenalib.square_root xenalib.complex
+local infix ` ^ ` := monoid.pow 
 
 -- Need to start off with some fake reals to do Q1,2
 
@@ -220,7 +221,7 @@ cases n with m,
   revert Hn_pos,norm_num,
 clear Hn_pos,
 induction m with p Hp,
-  simp [Hx_pos],
+  simp [Hx_pos,monoid.pow],
 exact A4 Hx_pos Hp,
 end
 
@@ -230,7 +231,7 @@ intros Hx_pos Hx_lt_y Hn_pos,
 cases n with m,
   exfalso, revert Hn_pos,norm_num,
 induction m with p Hp,
-  simp [Hx_lt_y],
+  simp [Hx_lt_y,monoid.pow],
 have H : x^ nat.succ p < y^nat.succ p := Hp (nat.zero_lt_succ p),
 clear Hp Hn_pos,
 change x ^ nat.succ (nat.succ p) with x * (x^nat.succ p),
@@ -313,18 +314,22 @@ end
 -- Here's something that's in core lean for nat.pow
 -- and we need for pow_nat.
 
-theorem pow_lt_pow_of_lt {x i j : ℕ} : x > 1 → i < j → pow_nat x i < pow_nat x j :=
+--#print nat.pow_eq_pow
+
+--#print nat.pow_eq_pow_nat
+
+theorem pow_lt_pow_of_lt {x i j : ℕ} : x > 1 → i < j → x^i < x^j :=
 begin
-rw [←nat.pow_eq_pow_nat,←nat.pow_eq_pow_nat],
+rw [←nat.pow_eq_pow,←nat.pow_eq_pow],
 intro H,
 exact nat.pow_lt_pow_of_lt_right H,
 end
 
-theorem Q3b : pow_nat 10000 100 < pow_nat 100 10000 :=
+theorem Q3b : 10000^100 < 100^10000 :=
 begin
-have H : 10000 = pow_nat 100 2,
+have H : 10000 = 100^2,
   { norm_num },
-have H2 : pow_nat 10000 100=pow_nat (pow_nat 100 2) 100,
+have H2 : 10000^100=(100^2)^100,
   rw [H],
 rw [H2,←pow_mul],
 have H3 : 2*100 = 200,
@@ -335,21 +340,21 @@ apply pow_lt_pow_of_lt,
 norm_num,
 end
 
-theorem Q3ci : pow_nat (pow_nat 2 11) 2 = pow_nat 2 22 :=
+theorem Q3ci : (2^11)^2 = 2^22 :=
 begin
 rw [←pow_mul],
 change 11*2 with 22,
 trivial,
 end
 
-theorem Q3cii : pow_nat (pow_nat 2 (pow_nat 2 21)) 2 = pow_nat 2 (pow_nat 2 22) :=
+theorem Q3cii : (2^(2^21))^2 = 2^(2^22) :=
 begin
 rw [←pow_mul],
-suffices H : pow_nat 2 22 = (pow_nat 2 21) * 2,
+suffices H : 2^22 = (2^21) * 2,
   rw [H],
 change 22 with 21+1,
 rw [pow_add],
-change pow_nat 2 1 with 2,
+change 2^1 with 2,
 trivial,
 end
 

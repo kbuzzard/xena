@@ -282,8 +282,8 @@ exact lt_div_of_mul_lt H1 H3,
 end 
 
 -- set_option pp.notation false
-
-theorem Q3a (n : int) : (3:ℤ) ∣ n^2 → 3 ∣ n :=
+infix ` ** `: 80 := monoid.pow 
+theorem Q3a (n : int) : (3:ℤ) ∣ n ** 2 → (3:ℤ) ∣ n :=
 begin
 intro Hn2,
 -- let r := n % 3,
@@ -316,7 +316,7 @@ cases r0 with r1,
   exact dvd_trans H (dvd_mul_left _ _), 
 simp at H2,
 rw [mul_add,add_mul,add_mul,add_assoc,←add_assoc (2*n) _ _,mul_comm 2 n,←mul_add,add_neg_self,mul_zero,zero_add] at H2,
-unfold pow_nat has_pow_nat.pow_nat pow_nat monoid.pow at Hn2,
+unfold monoid.pow at Hn2,
 have H3 : 3 ∣ n * (n * 1) - (n * n + 2 * -2),
   exact dvd_sub Hn2 H2,
 simp at H3,
@@ -338,7 +338,7 @@ cases r1 with r2,
   exact dvd_trans H (dvd_mul_left _ _),
 simp at H2,
 rw [mul_add,add_mul,add_mul,add_assoc,←add_assoc (1*n) _ _,mul_comm 1 n,←mul_add,add_neg_self,mul_zero,zero_add] at H2,
-unfold pow_nat has_pow_nat.pow_nat pow_nat monoid.pow at Hn2,
+unfold monoid.pow at Hn2,
 have H3 : 3 ∣ n * (n * 1) - (n * n + 1 * -1),
 exact dvd_sub Hn2 H2,
 simp at H3,
@@ -373,12 +373,12 @@ def sqrt3_proof := classical.some_spec (exists_sqrt_3)
 -- #check sqrt3_proof
 
 
-example : sqrt3^2 = 3 := sqrt3_proof.right.left
+example : sqrt3 ** 2 = 3 := sqrt3_proof.right.left
 
 noncomputable example : monoid ℝ := by apply_instance
 
 -- set_option pp.all true 
-theorem no_rational_squared_is_three : ¬ (∃ (q:ℚ),q^2=3) := 
+theorem no_rational_squared_is_three : ¬ (∃ (q:ℚ),q**2=3) := 
 begin
 intro H0,cases H0 with q Hq2,
 rw [pow_two_eq_mul_self] at Hq2,
@@ -427,10 +427,10 @@ clear Hq2 H0 H1,
 -- coprimality of n and d0 built into rat
 have H0 : nat.coprime (int.nat_abs n) d0,
   exact q.cop,
-have H3 : n*n=n^2,
+have H3 : n*n=n**2,
   exact mul_self_eq_pow_two,
 rw [H3] at H2,
-have H1 : (3:ℤ) ∣ n^2,
+have H1 : (3:ℤ) ∣ n**2,
   exact ⟨d*d,eq.symm H2⟩,
 have H4 : (3:ℤ) ∣ n,
   exact Q3a n H1,
@@ -441,7 +441,7 @@ have H6 : d * d = n1 * (3 * n1),
   exact eq_of_mul_eq_mul_left (by norm_num) H2,clear H2,
   rw [mul_comm n1,mul_assoc] at H6,
   rw [mul_self_eq_pow_two] at H6,
-have H2 : (3:ℤ) ∣ d^2,
+have H2 : (3:ℤ) ∣ d**2,
   exact ⟨n1 * n1, H6⟩,
 clear H1 H6,
 have H1 : (3:ℤ) ∣ d,
@@ -487,8 +487,6 @@ clear H1,
 revert H0,
 norm_num,
 end
-
-#check @rat.cast_inj 
 
 theorem Q3b : M1F.is_irrational (sqrt3) :=
 begin
@@ -567,13 +565,13 @@ let s6 := square_root.sqrt_abs 6,
 change square_root.sqrt_abs 6 with s6, -- 
 let s15 := square_root.sqrt_abs 15,
 change square_root.sqrt_abs 15 with s15, --  I just want names for these variables.
-have Hs15 : s15^2 = 15,
+have Hs15 : s15**2 = 15,
   exact square_root.sqrt_abs_squared 15 (by norm_num),
 rw [pow_two_eq_mul_self] at Hs15, 
-have Hs2 : s2^2 = 2,
+have Hs2 : s2**2 = 2,
   exact square_root.sqrt_abs_squared 2 (by norm_num), 
 rw [pow_two_eq_mul_self] at Hs2, 
-have Hs6 : s6^2 = 6, 
+have Hs6 : s6**2 = 6, 
   exact square_root.sqrt_abs_squared 6 (by norm_num), -- I know I'll need these things at some point.
 rw [pow_two_eq_mul_self] at Hs6, 
 apply imp_of_not_or (le_or_gt s15 (s2 + s6)),
@@ -610,13 +608,13 @@ begin
 
 let s2 := square_root.sqrt_abs 2,
 change square_root.sqrt_abs 2 with s2, 
-have Hs2 : s2^2 = 2,
+have Hs2 : s2**2 = 2,
   exact square_root.sqrt_abs_squared 2 (by norm_num), 
 rw [pow_two_eq_mul_self] at Hs2, 
 
 let s3o2 := square_root.sqrt_abs (3/2),
 change square_root.sqrt_abs (3/2) with s3o2, 
-have Hs3o2 : s3o2^2 = 3/2,
+have Hs3o2 : s3o2**2 = 3/2,
   exact square_root.sqrt_abs_squared (3/2) (by norm_num), 
 rw [pow_two_eq_mul_self] at Hs3o2, 
 

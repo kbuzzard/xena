@@ -1,5 +1,7 @@
 import xenalib.zmod algebra.group_power
 
+infix ` ** `:80 := monoid.pow
+
 -- sheet 5 solns
 
 def Fib : ℕ → ℕ
@@ -127,20 +129,19 @@ end
 --#check @eq.refl
 
 --#check (by apply_instance : has_mul (fin 4))
-lemma of_nat_pow : ∀ a b: ℕ, int.of_nat(nat.pow a b)=pow_nat (int.of_nat a) b :=
+lemma of_nat_pow : ∀ a b: ℕ, int.of_nat(nat.pow a b)=(int.of_nat a)**b :=
 begin
 intros a b,
 induction b with k Hk,
   simp [int.of_nat_one],
-unfold pow_nat nat.pow has_pow_nat.pow_nat monoid.pow,
+unfold monoid.pow nat.pow, -- pow_nat nat.pow has_pow_nat.pow_nat monoid.pow,
 --show int.of_nat (a^k*a) = (int.of_nat a) * (int.of_nat a)^k,
-rw [int.of_nat_mul,mul_comm,Hk],
-refl,
+rw [int.of_nat_mul,mul_comm,Hk,mul_comm],
 end
 
-theorem Q3b (n : ℕ) : 8 ∣ nat.pow 11 n - nat.pow 3 n :=
+theorem Q3b (n : ℕ) : 8 ∣ 11^n - 3^n :=
 begin
-have H : ∀ (e : ℕ), nat.pow 11 e ≥ nat.pow 3 e,
+have H : ∀ (e : ℕ), 11^e ≥ 3^e,
 intro e,
 induction e with d Hd,
   exact dec_trivial,
@@ -163,23 +164,38 @@ rw [int.of_nat_sub (H d),int.of_nat_mul] at Hk,
 rw [of_nat_pow,of_nat_pow] at Hk,
 --have : (int.of_nat 11)^d - (int.of_nat 3)^d = 8 * (int.of_nat k),
 --exact Hk,
-have Heq : @Zmod.of_int 8 ((3:ℤ)^d) = Zmod.of_int ((11:ℤ)^d),
+have Heq : @Zmod.of_int 8 ((3:ℤ)**d) = Zmod.of_int ((11:ℤ)**d),
 apply quot.sound,
 existsi (k:ℤ),
 rw [mul_comm],
 exact eq.symm Hk,
-have H1 : @Zmod.of_int 8 ((3:ℤ)^(nat.succ d)) = Zmod.of_int (11^(nat.succ d)) := calc
-Zmod.of_int ((3:ℤ)^(nat.succ d)) = (Zmod.of_int 3)^(nat.succ d) : eq.symm Zmod.of_int_pow
-... = (Zmod.of_int 3) * (Zmod.of_int 3)^d : pow_succ (Zmod.of_int 3) d
-... = Zmod.of_int 3 * (Zmod.of_int (3^d)) : by rw [@Zmod.of_int_pow 8]
-... = Zmod.of_int 3 * (Zmod.of_int (11^d)) : by rw [Heq]
-... = Zmod.of_int 11 * (Zmod.of_int (11^d)) : by rw [H311]
-... = Zmod.of_int (11^(nat.succ d)) : rfl,
+have H1 : @Zmod.of_int 8 ((3:ℤ)**(nat.succ d)) = Zmod.of_int (11**(nat.succ d)) := calc
+Zmod.of_int ((3:ℤ)**(nat.succ d)) = (Zmod.of_int 3)**(nat.succ d) : eq.symm Zmod.of_int_pow
+... = (Zmod.of_int 3) * (Zmod.of_int 3)**d : pow_succ (Zmod.of_int 3) d
+... = (Zmod.of_int 3) * (Zmod.of_int (3**d)) : by rw [@Zmod.of_int_pow 8]
+... = Zmod.of_int 3 * (Zmod.of_int (11**d)) : by rw [Heq]
+... = Zmod.of_int 11 * (Zmod.of_int (11**d)) : by rw [H311]
+... = Zmod.of_int (11**(nat.succ d)) : rfl,
 
 unfold Zmod.of_int at H1,
-exact quot.
-have H2 : cong_mod 8 ((3:ℤ)^(nat.succ d)) ((11:ℤ)^(nat.succ d)) := quot.exact (cong_mod 8) H1,
-admit,
+have H2 := @quotient.exact ℤ (@Z_setoid 8) _ _ H1,
+cases H2 with k2 Hk2,
+--show (8:ℤ) ∣ 11^nat.succ d - 3^nat.succ d,
+have H3 : k2 * ↑8 = (int.of_nat 11) ** nat.succ d - (int.of_nat 3) ** nat.succ d,
+exact Hk2,
+rw [←of_nat_pow,←of_nat_pow] at H3,
+rw [←int.of_nat_sub (H (nat.succ d))] at H3,
+have Hpos : k2 * ↑8 ≥ 0,
+rw [H3], exact int.of_nat_nonneg (11^nat.succ d - 3^nat.succ d),
+have Hpos2 : k2 ≥ 0 := nonneg_of_mul_nonneg_right Hpos (dec_trivial),
+let k3 : ℕ := int.nat_abs k2,
+have H4 : ↑k3 = k2 := int.nat_abs_of_nonneg Hpos2,
+existsi k3,
+apply int.of_nat_inj,
+rw [eq.symm H3],
+rw [←H4,int.of_nat_mul,mul_comm],
+rw int.of_nat_eq_coe,
+rw int.of_nat_eq_coe,
 end
 
 theorem Q3ca (n : ℕ) : ∃ k, (n+1)+(n+2)+(n+3)+(n+4) = 4*k+2 :=
@@ -190,13 +206,19 @@ rw [add_mul,add_mul,add_mul],
 simp,
 end
 
-example (α : Type) [comm_ring α] (a : α) (d : ℕ) : a^(nat.succ d) = a*a^d := rfl 
-example (α : Type) [comm_ring α] (a : α) (d : ℕ) : a*a^d = a^(nat.succ d) := rfl 
-
 
 theorem Q3cb (n : ℕ) : 8 ∣ 11^n - 3^n :=
 begin
--- something involving lists
+/-
+
+What's a sensible way to do 1+x+x^2+...+x^n?
+
+I'm still working on the details, but big_operations.lean deals with this stuff
+
+finset.sum is the one you want (or list.sum, but the finset version has more algebraic properties on it)
+
+-/
+
 admit,
 end
 

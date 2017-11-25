@@ -4,7 +4,40 @@ import algebra.group_power
 definition cong_mod (n : ℕ) : ℤ → ℤ → Prop :=
 λ a b, ∃ k:ℤ, k*↑n=b-a
 
-definition Zmod (n : ℕ) := quot (cong_mod n)
+-- Now check it's an equiv reln!
+
+theorem cong_mod_refl {n : ℕ} : reflexive (cong_mod n) :=
+begin
+intro x,
+existsi (0:ℤ),
+simp,
+end
+
+theorem cong_mod_symm {n : ℕ} : symmetric (cong_mod n) :=
+begin
+intros a b H,
+cases H with k Hk,
+existsi -k,
+simp [Hk],
+end
+
+theorem cong_mod_trans {n : ℕ} : transitive (cong_mod n) :=
+begin
+intros a b c Hab Hbc,
+cases Hab with k Hk,
+cases Hbc with l Hl,
+existsi (k+l),
+simp [Hk,Hl,add_mul],
+end
+
+theorem cong_mod_equiv {n : ℕ} : equivalence (cong_mod n) :=
+begin
+exact ⟨cong_mod_refl,cong_mod_symm,cong_mod_trans⟩,
+end 
+
+def Z_setoid (n : ℕ) : setoid ℤ := { r := cong_mod n, iseqv := cong_mod_equiv }
+
+definition Zmod (n : ℕ) := quotient (Z_setoid n) -- (cong_mod n)
 
 namespace Zmod 
 
@@ -216,7 +249,7 @@ instance {n : ℕ}: comm_ring (Zmod n) :=
     cases (quot.exists_rep a) with atilde Ha,
     cases (quot.exists_rep b) with btilde Hb,
     cases (quot.exists_rep c) with ctilde Hc,
-  rw [←Ha,←Hb,←Hc,←of_int,of_int_mul,of_int_mul,of_int_add,of_int_add,of_int_mul],
+  rw [←Ha,←Hb,←Hc],
   apply quot.sound,
   existsi (0:ℤ),
   rw [zero_mul,mul_add,sub_self],  
@@ -226,7 +259,7 @@ instance {n : ℕ}: comm_ring (Zmod n) :=
     cases (quot.exists_rep a) with atilde Ha,
     cases (quot.exists_rep b) with btilde Hb,
     cases (quot.exists_rep c) with ctilde Hc,
-  rw [←Ha,←Hb,←Hc,←of_int,of_int_mul,of_int_mul,of_int_add,of_int_add,of_int_mul], -- why did that happen?
+  rw [←Ha,←Hb,←Hc],
   apply quot.sound,
   existsi (0:ℤ),
   rw [zero_mul,add_mul,sub_self],  
@@ -243,16 +276,18 @@ instance {n : ℕ}: comm_ring (Zmod n) :=
   ..Zmod.add_comm_group
 }
 
+
+infix ` ** `: 80 := monoid.pow 
+
 theorem of_int_pow {n : ℕ} {a : ℤ} { b: ℕ} : 
-  (@of_int n a)^b = (of_int (a^b)) :=
+  (@of_int n a)**b = (of_int (a**b)) :=
 begin
 induction b with d Hd,
   exact Zmod.of_int_one,
-show of_int a * of_int a ^ d = of_int (a * a ^ d), 
+show of_int a * of_int a ** d = of_int (a * a ** d), 
 rw [Hd,Zmod.of_int_mul],
 end 
 
--- need to check it's an equiv reln!
 
 example : (@of_int 10 7 + @of_int 10 8 = @of_int 10 5) :=
 begin
