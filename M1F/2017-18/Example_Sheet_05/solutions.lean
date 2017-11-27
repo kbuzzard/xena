@@ -1,6 +1,6 @@
-import xenalib.zmod algebra.group_power
+import xenalib.zmod algebra.group_power tactic.norm_num
 
-infix ` ** `:80 := monoid.pow
+local infix ` ^ ` := monoid.pow
 
 -- sheet 5 solns
 
@@ -129,7 +129,7 @@ end
 --#check @eq.refl
 
 --#check (by apply_instance : has_mul (fin 4))
-lemma of_nat_pow : ∀ a b: ℕ, int.of_nat(nat.pow a b)=(int.of_nat a)**b :=
+lemma of_nat_pow : ∀ a b: ℕ, int.of_nat(a^b)=(int.of_nat a)^b :=
 begin
 intros a b,
 induction b with k Hk,
@@ -145,10 +145,10 @@ have H : ∀ (e : ℕ), 11^e ≥ 3^e,
 intro e,
 induction e with d Hd,
   exact dec_trivial,
-exact calc nat.pow 11 (nat.succ d) = nat.pow 11 d*11 : rfl
-... ≥ nat.pow 11 d * 3 : nat.mul_le_mul_left (nat.pow 11 d) (dec_trivial)
-... ≥ nat.pow 3 d * 3 : nat.mul_le_mul_right 3 Hd
-... = nat.pow 3 (nat.succ d) : rfl,
+exact calc 11^(nat.succ d) = 11*11^d : rfl
+... ≥ 3*11^d : nat.mul_le_mul_right (11^d) (dec_trivial)
+... ≥ 3*3^d : nat.mul_le_mul_left 3 Hd
+... = 3^(nat.succ d) : rfl,
 
 have H311 : @Zmod.of_int 8 3 = Zmod.of_int 11,
 apply quot.sound,
@@ -236,8 +236,13 @@ clear H,
 cases m with m,split;exact dec_trivial,
 cases m with m,split;exact dec_trivial,
 cases m with m,split;exact dec_trivial,
-cases m with m,split;exact dec_trivial,
-cases m with m,split;exact dec_trivial,
+
+cases m with m,split;intros,exact dec_trivial,
+repeat {unfold factorial monoid.pow},{norm_num},
+
+cases m with m,split;intros,exact dec_trivial,
+repeat {unfold factorial monoid.pow},{norm_num},
+
 cases m with m,split;exact dec_trivial,
 
 split,
@@ -250,8 +255,7 @@ split,
 intro this,exfalso,revert this,
 apply not_lt_of_ge,
 induction m with d Hd,
-  exact dec_trivial,
-
+repeat {unfold factorial monoid.pow},{norm_num},
 
 let e := nat.succ (nat.succ (nat.succ (nat.succ (nat.succ (nat.succ (nat.succ d)))))),
 change nat.succ (nat.succ (nat.succ (nat.succ (nat.succ (nat.succ (nat.succ d)))))) with e,
@@ -261,8 +265,9 @@ have He_ge_3 : nat.succ e ≥ 3 := by exact dec_trivial,
 exact calc
 factorial (nat.succ e) = factorial e * (nat.succ e) : by unfold factorial
 ... ≥ factorial e * 3 : nat.mul_le_mul_left _ He_ge_3
-... ≥ 3^e*3 : nat.mul_le_mul_right _ Hd
-... = 3^nat.succ e : by unfold nat.pow,
+... ≥ 3^e*3 : nat.mul_le_mul_right 3 Hd
+... = 3*3^e : by rw mul_comm
+... = 3^nat.succ e : rfl,
 end
 
 theorem Q5 : (¬ (∃ a b c : ℕ, 6*a+9*b+20*c = 43))
@@ -545,3 +550,5 @@ rw add_assoc at H,
 rw H,
 simp,
 end
+
+

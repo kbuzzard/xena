@@ -558,7 +558,7 @@ repeat {rw [complex.proj_mul_re,complex.proj_mul_im]},
 simp,
 end
 
-theorem Q7 (z : complex) (H : z^2=-1) : z=complex.i ∨ z = -complex.i :=
+theorem Q7 (z : complex) (H : z^2=-1) : z=complex.I ∨ z = -complex.I :=
 begin
 rw [pow_two_eq_mul_self] at H,
 have Him : (z*z).im = 0,
@@ -582,7 +582,7 @@ have H2 : z.im = 1 ∨ z.im = -1 := (mul_self_eq_one_iff z.im).1 H1,
 cases H2 with Hi Hmi,
   left,rw [complex.eq_iff_re_eq_and_im_eq,Htrue,Hi],split;refl, 
   right,rw [complex.eq_iff_re_eq_and_im_eq,Htrue,Hmi],split;
-    simp [complex.proj_neg_re,complex.proj_neg_im,complex.proj_i_re,complex.proj_i_im], 
+    simp [complex.proj_neg_re,complex.proj_neg_im,complex.proj_I_re,complex.proj_I_im], 
 end
 
 end M1F_Sheet03

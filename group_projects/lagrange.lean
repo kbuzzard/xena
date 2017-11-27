@@ -17,12 +17,13 @@ import tactic.norm_num
 
 namespace xena
 
-universe u
+universes u v
 
 variables {α β γ : Type u}
 variables a1 a2 a : α
 variable b : β
-variables X Y : Type u -- a set
+variable X : Type u -- a set
+variable Y : Type v
 variables m n : ℕ
 
 -- This is where the maths starts
@@ -40,8 +41,8 @@ definition bijects_with (X) (Y) : Prop :=
   ∃ f : X → Y, is_bijective f
 
 -- "fin n" means the finite set {0,1,...,n-1} of size n
-definition has_size (X) (n) : Prop :=
-  bijects_with (fin n) X
+definition has_size (Y) (n) : Prop :=
+  bijects_with (fin n) Y
 
 -- if Kenny cares about constructive maths he can
 -- prove that this statement is decidable
@@ -116,19 +117,26 @@ split;assumption,  -- ask Mario why I couldn't use functions
 end
 
 
-theorem only_one_size' (X) {m n} :
+theorem only_one_size (X) {m n} :
   has_size X m ∧ has_size X n → m = n :=
 begin
 assume X_size_m_and_n,
 have X_size_m, from X_size_m_and_n.left,
 have X_size_n, from X_size_m_and_n.right,
-
+cases X_size_m with f Hf,
+cases X_size_n with g Hg,
+have ginv := inv_of_bij g Hg,
+cases ginv with h Hh,
+have Hhf := bij_of_bij_bij Hf Hh,
+have : bijects_with (fin m) (fin n) := ⟨_,Hhf⟩,
+admit, 
 end
 
-definition subset (s : α → Prop) := { a : α // s a }
-definition complement (s : α → Prop) := λ a, ¬ (s a)
+definition subset {α : Type u} (s : α → Prop) := { a : α // s a }
+definition complement {α : Type u} (s : α → Prop) := λ a, ¬ (s a)
 
-example (s : α → Prop) (m n : ℕ) :
+/-
+example {α : Type u} (s : α → Prop) (m n : ℕ) :
   has_size (subset s) m ∧ has_size (subset (complement s)) n
   → has_size α (m+n) :=
 begin
@@ -138,6 +146,6 @@ begin
   --: has_size (subset s) m)
 admit
 end
-
+-/
 end xena
 

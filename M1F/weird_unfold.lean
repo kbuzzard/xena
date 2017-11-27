@@ -1,6 +1,6 @@
 import analysis.real
 variable x : real
--- set_option pp.all true
+set_option pp.all true
 example : x < (x+1) :=
 begin
 unfold has_lt.lt,
@@ -12,6 +12,8 @@ unfold has_lt.lt,
 unfold preorder.lt,
 unfold partial_order.lt,
 unfold lattice.semilattice_inf.lt,
+unfold lattice.lattice.lt,
+unfold lattice.distrib_lattice.lt,
 unfold lattice.lattice.lt,
 unfold decidable_linear_order.lt,
 unfold decidable_linear_ordered_comm_group.lt,
