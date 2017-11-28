@@ -89,7 +89,6 @@ rw [H],
 exact (Q1a 673 (dec_trivial)).left,
 end
 
--- aargh stupid overloaded ^
 theorem Q2 (n : ℕ) : n ≥ 2 → nat.pow 4 n > nat.pow 3 n + nat.pow 2 n :=
 begin
 intro H_n_ge_2,
@@ -133,6 +132,7 @@ lemma of_nat_pow : ∀ a b: ℕ, int.of_nat(a^b)=(int.of_nat a)^b :=
 begin
 intros a b,
 induction b with k Hk,
+  unfold monoid.pow,
   simp [int.of_nat_one],
 unfold monoid.pow nat.pow, -- pow_nat nat.pow has_pow_nat.pow_nat monoid.pow,
 --show int.of_nat (a^k*a) = (int.of_nat a) * (int.of_nat a)^k,
@@ -164,24 +164,25 @@ rw [int.of_nat_sub (H d),int.of_nat_mul] at Hk,
 rw [of_nat_pow,of_nat_pow] at Hk,
 --have : (int.of_nat 11)^d - (int.of_nat 3)^d = 8 * (int.of_nat k),
 --exact Hk,
-have Heq : @Zmod.of_int 8 ((3:ℤ)**d) = Zmod.of_int ((11:ℤ)**d),
+have Heq : @Zmod.of_int 8 ((3:ℤ)^d) = Zmod.of_int ((11:ℤ)^d),
 apply quot.sound,
 existsi (k:ℤ),
 rw [mul_comm],
 exact eq.symm Hk,
-have H1 : @Zmod.of_int 8 ((3:ℤ)**(nat.succ d)) = Zmod.of_int (11**(nat.succ d)) := calc
-Zmod.of_int ((3:ℤ)**(nat.succ d)) = (Zmod.of_int 3)**(nat.succ d) : eq.symm Zmod.of_int_pow
-... = (Zmod.of_int 3) * (Zmod.of_int 3)**d : pow_succ (Zmod.of_int 3) d
-... = (Zmod.of_int 3) * (Zmod.of_int (3**d)) : by rw [@Zmod.of_int_pow 8]
-... = Zmod.of_int 3 * (Zmod.of_int (11**d)) : by rw [Heq]
-... = Zmod.of_int 11 * (Zmod.of_int (11**d)) : by rw [H311]
-... = Zmod.of_int (11**(nat.succ d)) : rfl,
+have H1 : @Zmod.of_int 8 ((3:ℤ)^(nat.succ d)) = Zmod.of_int (11^(nat.succ d)) := calc
+Zmod.of_int ((3:ℤ)^(nat.succ d)) = (Zmod.of_int 3)^(nat.succ d) : eq.symm Zmod.of_int_pow
+... = (Zmod.of_int 3)^(d+1) : rfl
+... = (Zmod.of_int 3) * (Zmod.of_int 3)^d : pow_succ (Zmod.of_int 3) d
+... = (Zmod.of_int 3) * (Zmod.of_int (3^d)) : by rw [@Zmod.of_int_pow 8]
+... = Zmod.of_int 3 * (Zmod.of_int (11^d)) : by rw [Heq]
+... = Zmod.of_int 11 * (Zmod.of_int (11^d)) : by rw [H311]
+... = Zmod.of_int (11^(nat.succ d)) : rfl,
 
 unfold Zmod.of_int at H1,
 have H2 := @quotient.exact ℤ (@Z_setoid 8) _ _ H1,
 cases H2 with k2 Hk2,
 --show (8:ℤ) ∣ 11^nat.succ d - 3^nat.succ d,
-have H3 : k2 * ↑8 = (int.of_nat 11) ** nat.succ d - (int.of_nat 3) ** nat.succ d,
+have H3 : k2 * ↑8 = (int.of_nat 11) ^ nat.succ d - (int.of_nat 3) ^ nat.succ d,
 exact Hk2,
 rw [←of_nat_pow,←of_nat_pow] at H3,
 rw [←int.of_nat_sub (H (nat.succ d))] at H3,

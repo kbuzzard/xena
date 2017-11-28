@@ -17,31 +17,32 @@ import tactic.norm_num
 
 namespace xena
 
-universes u v
-
+universes u v w
+/-
 variables {α β γ : Type u}
 variables a1 a2 a : α
 variable b : β
 variable X : Type u -- a set
 variable Y : Type v
 variables m n : ℕ
+-/
 
 -- This is where the maths starts
 
-definition is_injective (f : α → β) : Prop :=
+definition is_injective {α : Type u} {β : Type v} (f : α → β) : Prop :=
   ∀ {a1 a2 : α}, f a1 = f a2 → a1 = a2
 
-definition is_surjective (f : α → β) : Prop :=
+definition is_surjective {α : Type u} {β : Type v} (f : α → β) : Prop :=
   ∀ b, ∃ a, f a = b
 
-definition is_bijective (f : α → β) : Prop :=
+definition is_bijective {α : Type u} {β : Type v} (f : α → β) : Prop :=
   is_injective f ∧ is_surjective f
 
-definition bijects_with (X) (Y) : Prop :=
+definition bijects_with (X : Type u) (Y : Type v) : Prop :=
   ∃ f : X → Y, is_bijective f
 
 -- "fin n" means the finite set {0,1,...,n-1} of size n
-definition has_size (Y) (n) : Prop :=
+definition has_size (Y : Type u) (n) : Prop :=
   bijects_with (fin n) Y
 
 -- if Kenny cares about constructive maths he can
@@ -49,7 +50,7 @@ definition has_size (Y) (n) : Prop :=
 -- and give it a decidable instance.
 -- set_option pp.implicit true 
 
-theorem inv_of_bij (f : α → β) :
+theorem inv_of_bij {α : Type u} {β : Type v} (f : α → β) :
   is_bijective f → exists g : β → α, is_bijective g :=
 begin
 intros H_f_bijective,
@@ -74,9 +75,7 @@ apply H_right_inverse,
 end
 
 
--- Example of usage:
-
-theorem inj_of_inj_inj {f : α → β} {g : β → γ} :
+theorem inj_of_inj_inj {α : Type u} {β : Type v} {γ : Type w} {f : α → β} {g : β → γ} :
   is_injective f → is_injective g → is_injective (g ∘ f) :=
 begin
 assume H_f_inj : is_injective f,
@@ -88,7 +87,7 @@ have H2 : f a1 = f a2,
 exact H_f_inj H2,
 end
 
-theorem surj_of_surj_surj {f : α → β} {g : β → γ} :
+theorem surj_of_surj_surj {α : Type u} {β : Type v} {γ : Type w} {f : α → β} {g : β → γ} :
   is_surjective f → is_surjective g → is_surjective (g ∘ f) :=
 begin
 intros Hf Hg c,
@@ -100,7 +99,7 @@ existsi a,
 simp [function.comp,Ha,Hb]
 end
 
-theorem bij_of_bij_bij {f : α → β} {g : β → γ} :
+theorem bij_of_bij_bij {α : Type u} {β : Type v} {γ : Type w} {f : α → β} {g : β → γ} :
   is_bijective f → is_bijective g → is_bijective (g ∘ f) :=
 --  λ ⟨Hfi,Hfs⟩ ⟨Hgi,Hgs⟩, ⟨inj_of_inj_inj Hfi Hgi,surj_of_surj_surj⟩
 
@@ -117,7 +116,7 @@ split;assumption,  -- ask Mario why I couldn't use functions
 end
 
 
-theorem only_one_size (X) {m n} :
+theorem only_one_size (X : Type u) {m n : ℕ} :
   has_size X m ∧ has_size X n → m = n :=
 begin
 assume X_size_m_and_n,
@@ -135,17 +134,25 @@ end
 definition subset {α : Type u} (s : α → Prop) := { a : α // s a }
 definition complement {α : Type u} (s : α → Prop) := λ a, ¬ (s a)
 
-/-
+
 example {α : Type u} (s : α → Prop) (m n : ℕ) :
   has_size (subset s) m ∧ has_size (subset (complement s)) n
   → has_size α (m+n) :=
 begin
   assume H : has_size (subset s) m ∧ has_size (subset (complement s)) n,
   cases H with H_s_m H_nots_n,
-
+  cases H_s_m with f Hf,
+  cases H_nots_n with g Hg,
+  have h : fin (m+n) → α,
+    intro x,
+    cases x with val is_lt,
+    exact dite (val<m) 
+      (λ h2,(f ⟨val,h2⟩).val)
+      (λ h2, (g ⟨val-m,nat.sub_lt_left_iff_lt_add is_lt⟩).val),
   --: has_size (subset s) m)
 admit
 end
--/
+#check @sub_lt_iff 
+
 end xena
 
