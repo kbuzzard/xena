@@ -1,4 +1,4 @@
-import xenalib.zmod algebra.group_power tactic.norm_num
+import xenalib.zmod algebra.group_power tactic.norm_num algebra.big_operators
 
 local infix ` ^ ` := monoid.pow
 
@@ -9,8 +9,8 @@ def Fib : ℕ → ℕ
 | 1 := 1
 | (n+2) := Fib n + Fib (n+1)
 
-#eval Fib 10
-#reduce Fib 10
+--#eval Fib 10
+--#reduce Fib 10
 
 def is_even (n : ℕ) : Prop := ∃ k, n=2*k
 def is_odd (n : ℕ) : Prop := ∃ k, n=2*k+1
@@ -207,9 +207,69 @@ rw [add_mul,add_mul,add_mul],
 simp,
 end
 
+--#check @finset.sum
+--example : fintype (fin 10) := by apply_instance
+
+/-
+def test (n : ℕ) : ℕ
+| 0 := 1
+| _ := 0
+-/
+
+--set_option trace.class_instances true
+/-
+def test (n : ℕ) : ℕ → ℕ
+| _ := (n:ℕ)
+-/
+--#eval test 4 5
+
+
+
+def finsum {β : Type} [add_comm_monoid β] : Π (n : ℕ), (fin n → β) → β
+| 0 _ := 0
+| (nat.succ d) f := f ⟨0,dec_trivial⟩ + finsum d (λ x, f ⟨x.val+1,(add_lt_add_iff_right 1).2 x.is_lt⟩)
+
+lemma finsum_rev {β : Type} [add_comm_monoid β] (d : ℕ) (f : fin (d+1) → β) :
+finsum (d+1) f = finsum (d+1) (λ x, f ⟨d-x.val,lt_of_le_of_lt (nat.sub_le d x.val) (nat.lt_succ_self _)⟩)
+:=
+begin
+admit,
+end 
+
+def Q3cbsum (d : ℕ) (a b : ℤ) := finsum (d+1) (λ x, a^(x.val)*b^(d-x.val))
+
+lemma H0 (d : ℕ) (a b : ℤ) : Q3cbsum d a b = Q3cbsum d b a :=
+begin
+unfold Q3cbsum,
+rw finsum_rev d (λ (x : fin (d + 1)), a ^ x.val * b ^ (d - x.val)),
+end
+
+
+lemma H1 (d : ℕ) (a b : ℤ) : a * Q3cbsum d a b = Q3cbsum (d+1) a b - b^(d+1) :=
+begin
+admit,
+end 
+
+lemma H2 (d : ℕ) : 3 * Q3cbsum d = Q3cbsum (d+1) - 11^(d+1) :=
+begin
+admit,
+end
+
+lemma Q3cb_helper : ∀ d : ℕ, 8*Q3cbsum d = 11^(d+1)-3^(d+1) :=
+begin
+intro d,
+change 8 with 11-3,
+rw []
+end
 
 theorem Q3cb (n : ℕ) : 8 ∣ 11^n - 3^n :=
 begin
+cases n with d,
+  simp,
+rw [←Q3cb_helper d],
+existsi Q3cbsum d,
+refl,
+end
 /-
 
 What's a sensible way to do 1+x+x^2+...+x^n?
@@ -220,8 +280,6 @@ finset.sum is the one you want (or list.sum, but the finset version has more alg
 
 -/
 
-admit,
-end
 
 def factorial : ℕ → ℕ
 | 0 := 1

@@ -85,7 +85,6 @@ end
 definition subset {α : Type u} (s : α → Prop) := { a : α // s a }
 definition complement {α : Type u} (s : α → Prop) := λ a, ¬ (s a)
 
-
 example {α : Type u} (s : α → Prop) (m n : ℕ) :
   has_size (subset s) m ∧ has_size (subset (complement s)) n
   → has_size α (m+n) :=
@@ -113,7 +112,7 @@ split,
         intro H,
         have : h a1 = (f ⟨a1.val,Ha1f⟩).val,
           --unfold fin.cases_on
-          exact @dif_pos _ _ Ha1f _ (λ (h2 : a1.val < m), (f ⟨a1.val, h2⟩).val) (λ (H : ¬a1.val < m), (g ⟨a1.val - m, _⟩).val),
+          --exact @dif_pos _ _ Ha1f _ (λ (h2 : a1.val < m), (f ⟨a1.val, h2⟩).val) (λ (H : ¬a1.val < m), (g ⟨a1.val - m, _⟩).val),
 
   repeat {admit},
   end⟩,
