@@ -139,16 +139,29 @@ unfold monoid.pow nat.pow, -- pow_nat nat.pow has_pow_nat.pow_nat monoid.pow,
 rw [int.of_nat_mul,mul_comm,Hk,mul_comm],
 end
 
-theorem Q3b (n : ℕ) : 8 ∣ 11^n - 3^n :=
+theorem Q3helpful_lemma : ∀ (e : ℕ), 11^e ≥ 3^e :=
 begin
-have H : ∀ (e : ℕ), 11^e ≥ 3^e,
 intro e,
 induction e with d Hd,
   exact dec_trivial,
 exact calc 11^(nat.succ d) = 11*11^d : rfl
 ... ≥ 3*11^d : nat.mul_le_mul_right (11^d) (dec_trivial)
 ... ≥ 3*3^d : nat.mul_le_mul_left 3 Hd
-... = 3^(nat.succ d) : rfl,
+... = 3^(nat.succ d) : rfl
+end 
+
+theorem Q3helpful_lemma2 : ∀ (e : ℕ ), (((11^e-3^e):ℕ):ℤ) = (11:ℤ)^e-(3:ℤ)^e :=
+begin
+intro e,
+show int.of_nat (11^e - 3^e) = (11:ℤ)^e - (3:ℤ)^e,
+rw [int.of_nat_sub (Q3helpful_lemma e)],
+rw [of_nat_pow,of_nat_pow],
+refl,
+end
+
+theorem Q3b (n : ℕ) : 8 ∣ 11^n - 3^n :=
+begin
+have H : ∀ (e : ℕ), 11^e ≥ 3^e := Q3helpful_lemma,
 
 have H311 : @Zmod.of_int 8 3 = Zmod.of_int 11,
 apply quot.sound,
@@ -207,69 +220,104 @@ rw [add_mul,add_mul,add_mul],
 simp,
 end
 
---#check @finset.sum
---example : fintype (fin 10) := by apply_instance
+#check @finset.range
+--finset.range : ℕ → finset ℕ
+#print finset.range
+#print multiset.range
+#print list.range
+#print list.range_core
+#reduce list.range 5
+#eval list.range 5
 
-/-
-def test (n : ℕ) : ℕ
-| 0 := 1
-| _ := 0
--/
+#check @finset.sum
+--finset.sum : Π {α : Type u_1} {β : Type u_2} [_inst_1 : add_comm_monoid β],
+-- finset α → (α → β) → β
+#print finset.sum
 
---set_option trace.class_instances true
-/-
-def test (n : ℕ) : ℕ → ℕ
-| _ := (n:ℕ)
--/
---#eval test 4 5
+#check list.reverse_perm
 
+def Q3sum (d : ℕ) (a b : ℤ) := finset.sum (finset.range (d+1)) (λ n, a^n*b^(d-n))
 
-
-def finsum {β : Type} [add_comm_monoid β] : Π (n : ℕ), (fin n → β) → β
-| 0 _ := 0
-| (nat.succ d) f := f ⟨0,dec_trivial⟩ + finsum d (λ x, f ⟨x.val+1,(add_lt_add_iff_right 1).2 x.is_lt⟩)
-
-lemma finsum_rev {β : Type} [add_comm_monoid β] (d : ℕ) (f : fin (d+1) → β) :
-finsum (d+1) f = finsum (d+1) (λ x, f ⟨d-x.val,lt_of_le_of_lt (nat.sub_le d x.val) (nat.lt_succ_self _)⟩)
-:=
+lemma H0 (d : ℕ) (a b : ℤ) : Q3sum d a b = Q3sum d b a :=
 begin
+unfold Q3sum,
+--unfold finset.sum,
 admit,
-end 
-
-def Q3cbsum (d : ℕ) (a b : ℤ) := finsum (d+1) (λ x, a^(x.val)*b^(d-x.val))
-
-lemma H0 (d : ℕ) (a b : ℤ) : Q3cbsum d a b = Q3cbsum d b a :=
-begin
-unfold Q3cbsum,
-rw finsum_rev d (λ (x : fin (d + 1)), a ^ x.val * b ^ (d - x.val)),
+--rw finsum_rev d (λ (x : fin (d + 1)), a ^ x.val * b ^ (d - x.val)),
 end
 
 
-lemma H1 (d : ℕ) (a b : ℤ) : a * Q3cbsum d a b = Q3cbsum (d+1) a b - b^(d+1) :=
-begin
-admit,
-end 
+#check @finset.range_succ 
 
-lemma H2 (d : ℕ) : 3 * Q3cbsum d = Q3cbsum (d+1) - 11^(d+1) :=
+
+lemma H5 (e : ℕ) : finset.range (nat.succ e) = insert e (finset.range e) :=
 begin
-admit,
+exact finset.range_succ,
 end
 
-lemma Q3cb_helper : ∀ d : ℕ, 8*Q3cbsum d = 11^(d+1)-3^(d+1) :=
+lemma H1 (d : ℕ) (aa b : ℤ) : b * Q3sum d aa b = Q3sum (d+1) aa b - aa^(d+1) :=
+begin
+unfold Q3sum,
+rw finset.mul_sum,
+change d+1+1 with nat.succ(d+1),
+rw (@finset.range_succ (d+1)),
+rw finset.sum_insert,
+rw [nat.sub_self (d+1)],
+have : ∀ x : ℕ, x<(d+1) → b*(aa^x*b^(d-x))= aa^x*b^(d+1-x),
+  intros x Hx,
+  rw [mul_comm], 
+  have : d+1-x = (d-x)+1,
+    rw [add_comm,nat.add_sub_assoc (nat.le_of_lt_succ Hx),add_comm],
+  rw [this],
+  rw [pow_succ],simp,
+rw [pow_zero,mul_one],
+rw [add_comm (aa^(d+1)),add_sub_cancel],
+-- need a lemma that says two sums are the same if they agree on small terms.
+
+admit,
+suffices : ¬(d + 1 = d ∨ d + 1 < d),
+  simp [this],
+
+intro H,cases H,
+  apply ne_of_gt (nat.lt_succ_self d),
+  exact a,
+apply lt_irrefl (d+1),
+exact lt_trans a (nat.lt_succ_self d),
+end
+
+lemma H3 (d : ℕ) : 11 * Q3sum d 3 11 = Q3sum (d+1) 3 11 - 3^(d+1) := H1 d 3 11
+lemma H2 (d : ℕ) : 3 * Q3sum d 3 11 = Q3sum (d+1) 3 11 - 11^(d+1) :=
+begin
+rw [H0],
+rw H1 d 11 3,
+rw [H0]
+end
+
+lemma Q3cb_helper : ∀ d : ℕ, 8*Q3sum d 3 11 = 11^(d+1)-3^(d+1) :=
 begin
 intro d,
-change 8 with 11-3,
-rw []
+change (8:ℤ) with (11:ℤ)-3,
+rw [sub_mul,H3,H2],
+simp,
 end
 
-theorem Q3cb (n : ℕ) : 8 ∣ 11^n - 3^n :=
+theorem Q3cbint (n : ℕ) : 8 ∣ (11:ℤ)^n - 3^n :=
 begin
 cases n with d,
   simp,
+show 8 ∣ (11:ℤ)^(d+1) - 3^(d+1),
 rw [←Q3cb_helper d],
-existsi Q3cbsum d,
+existsi Q3sum d 3 11,
 refl,
 end
+
+theorem Q3cb (n : ℕ) : 8 ∣ 11^n - 3^n := -- non-inductive proof
+begin
+rw ←int.coe_nat_dvd,
+rw [Q3helpful_lemma2],
+apply Q3cbint,
+end
+
 /-
 
 What's a sensible way to do 1+x+x^2+...+x^n?
