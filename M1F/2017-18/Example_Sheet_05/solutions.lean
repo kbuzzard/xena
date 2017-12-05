@@ -223,7 +223,15 @@ def test (n : ℕ) : ℕ → ℕ
 -/
 --#eval test 4 5
 
-
+open finset 
+#check (range 19).sum
+#print finset.sum 
+#print finset.range
+#print multiset.range 
+#print list.range 
+#print list.range_core 
+#eval list.range 5
+#eval finset.range 5
 
 def finsum {β : Type} [add_comm_monoid β] : Π (n : ℕ), (fin n → β) → β
 | 0 _ := 0
