@@ -234,21 +234,9 @@ end
 -- finset α → (α → β) → β
 #print finset.sum
 
-<<<<<<< HEAD
-open finset 
-#check (range 19).sum
-#print finset.sum 
-#print finset.range
-#print multiset.range 
-#print list.range 
-#print list.range_core 
-#eval list.range 5
-#eval finset.range 5
-=======
 #check list.reverse_perm
 
 def Q3sum (d : ℕ) (a b : ℤ) := finset.sum (finset.range (d+1)) (λ n, a^n*b^(d-n))
->>>>>>> 241759fff00805cbdcbf4fd83234e20ee8d0720c
 
 lemma H0 (d : ℕ) (a b : ℤ) : Q3sum d a b = Q3sum d b a :=
 begin
@@ -330,6 +318,7 @@ rw [Q3helpful_lemma2],
 apply Q3cbint,
 end
 
+#check @finset.prod_image
 /-
 
 What's a sensible way to do 1+x+x^2+...+x^n?
