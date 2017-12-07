@@ -331,6 +331,7 @@ rw [Q3helpful_lemma2],
 apply Q3cbint,
 end
 
+#check @finset.prod_image
 /-
 
 What's a sensible way to do 1+x+x^2+...+x^n?
