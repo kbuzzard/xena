@@ -222,46 +222,50 @@ end
 
 def Q3sum (d : ℕ) (a b : ℤ) := finset.sum (finset.range (d+1)) (λ n, a^n*b^(d-n))
 
-#check quot.lift_on
-#check finset.image 
-#check finset.mk
-#check finset.range 
-#print finset.range 
-#print multiset.range
-#check multiset.coe_reverse
-#check @finset.sum_image
 --finset.sum_image :
 --  ∀ {α : Type u_1} {β : Type u_2} {γ : Type u_3} {f : α → β} [_inst_1 : add_comm_monoid β]
 --  [_inst_2 : decidable_eq α] [_inst_3 : decidable_eq γ] {s : finset γ} {g : γ → α},
 --    (∀ (x : γ), x ∈ s → ∀ (y : γ), y ∈ s → g x = g y → x = y) →
 --    finset.sum (finset.image g s) f = finset.sum s (λ (x : γ), f (g x))
 
+lemma lt_of_in_finset {x y: ℕ} : x ∈ finset.range y → x < y := by simp
+
+lemma H7 : ∀ d : ℕ, (finset.range (d+1)).image (λ i,d-i) = finset.range (d+1) :=
+begin
+admit,
+end 
+
 lemma H0 (d : ℕ) (a b : ℤ) : Q3sum d a b = Q3sum d b a :=
 begin
 unfold Q3sum,
 have : (finset.range (d+1)).image (λ i,d-i) = finset.range (d+1),
-  admit,
+  exact H7 d,
 /-
   unfold finset.range,
   unfold multiset.range,
   rw ←multiset.coe_reverse,
 -/
 rw ←this, -- aargh, rewrites both!
-have H53 : ∀ (x : ℕ), x ∈ finset.range(d+1) → ∀ (y : ℕ), y ∈ finset.range (d+1) → d-x = d-y → x=y,
-  admit,
+have H53 : ∀ (x : ℕ), 
+    x ∈ finset.range(d+1) → ∀ (y : ℕ), y ∈ finset.range (d+1) → d-x = d-y → x=y,
+  introv Hx Hy Hxy,
+  have : (d-x)+x=d,
+    exact nat.sub_add_cancel (nat.le_of_lt_succ (lt_of_in_finset Hx)),
+  rw Hxy at this,
+  rw ←nat.sub_add_comm (nat.le_of_lt_succ (lt_of_in_finset Hy)) at this,
+  have this2 : (d+x-y)+y=d+x,
+    exact nat.sub_add_cancel (le_trans (nat.le_of_lt_succ (lt_of_in_finset Hy)) (nat.le_add_right _ _)),
+  rw this at this2,
+  exact eq.symm (nat.add_left_cancel this2),
 rw [@finset.sum_image ℕ ℤ ℕ (λ (n : ℕ), a ^ n * b ^ (d - n)) _ _ _ 
      (finset.range (d+1)) (λ i : ℕ, d-i) H53],
 rw [this],
-apply congr_arg,
-apply funext,
-intro x,
+apply finset.sum_congr,
+introv H,
+have := lt_of_in_finset H,
 show a ^ (d - x) * b ^ (d - (d - x)) = b ^ x * a ^ (d - x),
-rw [mul_comm],
---CRAP this i not true.
-
---unfold finset.sum,
-admit,
---rw finsum_rev d (λ (x : fin (d + 1)), a ^ x.val * b ^ (d - x.val)),
+rw [nat.sub_sub_self (nat.le_of_lt_succ this)],
+apply mul_comm,
 end
 
 lemma H5 (e : ℕ) : finset.range (nat.succ e) = insert e (finset.range e) :=
@@ -269,7 +273,6 @@ begin
 exact finset.range_succ,
 end
 
-lemma lt_of_in_finset {x y: ℕ} : x ∈ finset.range y → x < y := by simp
 
 lemma H1 (d : ℕ) (aa b : ℤ) : b * Q3sum d aa b = Q3sum (d+1) aa b - aa^(d+1) :=
 begin

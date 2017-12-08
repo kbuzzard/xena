@@ -10,7 +10,12 @@ TODO: Add topology, and prove that the complexes are a topological ring.
 import analysis.real
 noncomputable theory
 
-local attribute [instance] classical.decidable_inhabited classical.prop_decidable
+-- I have no idea about whether I should be proving that
+-- C is a field or a discrete field. As far as I am personally
+-- concerned these structures are the same. I have gone for
+-- a field which enables me to comment out the next line.
+
+--local attribute [instance] classical.decidable_inhabited classical.prop_decidable
 
 structure complex : Type :=
 (re : ℝ) (im : ℝ)
@@ -43,16 +48,17 @@ local attribute [simp] eq_iff_re_eq_and_im_eq proj_re proj_im
 
 def of_real : ℝ → ℂ := λ x, { re := x, im := 0 }
 
+protected def zero := of_real 0
+protected def one := of_real 1
+
 instance coe_real_complex : has_coe ℝ ℂ := ⟨of_real⟩
-instance has_zero_complex : has_zero complex := ⟨of_real 0⟩
-instance has_one_complex : has_one complex := ⟨of_real 1⟩
-instance inhabited_complex : inhabited complex := ⟨0⟩
+instance has_zero_complex : has_zero complex := ⟨complex.zero⟩
+instance has_one_complex : has_one complex := ⟨complex.one⟩
+instance inhabited_complex : inhabited complex := ⟨complex.zero⟩ 
 
 def I : complex := {re := 0, im := 1}
 
 def conjugate (z : complex) : complex := {re := z.re, im := -(z.im)}
-
--- Are these supposed to be protected too?
 
 protected def add : complex → complex → complex :=
 λ z w, { re :=z.re+w.re, im:=z.im+w.im}
@@ -76,10 +82,19 @@ instance : has_neg complex := ⟨complex.neg⟩
 instance : has_mul complex := ⟨complex.mul⟩
 instance : has_inv complex := ⟨complex.inv⟩
 
+-- I don't understand enough about typeclasses to know
+-- which of the variants of e.g. proj_add_re
+-- I should be making a local simp lemma. So I went for
+-- all of them.
+
 lemma proj_zero_re : (0:complex).re=0 := rfl
 lemma proj_zero_im : (0:complex).im=0 := rfl
+lemma proj_zero_re' : (complex.zero).re=0 := rfl
+lemma proj_zero_im' : (complex.zero).im=0 := rfl
 lemma proj_one_re : (1:complex).re=1 := rfl
 lemma proj_one_im : (1:complex).im=0 := rfl
+lemma proj_one_re' : (complex.one).re=1 := rfl
+lemma proj_one_im' : (complex.one).im=0 := rfl 
 lemma proj_I_re : complex.I.re=0 := rfl
 lemma proj_I_im : complex.I.im=1 := rfl
 lemma proj_conj_re (z : complex) : (conjugate z).re = z.re := rfl
@@ -95,10 +110,13 @@ lemma proj_neg_im (z: complex) : (-z).im=-z.im := rfl
 lemma proj_neg_re' (z: complex) : (complex.neg z).re=-z.re := rfl
 lemma proj_neg_im' (z: complex) : (complex.neg z).im=-z.im := rfl
 
-local attribute [simp] proj_zero_re proj_zero_im proj_one_re proj_one_im
+local attribute [simp] proj_zero_re proj_zero_im proj_zero_re' proj_zero_im'
+local attribute [simp] proj_one_re proj_one_im proj_one_re' proj_one_im'
 local attribute [simp] proj_I_re proj_I_im proj_conj_re proj_conj_im
 local attribute [simp] proj_add_re proj_add_im proj_add_re' proj_add_im' proj_add_re'' proj_add_im''
 local attribute [simp] proj_neg_re proj_neg_im proj_neg_re' proj_neg_im'
+
+-- one size fits all tactic 
 
 meta def crunch : tactic unit := do
 `[intros],
@@ -107,7 +125,7 @@ meta def crunch : tactic unit := do
 
 instance : add_comm_group complex :=
 { add_comm_group .
-  zero         := 0,
+  zero         := complex.zero,
   add          := complex.add,
   neg          := complex.neg,
   zero_add     := by crunch,
@@ -129,7 +147,7 @@ lemma proj_of_real_re' (r:real) : (r:complex).re = r := rfl
 lemma proj_of_real_im' (r:real) : (r:complex).im = 0 := rfl
 local attribute [simp] proj_sub_re proj_sub_im proj_of_real_re proj_of_real_im
 local attribute [simp] proj_mul_re proj_mul_im proj_mul_re' proj_mul_im'
-local attribute [simp] proj_of_real_re proj_of_real_im proj_of_real_re' proj_of_real_im'
+local attribute [simp] proj_of_real_re' proj_of_real_im'
 
 lemma norm_squared_pos_of_nonzero (z : complex) (H : z ≠ 0) : norm_squared z > 0 :=
 begin -- far more painful than it should be but I need it for inverses
@@ -186,16 +204,18 @@ rw [abs_mul_abs_self],
   simp,
 end
 
-instance : discrete_field complex :=
-{ discrete_field .
-  add              := (+),
-  zero             := 0,
-  neg          := complex.neg,
-  zero_add     := by crunch,
-  add_zero     := by crunch,
-  add_comm     := by crunch,
-  add_assoc    := by crunch,
-  add_left_neg := by crunch,
+--set_option pp.all true
+set_option trace.simp_lemmas_cache true
+instance : field complex :=
+{ --field .
+--  add              := (+),
+--  zero             := 0,
+--  neg          := complex.neg,
+--  zero_add     := by crunch,
+--  add_zero     := by crunch,
+--  add_comm     := by crunch,
+--  add_assoc    := by crunch,
+--  add_left_neg := by crunch,
   one              := 1,
   mul              := has_mul.mul,
   inv              := has_inv.inv,
@@ -203,6 +223,14 @@ instance : discrete_field complex :=
   one_mul          := by crunch,
   mul_comm         := by crunch,
   mul_assoc        := by crunch,
+  left_distrib := begin
+intros,
+rw [eq_iff_re_eq_and_im_eq],
+split,
+simp,
+simp[add_mul,mul_add],
+
+  end,
   left_distrib     := by crunch,
   right_distrib    := by crunch,
   zero_ne_one      := begin
@@ -246,14 +274,15 @@ instance : discrete_field complex :=
     rw [←mul_div_assoc,←mul_div_assoc,div_add_div_same],
     simp [zero_div],
   end, -- it worked without modification!
-  -- Presumably I could just have proved mul_comm outside the verification that C is a field
-  -- and then used that too?
+  /-
   inv_zero         := begin
   unfold has_inv.inv complex.inv add_comm_group.zero,
   apply eq_of_re_eq_and_im_eq,
   split;simp [zero_div],
   end,
-  has_decidable_eq := by apply_instance,
+  -/
+--  has_decidable_eq := by apply_instance,
+  ..add_comm_group complex,
   }
 
 theorem im_eq_zero_of_complex_nat (n : ℕ) : (n:complex).im = 0 :=
