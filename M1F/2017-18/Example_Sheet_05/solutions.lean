@@ -229,10 +229,60 @@ def Q3sum (d : ℕ) (a b : ℤ) := finset.sum (finset.range (d+1)) (λ n, a^n*b^
 --    finset.sum (finset.image g s) f = finset.sum s (λ (x : γ), f (g x))
 
 lemma lt_of_in_finset {x y: ℕ} : x ∈ finset.range y → x < y := by simp
+#print multiset.to_finset 
+#print finset.range
+#check multiset.erase
+#check finset.eq_of_veq
+#print multiset.erase_dup 
+#check multiset.nodup_range
+#check multiset.erase_dup_eq_self
+#print multiset.map 
+#check multiset.coe_reverse
+#print multiset.range
+#check multiset.coe_map
+#print list.reverse
+#print list.iota._main
+#print list.range_core
+#check list.range_core_range'
+#print list.range'._main
+#eval list.range' 5 8 -- [5,6,7,8,9,10,11,12] 
+#check list.range'
+--set_option pp.notation false
+lemma H8 (d : ℕ) : list.map (λ (i : ℕ), d - i) (list.range (d + 1)) 
+    = list.reverse (list.range (d + 1)) :=
+begin
+admit, -- and ask Mario
+end
 
 lemma H7 : ∀ d : ℕ, (finset.range (d+1)).image (λ i,d-i) = finset.range (d+1) :=
 begin
-admit,
+-- statement about finsets
+intro d,
+unfold finset.image,
+unfold finset.range,
+show multiset.to_finset (multiset.map (λ (i : ℕ), d - i) 
+      (multiset.range (d + 1))) =
+    {val := multiset.range (d + 1), nodup := _},
+unfold multiset.to_finset,
+apply finset.eq_of_veq,
+show multiset.erase_dup (multiset.map (λ (i : ℕ), d - i) (multiset.range (d + 1)))
+    = multiset.range (d + 1),
+-- now a statement about multisets
+have this2 := multiset.nodup_range (d+1),
+suffices : multiset.erase_dup (multiset.map (λ (i : ℕ), d - i) (multiset.range (d + 1))) 
+   = multiset.erase_dup (multiset.range (d + 1)),
+  rw [this],
+  exact multiset.erase_dup_eq_self.2 this2,
+apply congr_arg,
+clear this2,
+show multiset.map (λ (i : ℕ), d - i) (multiset.range (d + 1)) 
+    = ↑(list.range (d + 1)),
+rw ←multiset.coe_reverse,
+unfold multiset.range,
+rw multiset.coe_map,
+apply congr_arg,
+-- now a statement about lists
+exact H8 d,
 end 
 
 lemma H0 (d : ℕ) (a b : ℤ) : Q3sum d a b = Q3sum d b a :=
@@ -334,7 +384,7 @@ rw [Q3helpful_lemma2],
 apply Q3cbint,
 end
 
-#check @finset.prod_image
+--#check @finset.prod_image
 /-
 
 What's a sensible way to do 1+x+x^2+...+x^n?
@@ -676,3 +726,4 @@ simp,
 end
 
 
+theorem Q6 : 1=1 := sorry -- blue-eyed islanders
