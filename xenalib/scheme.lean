@@ -47,10 +47,6 @@ let W := inter U V,
 exact (FP.res V W (inter_sub_right U V))
 end
 
---#check set.Union_subset_iff
---set.Union_subset_iff : (⋃ (i : ?M_2), ?M_3 i) ⊆ ?M_4 ↔ ∀ (i : ?M_2), ?M_3 i ⊆ ?M_4
-
-
 lemma cov_is_subs {α : Type u} [T : topological_space α]
   (U : {U : set α // T.is_open U}) 
   {γ : Type v} (Ui : γ → {U : set α // T.is_open U}) 
@@ -88,6 +84,11 @@ structure sheaf_of_rings (α : Type u) [T : topological_space α] :=
           (Hcov : (⋃ (x : γ), (Ui x).1) = U.1),
             function.bijective (gluing FP U Ui Hcov)
 )
+
+structure ideal (R : Type u) [RR : comm_ring R] :=
+(I : set R)
+(I_ab_group : RR.0 ∈ I ∧ ∀ a b : R, a ∈ I → b ∈ I → a-b ∈ I)
+(I_mult : ∀ (r : R) (i ∈ I), 
 
 /-
 ring_morphism: make Ra and Rb instance implicit
