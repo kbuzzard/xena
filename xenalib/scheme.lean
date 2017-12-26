@@ -34,7 +34,7 @@ lemma inter_sub_right {α : Type u} [T : topological_space α]
 λ x Hx,Hx.right
 
 def res_to_inter_left {α : Type u} [T : topological_space α] (FP : presheaf_of_rings α) 
-  (U V : { U : set α // T.is_open U}) : ring_morphism _ _ _ _:=
+  (U V : { U : set α // T.is_open U}) : ring_morphism (FP.F U) (FP.F (inter U V)) _ _:=
 begin
 let W := inter U V,
 exact (FP.res U W (inter_sub_left U V))
@@ -87,8 +87,9 @@ structure sheaf_of_rings (α : Type u) [T : topological_space α] :=
 
 structure ideal (R : Type u) [RR : comm_ring R] :=
 (I : set R)
-(I_ab_group : RR.0 ∈ I ∧ ∀ a b : R, a ∈ I → b ∈ I → a-b ∈ I)
-(I_mult : ∀ (r : R) (i ∈ I), 
+(Izero : RR.zero ∈ I)
+(I_ab_group : ∀ a b : R, a ∈ I → b ∈ I → a-b ∈ I)
+(I_module : ∀ (r : R) (i ∈ I), r*i ∈ I)
 
 /-
 ring_morphism: make Ra and Rb instance implicit
