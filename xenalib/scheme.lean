@@ -9,9 +9,10 @@ structure ring_morphism (α : Type u) (β : Type v) (Ra : comm_ring α) (Rb : co
 (f_mul : ∀ {a₁ a₂ : α}, f (a₁ * a₂) = f a₁ * f a₂) 
 
 structure presheaf_of_rings (α : Type u) [T : topological_space α] :=
-(F : {U : set α // T.is_open U} → Σ R : Type, comm_ring R)
+(F : {U : set α // T.is_open U} → Type)
+(Fring : ∀ U, comm_ring (F U))
 (res : ∀  (U V : {U : set α // T.is_open U}) (H : V.1 ⊆ U.1), 
-  ring_morphism (F U).1 (F V).1 (F U).2 (F V).2)
+  ring_morphism (F U) (F V) (Fring U) (Fring V))
 (Hid : ∀ {U : {U : set α // T.is_open U}}, (res U U (set.subset.refl _)).f = id)  
 (Hcomp : ∀ {U V W : {U : set α // T.is_open U}} (HUV : V.1 ⊆ U.1) (HVW : W.1 ⊆ V.1),
   (res U W (set.subset.trans HVW HUV)).f = (res V W HVW).f ∘ (res U V HUV).f )
@@ -66,7 +67,7 @@ def gluing {α : Type u} [T : topological_space α] (FP : presheaf_of_rings α)
   (U : {U : set α // T.is_open U}) 
   {γ : Type v} (Ui : γ → {U : set α // T.is_open U}) 
   (Hcov : (⋃ (x : γ), (Ui x).1) = U.1) : 
-  (FP.F U).1 → {a : (Π (x : γ), (FP.F (Ui x)).1) | ∀ (x y : γ), 
+  (FP.F U) → {a : (Π (x : γ), (FP.F (Ui x))) | ∀ (x y : γ), 
     (res_to_inter_left FP (Ui x) (Ui y)).f (a x) = 
     (res_to_inter_right FP (Ui x) (Ui y)).f (a y)} :=
 begin
@@ -88,3 +89,16 @@ structure sheaf_of_rings (α : Type u) [T : topological_space α] :=
             function.bijective (gluing FP U Ui Hcov)
 )
 
+/-
+ring_morphism: make Ra and Rb instance implicit
+
+In fact you might even want to move the type family component into a parameter
+
+Uncurrying will save you the trouble of stuff like def inter and inter_sub_left which
+are duplicates of existing theorems
+
+I might also suggest removing the is_open parameter from F entirely, but I don't
+know if that will interfere with some construction or another since that's not an
+isomorphic modification (seeing as how partial functions are not nice to work 
+with in practice)
+-/
