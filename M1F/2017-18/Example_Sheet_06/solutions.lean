@@ -561,7 +561,7 @@ split,
   refl,
 }
 end 
-set_option pp.all true 
+--set_option pp.all true 
 
 theorem Q6c2' : liminf a2 0 :=
 begin
@@ -608,7 +608,7 @@ show x ≤ 0,
     { suffices : ↑n < (↑m:ℝ),exact le_of_lt (nat.cast_lt.1 this), exact lt_of_le_of_lt (le_max_right _ _) Hm },
     have H2' : m ≥ 1,
     { refine le_trans Hn _, exact H2},
-    have H4 : 1 / (↑m:ℝ) ∈ {x : ℝ | ∃ (m : ℕ) (H : m ≥ n), x = a2 ⟨m, (le_trans Hn H2)⟩},
+    have H4 : 1 / (↑m:ℝ) ∈ {x : ℝ | ∃ (m : ℕ) (H : m ≥ n), x = a2 ⟨m, (le_trans Hn H)⟩},
     { existsi [m,H2],
       refl },
     have H5 := H1 H4,
