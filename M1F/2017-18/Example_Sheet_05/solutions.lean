@@ -228,6 +228,7 @@ def Q3sum (d : ℕ) (a b : ℤ) := finset.sum (finset.range (d+1)) (λ n, a^n*b^
 --    (∀ (x : γ), x ∈ s → ∀ (y : γ), y ∈ s → g x = g y → x = y) →
 --    finset.sum (finset.image g s) f = finset.sum s (λ (x : γ), f (g x))
 
+
 lemma lt_of_in_finset {x y: ℕ} : x ∈ finset.range y → x < y := by simp
 #print multiset.to_finset 
 #print finset.range

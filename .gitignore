@@ -1,14 +1,5 @@
 *.olean
 /_target
 /leanpkg.path
-/GITHINTS.org
-/TODO.org
-/bogus_real_scratch.lean
-/leanpkg.toml_master
-/scratch*.lean
-/thm_search.lean
-/xena_header_image.png
-/xenalib/real.lean~
-/xenalib/real.org
-/xenalib/real.org~
-*scratch*.lean
+/scratch/*
+/unfinished/*

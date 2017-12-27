@@ -561,7 +561,6 @@ split,
   refl,
 }
 end 
---set_option pp.all true 
 
 theorem Q6c2' : liminf a2 0 :=
 begin
@@ -606,8 +605,6 @@ show x ≤ 0,
     rw ←inv_eq_one_div at Hm,
     have H2 : n ≤ m,
     { suffices : ↑n < (↑m:ℝ),exact le_of_lt (nat.cast_lt.1 this), exact lt_of_le_of_lt (le_max_right _ _) Hm },
-    have H2' : m ≥ 1,
-    { refine le_trans Hn _, exact H2},
     have H4 : 1 / (↑m:ℝ) ∈ {x : ℝ | ∃ (m : ℕ) (H : m ≥ n), x = a2 ⟨m, (le_trans Hn H)⟩},
     { existsi [m,H2],
       refl },
@@ -615,9 +612,58 @@ show x ≤ 0,
     have H6 := inv_le_inv _ _ Hny H5,
     rw [←inv_eq_one_div,inv_inv'] at H6,
     apply lt_irrefl (m:ℝ),
-    exact lt_of_le_of_lt H6 Hm,
-
+    refine lt_of_le_of_lt H6 _,
+    refine lt_of_le_of_lt (le_max_left _ _) Hm,
 end
-#print S
---def S : ({n // n ≥ 1} → ℝ) → Π (n : ℕ), n ≥ 1 → set ℝ :=
---λ (a : {n // n ≥ 1} → ℝ) (n : ℕ) (H : n ≥ 1), {r : ℝ | ∃ (m : ℕ) (Hm : m ≥ n), r = a ⟨m, _⟩}
+
+
+--noncomputable def a3 : {n : ℕ // n ≥ 1} → ℝ := λ N, 1 - ((((N.val % (2:ℕ))):ℤ):ℝ)
+theorem Q6c3' : liminf a3 0 :=
+begin
+existsi (λ _,(0:ℝ)),
+split,
+{ split,
+  { intros x₁ Hx₁,
+    cases Hx₁ with n₁ Hn₁,
+    cases Hn₁ with H1 H2,
+    rw H2,
+    exact le_refl 0 },
+  intros x₂ Hx₂,
+  apply Hx₂,
+  existsi 1,
+  existsi _,refl,
+  exact le_refl 1 },
+intros n H,
+split,
+{ intro x₁,
+  intro H1,
+  show 0 ≤ x₁,
+  cases H1 with n₁ Hn₁,
+  cases Hn₁ with H1 H2,
+  rw H2,
+  unfold a3,
+  rw [sub_nonneg],
+  show ↑((↑n₁:ℤ) % (↑2:ℤ)) ≤ (1:ℝ),
+  have H3 : (1:ℝ) = ↑(1:ℤ), rw [←int.cast_one],
+  rw [H3],
+  rw [int.cast_le],
+  apply int.le_of_lt_add_one,
+  show ↑n₁ % ↑2 < (2:ℤ),
+  refine int.mod_lt_of_pos ↑n₁ _,
+  norm_num },
+intros x₁ Hx₁,
+show x₁ ≤ 0,
+apply Hx₁,
+existsi (2*n+1),
+existsi _,
+{ unfold a3,
+  apply eq.symm,
+  apply sub_eq_zero_of_eq,
+  rw ←int.cast_one,
+  rw int.cast_inj,
+  show (1:ℤ) = ↑((2*n+1) % 2),
+  suffices : 1 = 1 % 2,simpa,
+  refl },
+rw [mul_comm,mul_two,add_assoc],
+apply nat.le_add_right
+end 
