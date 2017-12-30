@@ -166,7 +166,7 @@ intro H, -- this is the hypothesis x^2-3x+2=0.
 have H2:x^2-3*x+2=(x-1)*(x-2), {
  -- Aargh! Lean stuggles to do this! Excuse us for a second.
  unfold pow,
- change (3:ℤ) with 2+1;simp [mul_add,mul_one,add_left_cancel_iff],
+ change (3:ℤ) with 2+1;simp [mul_add,mul_one,add_left_cancel_iff,mul_add,add_mul,mul_comm],
  -- Done.
 },
 
