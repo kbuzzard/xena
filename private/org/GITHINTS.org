@@ -1,9 +1,0 @@
-* single user git workflow
-** http://blog.ezyang.com/2010/01/single-user-git-workflow/
-** If you're not going to bother with branching:
-
-git commit -m "useful comments"
-[do that a lot]
-
-git push 
-[do that when it's ready]
