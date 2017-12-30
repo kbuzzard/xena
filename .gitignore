@@ -2,5 +2,6 @@
 /_target
 /leanpkg.path
 /private
+/private/*
 M1F/problem_bank/solns*
 M1F/problem_bank/exsht*
