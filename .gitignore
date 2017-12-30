@@ -1,5 +1,7 @@
 *.olean
 /_target
 /leanpkg.path
-/scratch/*
-/unfinished/*
+/private
+/private/*
+M1F/problem_bank/solns*
+M1F/problem_bank/exsht*

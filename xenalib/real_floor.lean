@@ -2,6 +2,43 @@ import analysis.real init.classical tactic.norm_num
 
 namespace M1F
 
+def floor_set (x : ℝ) : set ℝ := { y : ℝ | y ≤ x ∧  ∃ n : ℤ, y = ↑n }
+
+lemma floor_set_nonempty (x : ℝ) : ∃ s : ℝ, s ∈ floor_set x :=
+let ⟨m,Hm⟩ := exists_lt_nat (-x) in 
+⟨-m,begin
+  split,
+  { exact le_of_lt (neg_lt.1 Hm)},
+  existsi (-(m:ℤ)),
+  simp,
+end⟩ 
+
+lemma floor_set_bounded (x : ℝ) : ∃ B : ℝ, B ∈ upper_bounds (floor_set x) :=
+⟨x,λ _ H,H.left⟩
+
+theorem exists_real_floor (x : ℝ) : ∃ (n : ℤ), ↑n ≤ x ∧ x < n+1 :=
+begin
+let S :=floor_set x,
+have H₁ := floor_set_nonempty x,
+cases H₁ with z Hz, 
+have HB : x ∈ upper_bounds (floor_set x)
+have H₂ := floor_set_bounded x,
+cases H₂ with B HB,
+
+have lub_exists := exists_supremum_real Hz HB,
+cases lub_exists with m Hm,
+
+
+
+have H1 : ∃ s : ℝ, s ∈ S := let ⟨m,Hm⟩ := exists_lt_nat (-x) in 
+⟨-m,begin
+  split,
+  { exact le_of_lt (neg_lt.1 Hm)},
+  existsi (-(m:ℤ)),
+  simp,
+end⟩ 
+
+end 
 
 
 theorem floor_real_exists : ∀ (x : ℝ), ∃ (n : ℤ), ↑n ≤ x ∧ x < n+1 :=

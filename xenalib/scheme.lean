@@ -130,4 +130,82 @@ Mario Carneiro
 Whenever you are trying to make a typeclass instance solvable, you need to add an instance keyed to the form of the thing being inferred. If it's FP.F then this is easy, just have a theorem like instance : comm_ring (FP.F U O) or whatever
 If it's a parameter, the comm_ring part will also need to be a parameter, so it shows up in the local context of all such theorems (or else it is derivable from something in the context that only depends on F)
 
+I might also suggest removing the is_open parameter from F entirely, but I don't
+know if that will interfere with some construction or another since that's not an
+isomorphic modification (seeing as how partial functions are not nice to work 
+with in practice)
+
+and by make F a parameter I meant this
+
+structure presheaf_of_rings (α : Type u) [topological_space α] (F : Π U : set α, is_open U → Type) :=
+[Fring : ∀ U O, comm_ring (F U O)]
+
+It's good for the digestion if you've had too much curry
+
+    why don't you use add_comm_group?
+
+Re: ideal, you should have a is_subgroup predicate for asserting that I is closed under group operations for this
+It should be similar to is_submodule in algebra/module
+Mario Carneiro
+@digama0
+05:26
+
+    with now no clue as to how to figure out that F U is a ring
+
+Whenever you are trying to make a typeclass instance solvable, you need to add an instance keyed to the form of the thing being inferred. If it's FP.F then this is easy, just have a theorem like instance : comm_ring (FP.F U O) or whatever
+If it's a parameter, the comm_ring part will also need to be a parameter, so it shows up in the local context of all such theorems (or else it is derivable from something in the context that only depends on F)
+Patrick Massot
+@PatrickMassot
+14:43
+I think the question of how to define something as composite as a sheaf and not be buried under cumbersome notations and explicit arguments is crucial. Here my try at reducing the mess a bit:
+
+variables (α : Type u) [T : topological_space α]
+include T
+def open_sets :=  {U : set α // T.is_open U}
+
+instance open_inter : has_inter (open_sets α):= 
+⟨λ U V, ⟨U.1 ∩ V.1, T.is_open_inter U.1 V.1 U.2 V.2⟩⟩
+
+instance open_subset : has_subset (open_sets α) := 
+⟨λ U V, U.1 ⊆ V.1⟩
+
+lemma inter_sub_left (U V : open_sets α) : U ∩ V ⊆ U :=
+  λ x Hx,Hx.left
+
+lemma inter_sub_right (U V : open_sets α) : U ∩ V ⊆ V :=
+λ x Hx,Hx.right
+
+structure presheaf_of_rings  :=
+(F : open_sets α  → Type)
+[Fring : ∀ U, comm_ring (F U)]
+(res : ∀  (U V : open_sets α) (H : V ⊆ U), 
+  @ring_morphism (F U) (F V) (Fring U) (Fring V))
+(Hid : ∀ {U : open_sets α}, (res U U (set.subset.refl _)).f = id)  
+(Hcomp : ∀ {U V W : open_sets α} (HUV : V ⊆ U) (HVW : W ⊆ V),
+  (res U W (set.subset.trans HVW HUV)).f = (res V W HVW).f ∘ (res U V HUV).f )
+
+instance presheaf_ring (FP: presheaf_of_rings α) (U : open_sets α): comm_ring (FP.F U) := 
+FP.Fring U
+
+variables U V : open_sets α
+
+def res_to_inter_left (FP : presheaf_of_rings α) 
+  (U V : open_sets α) : ring_morphism (FP.F U) (FP.F (U ∩ V)) :=
+FP.res U (U ∩ V) (inter_sub_left α U V)
+
+def res_to_inter_right (FP : presheaf_of_rings α) 
+  (U V : open_sets α) : ring_morphism (FP.F V) (FP.F (U ∩ V)) :=
+FP.res V (U ∩ V) (inter_sub_right α U V)
+
+Here it seems enough to have α explicit everywhere but T implicit.
+I should have said that I have:
+structure ring_morphism (α : Type u) (β : Type v) [Ra : comm_ring α] [Rb : comm_ring β]
+in the definition of morphisms
+In the definition of presheaf I need to give the instances explicitly but then in res_to_inter_* I don't
+thanks to presheaf_ring
+Patrick Massot
+@PatrickMassot
+14:50
+I don't how many theorem you unlock by providing has_inter and has_subset instances. But at least you get convenient notations
+
 -/
