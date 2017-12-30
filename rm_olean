@@ -1,1 +1,1 @@
-zfind . -iname "*.olean" -execdir rm '{}' \;
+find . -iname "*.olean" -execdir rm '{}' \;
