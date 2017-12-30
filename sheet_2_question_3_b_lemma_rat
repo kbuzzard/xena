@@ -1,0 +1,1186 @@
+theorem no_rational_squared_is_three : not
+  (@Exists.{1} rat
+     (λ (q : rat),
+        @eq.{1} rat
+          (@pow_nat.{0} rat
+             (@monoid.has_pow_nat.{0} rat
+                (@ring.to_monoid.{0} rat
+                   (@domain.to_ring.{0} rat
+                      (@to_domain.{0} rat
+                         (@linear_ordered_field.to_linear_ordered_ring.{0} rat
+                            (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                               rat.discrete_linear_ordered_field))))))
+             q
+             (@bit0.{0} nat nat.has_add (@has_one.one.{0} nat nat.has_one)))
+          (@bit1.{0} rat rat.has_one rat.has_add (@has_one.one.{0} rat rat.has_one)))) :=
+@id_locked.{0}
+  (not
+     (@Exists.{1} rat
+        (λ (q : rat),
+           @eq.{1} rat
+             (@pow_nat.{0} rat
+                (@monoid.has_pow_nat.{0} rat
+                   (@ring.to_monoid.{0} rat
+                      (@domain.to_ring.{0} rat
+                         (@to_domain.{0} rat
+                            (@linear_ordered_field.to_linear_ordered_ring.{0} rat
+                               (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                  rat.discrete_linear_ordered_field))))))
+                q
+                (@bit0.{0} nat nat.has_add (@has_one.one.{0} nat nat.has_one)))
+             (@bit1.{0} rat rat.has_one rat.has_add (@has_one.one.{0} rat rat.has_one)))))
+  (λ
+   (H0 :
+     @Exists.{1} rat
+       (λ (q : rat),
+          @eq.{1} rat
+            (@pow_nat.{0} rat
+               (@monoid.has_pow_nat.{0} rat
+                  (@ring.to_monoid.{0} rat
+                     (@domain.to_ring.{0} rat
+                        (@to_domain.{0} rat
+                           (@linear_ordered_field.to_linear_ordered_ring.{0} rat
+                              (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                 rat.discrete_linear_ordered_field))))))
+               q
+               (@bit0.{0} nat nat.has_add (@has_one.one.{0} nat nat.has_one)))
+            (@bit1.{0} rat rat.has_one rat.has_add (@has_one.one.{0} rat rat.has_one)))),
+     @Exists.dcases_on.{1} rat
+       (λ (q : rat),
+          @eq.{1} rat
+            (@pow_nat.{0} rat
+               (@monoid.has_pow_nat.{0} rat
+                  (@ring.to_monoid.{0} rat
+                     (@domain.to_ring.{0} rat
+                        (@to_domain.{0} rat
+                           (@linear_ordered_field.to_linear_ordered_ring.{0} rat
+                              (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                 rat.discrete_linear_ordered_field))))))
+               q
+               (@bit0.{0} nat nat.has_add (@has_one.one.{0} nat nat.has_one)))
+            (@bit1.{0} rat rat.has_one rat.has_add (@has_one.one.{0} rat rat.has_one)))
+       (λ
+        (H0 :
+          @Exists.{1} rat
+            (λ (q : rat),
+               @eq.{1} rat
+                 (@pow_nat.{0} rat
+                    (@monoid.has_pow_nat.{0} rat
+                       (@ring.to_monoid.{0} rat
+                          (@domain.to_ring.{0} rat
+                             (@to_domain.{0} rat
+                                (@linear_ordered_field.to_linear_ordered_ring.{0} rat
+                                   (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                      rat.discrete_linear_ordered_field))))))
+                    q
+                    (@bit0.{0} nat nat.has_add (@has_one.one.{0} nat nat.has_one)))
+                 (@bit1.{0} rat rat.has_one rat.has_add (@has_one.one.{0} rat rat.has_one)))), false)
+       H0
+       (λ (q : rat)
+        (Hq2 :
+          @eq.{1} rat
+            (@pow_nat.{0} rat
+               (@monoid.has_pow_nat.{0} rat
+                  (@ring.to_monoid.{0} rat
+                     (@domain.to_ring.{0} rat
+                        (@to_domain.{0} rat
+                           (@linear_ordered_field.to_linear_ordered_ring.{0} rat
+                              (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                 rat.discrete_linear_ordered_field))))))
+               q
+               (@bit0.{0} nat nat.has_add (@has_one.one.{0} nat nat.has_one)))
+            (@bit1.{0} rat rat.has_one rat.has_add (@has_one.one.{0} rat rat.has_one))),
+          let n : int := q.num,
+              d0 : nat := q.denom,
+              d : int := @coe.{1 1} nat int (@coe_to_lift.{1 1} nat int (@coe_base.{1 1} nat int int.has_coe)) d0
+          in @id_locked.{0}
+               (@eq.{1} rat
+                  (@has_mul.mul.{0} rat
+                     (@semigroup.to_has_mul.{0} rat
+                        (@monoid.to_semigroup.{0} rat
+                           (@ring.to_monoid.{0} rat
+                              (@domain.to_ring.{0} rat
+                                 (@to_domain.{0} rat
+                                    (@linear_ordered_field.to_linear_ordered_ring.{0} rat
+                                       (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                          rat.discrete_linear_ordered_field)))))))
+                     (@has_div.div.{0} rat
+                        (@division_ring_has_div.{0} rat
+                           (@field.to_division_ring.{0} rat
+                              (@linear_ordered_field.to_field.{0} rat
+                                 (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                    rat.discrete_linear_ordered_field)))
+                           (@field.to_division_ring.{0} rat
+                              (@linear_ordered_field.to_field.{0} rat
+                                 (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                    rat.discrete_linear_ordered_field))))
+                        (@coe.{1 1} int rat
+                           (@coe_to_lift.{1 1} int rat
+                              (@coe_base.{1 1} int rat
+                                 (@int.cast_coe.{0} rat rat.has_zero rat.has_one rat.has_add rat.has_neg)))
+                           (q.num))
+                        (@coe.{1 1} int rat
+                           (@coe_to_lift.{1 1} int rat
+                              (@coe_base.{1 1} int rat
+                                 (@int.cast_coe.{0} rat rat.has_zero rat.has_one rat.has_add rat.has_neg)))
+                           (@coe.{1 1} nat int (@coe_to_lift.{1 1} nat int (@coe_base.{1 1} nat int int.has_coe))
+                              (q.denom))))
+                     (@has_div.div.{0} rat
+                        (@division_ring_has_div.{0} rat
+                           (@field.to_division_ring.{0} rat
+                              (@linear_ordered_field.to_field.{0} rat
+                                 (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                    rat.discrete_linear_ordered_field)))
+                           (@field.to_division_ring.{0} rat
+                              (@linear_ordered_field.to_field.{0} rat
+                                 (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                    rat.discrete_linear_ordered_field))))
+                        (@coe.{1 1} int rat
+                           (@coe_to_lift.{1 1} int rat
+                              (@coe_base.{1 1} int rat
+                                 (@int.cast_coe.{0} rat rat.has_zero rat.has_one rat.has_add rat.has_neg)))
+                           (q.num))
+                        (@coe.{1 1} int rat
+                           (@coe_to_lift.{1 1} int rat
+                              (@coe_base.{1 1} int rat
+                                 (@int.cast_coe.{0} rat rat.has_zero rat.has_one rat.has_add rat.has_neg)))
+                           (@coe.{1 1} nat int (@coe_to_lift.{1 1} nat int (@coe_base.{1 1} nat int int.has_coe))
+                              (q.denom)))))
+                  (@bit1.{0} rat rat.has_one rat.has_add (@has_one.one.{0} rat rat.has_one)) →
+                false)
+               (λ
+                (Hq2_1 :
+                  @eq.{1} rat
+                    (@has_mul.mul.{0} rat
+                       (@semigroup.to_has_mul.{0} rat
+                          (@monoid.to_semigroup.{0} rat
+                             (@ring.to_monoid.{0} rat
+                                (@domain.to_ring.{0} rat
+                                   (@to_domain.{0} rat
+                                      (@linear_ordered_field.to_linear_ordered_ring.{0} rat
+                                         (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                            rat.discrete_linear_ordered_field)))))))
+                       (@has_div.div.{0} rat
+                          (@division_ring_has_div.{0} rat
+                             (@field.to_division_ring.{0} rat
+                                (@linear_ordered_field.to_field.{0} rat
+                                   (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                      rat.discrete_linear_ordered_field)))
+                             (@field.to_division_ring.{0} rat
+                                (@linear_ordered_field.to_field.{0} rat
+                                   (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                      rat.discrete_linear_ordered_field))))
+                          (@coe.{1 1} int rat
+                             (@coe_to_lift.{1 1} int rat
+                                (@coe_base.{1 1} int rat
+                                   (@int.cast_coe.{0} rat rat.has_zero rat.has_one rat.has_add rat.has_neg)))
+                             (q.num))
+                          (@coe.{1 1} int rat
+                             (@coe_to_lift.{1 1} int rat
+                                (@coe_base.{1 1} int rat
+                                   (@int.cast_coe.{0} rat rat.has_zero rat.has_one rat.has_add rat.has_neg)))
+                             (@coe.{1 1} nat int (@coe_to_lift.{1 1} nat int (@coe_base.{1 1} nat int int.has_coe))
+                                d0)))
+                       (@has_div.div.{0} rat
+                          (@division_ring_has_div.{0} rat
+                             (@field.to_division_ring.{0} rat
+                                (@linear_ordered_field.to_field.{0} rat
+                                   (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                      rat.discrete_linear_ordered_field)))
+                             (@field.to_division_ring.{0} rat
+                                (@linear_ordered_field.to_field.{0} rat
+                                   (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                      rat.discrete_linear_ordered_field))))
+                          (@coe.{1 1} int rat
+                             (@coe_to_lift.{1 1} int rat
+                                (@coe_base.{1 1} int rat
+                                   (@int.cast_coe.{0} rat rat.has_zero rat.has_one rat.has_add rat.has_neg)))
+                             (q.num))
+                          (@coe.{1 1} int rat
+                             (@coe_to_lift.{1 1} int rat
+                                (@coe_base.{1 1} int rat
+                                   (@int.cast_coe.{0} rat rat.has_zero rat.has_one rat.has_add rat.has_neg)))
+                             (@coe.{1 1} nat int (@coe_to_lift.{1 1} nat int (@coe_base.{1 1} nat int int.has_coe))
+                                d0))))
+                    (@bit1.{0} rat rat.has_one rat.has_add (@has_one.one.{0} rat rat.has_one))),
+                  @id_locked.{0}
+                    (@eq.{1} rat
+                       (@has_mul.mul.{0} rat
+                          (@semigroup.to_has_mul.{0} rat
+                             (@monoid.to_semigroup.{0} rat
+                                (@ring.to_monoid.{0} rat
+                                   (@domain.to_ring.{0} rat
+                                      (@to_domain.{0} rat
+                                         (@linear_ordered_field.to_linear_ordered_ring.{0} rat
+                                            (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                               rat.discrete_linear_ordered_field)))))))
+                          (@has_div.div.{0} rat
+                             (@division_ring_has_div.{0} rat
+                                (@field.to_division_ring.{0} rat
+                                   (@linear_ordered_field.to_field.{0} rat
+                                      (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                         rat.discrete_linear_ordered_field)))
+                                (@field.to_division_ring.{0} rat
+                                   (@linear_ordered_field.to_field.{0} rat
+                                      (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                         rat.discrete_linear_ordered_field))))
+                             (@coe.{1 1} int rat
+                                (@coe_to_lift.{1 1} int rat
+                                   (@coe_base.{1 1} int rat
+                                      (@int.cast_coe.{0} rat rat.has_zero rat.has_one rat.has_add rat.has_neg)))
+                                (q.num))
+                             (@coe.{1 1} int rat
+                                (@coe_to_lift.{1 1} int rat
+                                   (@coe_base.{1 1} int rat
+                                      (@int.cast_coe.{0} rat rat.has_zero rat.has_one rat.has_add rat.has_neg)))
+                                (@coe.{1 1} nat int (@coe_to_lift.{1 1} nat int (@coe_base.{1 1} nat int int.has_coe))
+                                   d0)))
+                          (@has_div.div.{0} rat
+                             (@division_ring_has_div.{0} rat
+                                (@field.to_division_ring.{0} rat
+                                   (@linear_ordered_field.to_field.{0} rat
+                                      (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                         rat.discrete_linear_ordered_field)))
+                                (@field.to_division_ring.{0} rat
+                                   (@linear_ordered_field.to_field.{0} rat
+                                      (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                         rat.discrete_linear_ordered_field))))
+                             (@coe.{1 1} int rat
+                                (@coe_to_lift.{1 1} int rat
+                                   (@coe_base.{1 1} int rat
+                                      (@int.cast_coe.{0} rat rat.has_zero rat.has_one rat.has_add rat.has_neg)))
+                                (q.num))
+                             (@coe.{1 1} int rat
+                                (@coe_to_lift.{1 1} int rat
+                                   (@coe_base.{1 1} int rat
+                                      (@int.cast_coe.{0} rat rat.has_zero rat.has_one rat.has_add rat.has_neg)))
+                                (@coe.{1 1} nat int (@coe_to_lift.{1 1} nat int (@coe_base.{1 1} nat int int.has_coe))
+                                   d0))))
+                       (@bit1.{0} rat rat.has_one rat.has_add (@has_one.one.{0} rat rat.has_one)) →
+                     false)
+                    (λ
+                     (Hq2_1 :
+                       @eq.{1} rat
+                         (@has_mul.mul.{0} rat
+                            (@semigroup.to_has_mul.{0} rat
+                               (@monoid.to_semigroup.{0} rat
+                                  (@ring.to_monoid.{0} rat
+                                     (@domain.to_ring.{0} rat
+                                        (@to_domain.{0} rat
+                                           (@linear_ordered_field.to_linear_ordered_ring.{0} rat
+                                              (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                                 rat.discrete_linear_ordered_field)))))))
+                            (@has_div.div.{0} rat
+                               (@division_ring_has_div.{0} rat
+                                  (@field.to_division_ring.{0} rat
+                                     (@linear_ordered_field.to_field.{0} rat
+                                        (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                           rat.discrete_linear_ordered_field)))
+                                  (@field.to_division_ring.{0} rat
+                                     (@linear_ordered_field.to_field.{0} rat
+                                        (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                           rat.discrete_linear_ordered_field))))
+                               (@coe.{1 1} int rat
+                                  (@coe_to_lift.{1 1} int rat
+                                     (@coe_base.{1 1} int rat
+                                        (@int.cast_coe.{0} rat rat.has_zero rat.has_one rat.has_add rat.has_neg)))
+                                  (q.num))
+                               (@coe.{1 1} int rat
+                                  (@coe_to_lift.{1 1} int rat
+                                     (@coe_base.{1 1} int rat
+                                        (@int.cast_coe.{0} rat rat.has_zero rat.has_one rat.has_add rat.has_neg)))
+                                  d))
+                            (@has_div.div.{0} rat
+                               (@division_ring_has_div.{0} rat
+                                  (@field.to_division_ring.{0} rat
+                                     (@linear_ordered_field.to_field.{0} rat
+                                        (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                           rat.discrete_linear_ordered_field)))
+                                  (@field.to_division_ring.{0} rat
+                                     (@linear_ordered_field.to_field.{0} rat
+                                        (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                           rat.discrete_linear_ordered_field))))
+                               (@coe.{1 1} int rat
+                                  (@coe_to_lift.{1 1} int rat
+                                     (@coe_base.{1 1} int rat
+                                        (@int.cast_coe.{0} rat rat.has_zero rat.has_one rat.has_add rat.has_neg)))
+                                  (q.num))
+                               (@coe.{1 1} int rat
+                                  (@coe_to_lift.{1 1} int rat
+                                     (@coe_base.{1 1} int rat
+                                        (@int.cast_coe.{0} rat rat.has_zero rat.has_one rat.has_add rat.has_neg)))
+                                  d)))
+                         (@bit1.{0} rat rat.has_one rat.has_add (@has_one.one.{0} rat rat.has_one))),
+                       @id_locked.{0}
+                         (@eq.{1} rat
+                            (@has_mul.mul.{0} rat
+                               (@semigroup.to_has_mul.{0} rat
+                                  (@monoid.to_semigroup.{0} rat
+                                     (@ring.to_monoid.{0} rat
+                                        (@domain.to_ring.{0} rat
+                                           (@to_domain.{0} rat
+                                              (@linear_ordered_field.to_linear_ordered_ring.{0} rat
+                                                 (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                                    rat.discrete_linear_ordered_field)))))))
+                               (@has_div.div.{0} rat
+                                  (@division_ring_has_div.{0} rat
+                                     (@field.to_division_ring.{0} rat
+                                        (@linear_ordered_field.to_field.{0} rat
+                                           (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                              rat.discrete_linear_ordered_field)))
+                                     (@field.to_division_ring.{0} rat
+                                        (@linear_ordered_field.to_field.{0} rat
+                                           (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                              rat.discrete_linear_ordered_field))))
+                                  (@coe.{1 1} int rat
+                                     (@coe_to_lift.{1 1} int rat
+                                        (@coe_base.{1 1} int rat
+                                           (@int.cast_coe.{0} rat rat.has_zero rat.has_one rat.has_add rat.has_neg)))
+                                     (q.num))
+                                  (@coe.{1 1} int rat
+                                     (@coe_to_lift.{1 1} int rat
+                                        (@coe_base.{1 1} int rat
+                                           (@int.cast_coe.{0} rat rat.has_zero rat.has_one rat.has_add rat.has_neg)))
+                                     d))
+                               (@has_div.div.{0} rat
+                                  (@division_ring_has_div.{0} rat
+                                     (@field.to_division_ring.{0} rat
+                                        (@linear_ordered_field.to_field.{0} rat
+                                           (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                              rat.discrete_linear_ordered_field)))
+                                     (@field.to_division_ring.{0} rat
+                                        (@linear_ordered_field.to_field.{0} rat
+                                           (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                              rat.discrete_linear_ordered_field))))
+                                  (@coe.{1 1} int rat
+                                     (@coe_to_lift.{1 1} int rat
+                                        (@coe_base.{1 1} int rat
+                                           (@int.cast_coe.{0} rat rat.has_zero rat.has_one rat.has_add rat.has_neg)))
+                                     (q.num))
+                                  (@coe.{1 1} int rat
+                                     (@coe_to_lift.{1 1} int rat
+                                        (@coe_base.{1 1} int rat
+                                           (@int.cast_coe.{0} rat rat.has_zero rat.has_one rat.has_add rat.has_neg)))
+                                     d)))
+                            (@bit1.{0} rat rat.has_one rat.has_add (@has_one.one.{0} rat rat.has_one)) →
+                          false)
+                         (λ
+                          (Hq2_1 :
+                            @eq.{1} rat
+                              (@has_mul.mul.{0} rat
+                                 (@semigroup.to_has_mul.{0} rat
+                                    (@monoid.to_semigroup.{0} rat
+                                       (@ring.to_monoid.{0} rat
+                                          (@domain.to_ring.{0} rat
+                                             (@to_domain.{0} rat
+                                                (@linear_ordered_field.to_linear_ordered_ring.{0} rat
+                                                   (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                                      rat.discrete_linear_ordered_field)))))))
+                                 (@has_div.div.{0} rat
+                                    (@division_ring_has_div.{0} rat
+                                       (@field.to_division_ring.{0} rat
+                                          (@linear_ordered_field.to_field.{0} rat
+                                             (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                                rat.discrete_linear_ordered_field)))
+                                       (@field.to_division_ring.{0} rat
+                                          (@linear_ordered_field.to_field.{0} rat
+                                             (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                                rat.discrete_linear_ordered_field))))
+                                    (@coe.{1 1} int rat
+                                       (@coe_to_lift.{1 1} int rat
+                                          (@coe_base.{1 1} int rat
+                                             (@int.cast_coe.{0} rat rat.has_zero rat.has_one rat.has_add rat.has_neg)))
+                                       n)
+                                    (@coe.{1 1} int rat
+                                       (@coe_to_lift.{1 1} int rat
+                                          (@coe_base.{1 1} int rat
+                                             (@int.cast_coe.{0} rat rat.has_zero rat.has_one rat.has_add rat.has_neg)))
+                                       d))
+                                 (@has_div.div.{0} rat
+                                    (@division_ring_has_div.{0} rat
+                                       (@field.to_division_ring.{0} rat
+                                          (@linear_ordered_field.to_field.{0} rat
+                                             (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                                rat.discrete_linear_ordered_field)))
+                                       (@field.to_division_ring.{0} rat
+                                          (@linear_ordered_field.to_field.{0} rat
+                                             (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                                rat.discrete_linear_ordered_field))))
+                                    (@coe.{1 1} int rat
+                                       (@coe_to_lift.{1 1} int rat
+                                          (@coe_base.{1 1} int rat
+                                             (@int.cast_coe.{0} rat rat.has_zero rat.has_one rat.has_add rat.has_neg)))
+                                       n)
+                                    (@coe.{1 1} int rat
+                                       (@coe_to_lift.{1 1} int rat
+                                          (@coe_base.{1 1} int rat
+                                             (@int.cast_coe.{0} rat rat.has_zero rat.has_one rat.has_add rat.has_neg)))
+                                       d)))
+                              (@bit1.{0} rat rat.has_one rat.has_add (@has_one.one.{0} rat rat.has_one))),
+                            @Exists.dcases_on.{1} int
+                              (λ (c : int),
+                                 @eq.{1} int n
+                                   (@has_mul.mul.{0} int
+                                      (@mul_zero_class.to_has_mul.{0} int
+                                         (@semiring.to_mul_zero_class.{0} int
+                                            (@comm_semiring.to_semiring.{0} int int.comm_semiring)))
+                                      (@bit1.{0} int int.has_one int.has_add (@has_one.one.{0} int int.has_one))
+                                      c))
+                              (λ
+                               (H4 :
+                                 @has_dvd.dvd.{0} int (@comm_semiring_has_dvd.{0} int int.comm_semiring)
+                                   (@bit1.{0} int int.has_one int.has_add (@has_one.one.{0} int int.has_one))
+                                   n), false)
+                              (Q3a n
+                                 (@Exists.intro.{1} int
+                                    (λ (c : int),
+                                       @eq.{1} int
+                                         (@pow_nat.{0} int (@monoid.has_pow_nat.{0} int int.monoid) n
+                                            (@bit0.{0} nat nat.has_add (@has_one.one.{0} nat nat.has_one)))
+                                         (@has_mul.mul.{0} int
+                                            (@mul_zero_class.to_has_mul.{0} int
+                                               (@semiring.to_mul_zero_class.{0} int
+                                                  (@comm_semiring.to_semiring.{0} int int.comm_semiring)))
+                                            (@bit1.{0} int int.has_one int.has_add (@has_one.one.{0} int int.has_one))
+                                            c))
+                                    (@has_mul.mul.{0} int int.has_mul d d)
+                                    (@eq.symm.{1} int
+                                       (@has_mul.mul.{0} int
+                                          (@mul_zero_class.to_has_mul.{0} int
+                                             (@semiring.to_mul_zero_class.{0} int
+                                                (@comm_semiring.to_semiring.{0} int int.comm_semiring)))
+                                          (@bit1.{0} int int.has_one int.has_add (@has_one.one.{0} int int.has_one))
+                                          (@has_mul.mul.{0} int int.has_mul d d))
+                                       (@pow_nat.{0} int (@monoid.has_pow_nat.{0} int int.monoid) n
+                                          (@bit0.{0} nat nat.has_add (@has_one.one.{0} nat nat.has_one)))
+                                       (@eq.mp.{0}
+                                          (@eq.{1} int
+                                             (@has_mul.mul.{0} int int.has_mul
+                                                (@bit1.{0} int int.has_one int.has_add
+                                                   (@has_one.one.{0} int int.has_one))
+                                                (@has_mul.mul.{0} int int.has_mul d d))
+                                             (@has_mul.mul.{0} int int.has_mul n n))
+                                          (@eq.{1} int
+                                             (@has_mul.mul.{0} int int.has_mul
+                                                (@bit1.{0} int int.has_one int.has_add
+                                                   (@has_one.one.{0} int int.has_one))
+                                                (@has_mul.mul.{0} int int.has_mul d d))
+                                             (@pow_nat.{0} int (@monoid.has_pow_nat.{0} int int.monoid) n
+                                                (@bit0.{0} nat nat.has_add (@has_one.one.{0} nat nat.has_one))))
+                                          (@eq.rec.{0 1} int (@has_mul.mul.{0} int int.has_mul n n)
+                                             (λ (_a : int),
+                                                @eq.{1} Prop
+                                                  (@eq.{1} int
+                                                     (@has_mul.mul.{0} int int.has_mul
+                                                        (@bit1.{0} int int.has_one int.has_add
+                                                           (@has_one.one.{0} int int.has_one))
+                                                        (@has_mul.mul.{0} int int.has_mul d d))
+                                                     (@has_mul.mul.{0} int int.has_mul n n))
+                                                  (@eq.{1} int
+                                                     (@has_mul.mul.{0} int int.has_mul
+                                                        (@bit1.{0} int int.has_one int.has_add
+                                                           (@has_one.one.{0} int int.has_one))
+                                                        (@has_mul.mul.{0} int int.has_mul d d))
+                                                     _a))
+                                             (@eq.refl.{1} Prop
+                                                (@eq.{1} int
+                                                   (@has_mul.mul.{0} int int.has_mul
+                                                      (@bit1.{0} int int.has_one int.has_add
+                                                         (@has_one.one.{0} int int.has_one))
+                                                      (@has_mul.mul.{0} int int.has_mul d d))
+                                                   (@has_mul.mul.{0} int int.has_mul n n)))
+                                             (@pow_nat.{0} int (@monoid.has_pow_nat.{0} int int.monoid) n
+                                                (@bit0.{0} nat nat.has_add (@has_one.one.{0} nat nat.has_one)))
+                                             (@mul_self_eq_pow_two int int.monoid n))
+                                          (@eq.mp.{0}
+                                             (@eq.{1} rat
+                                                (@coe.{1 1} int rat
+                                                   (@coe_to_lift.{1 1} int rat
+                                                      (@coe_base.{1 1} int rat
+                                                         (@int.cast_coe.{0} rat
+                                                            (@mul_zero_class.to_has_zero.{0} rat
+                                                               (@semiring.to_mul_zero_class.{0} rat
+                                                                  (@ring.to_semiring.{0} rat
+                                                                     (@domain.to_ring.{0} rat
+                                                                        (@to_domain.{0} rat
+                                                                           (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                              rat
+                                                                              (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                 rat
+                                                                                 rat.discrete_linear_ordered_field)))))))
+                                                            (@monoid.to_has_one.{0} rat
+                                                               (@ring.to_monoid.{0} rat
+                                                                  (@domain.to_ring.{0} rat
+                                                                     (@to_domain.{0} rat
+                                                                        (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                           rat
+                                                                           (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                              rat
+                                                                              rat.discrete_linear_ordered_field))))))
+                                                            (@distrib.to_has_add.{0} rat
+                                                               (@ring.to_distrib.{0} rat
+                                                                  (@domain.to_ring.{0} rat
+                                                                     (@to_domain.{0} rat
+                                                                        (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                           rat
+                                                                           (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                              rat
+                                                                              rat.discrete_linear_ordered_field))))))
+                                                            (@add_group.to_has_neg.{0} rat
+                                                               (@add_comm_group.to_add_group.{0} rat
+                                                                  (@ring.to_add_comm_group.{0} rat
+                                                                     (@domain.to_ring.{0} rat
+                                                                        (@to_domain.{0} rat
+                                                                           (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                              rat
+                                                                              (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                 rat
+                                                                                 rat.discrete_linear_ordered_field))))))))))
+                                                   (@has_mul.mul.{0} int int.has_mul
+                                                      (@bit1.{0} int int.has_one int.has_add
+                                                         (@has_one.one.{0} int int.has_one))
+                                                      (@has_mul.mul.{0} int int.has_mul d d)))
+                                                (@coe.{1 1} int rat
+                                                   (@coe_to_lift.{1 1} int rat
+                                                      (@coe_base.{1 1} int rat
+                                                         (@int.cast_coe.{0} rat
+                                                            (@mul_zero_class.to_has_zero.{0} rat
+                                                               (@semiring.to_mul_zero_class.{0} rat
+                                                                  (@ring.to_semiring.{0} rat
+                                                                     (@domain.to_ring.{0} rat
+                                                                        (@to_domain.{0} rat
+                                                                           (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                              rat
+                                                                              (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                 rat
+                                                                                 rat.discrete_linear_ordered_field)))))))
+                                                            (@monoid.to_has_one.{0} rat
+                                                               (@ring.to_monoid.{0} rat
+                                                                  (@domain.to_ring.{0} rat
+                                                                     (@to_domain.{0} rat
+                                                                        (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                           rat
+                                                                           (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                              rat
+                                                                              rat.discrete_linear_ordered_field))))))
+                                                            (@distrib.to_has_add.{0} rat
+                                                               (@ring.to_distrib.{0} rat
+                                                                  (@domain.to_ring.{0} rat
+                                                                     (@to_domain.{0} rat
+                                                                        (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                           rat
+                                                                           (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                              rat
+                                                                              rat.discrete_linear_ordered_field))))))
+                                                            (@add_group.to_has_neg.{0} rat
+                                                               (@add_comm_group.to_add_group.{0} rat
+                                                                  (@ring.to_add_comm_group.{0} rat
+                                                                     (@domain.to_ring.{0} rat
+                                                                        (@to_domain.{0} rat
+                                                                           (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                              rat
+                                                                              (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                 rat
+                                                                                 rat.discrete_linear_ordered_field))))))))))
+                                                   (@has_mul.mul.{0} int int.has_mul n n)))
+                                             (@eq.{1} int
+                                                (@has_mul.mul.{0} int int.has_mul
+                                                   (@bit1.{0} int int.has_one int.has_add
+                                                      (@has_one.one.{0} int int.has_one))
+                                                   (@has_mul.mul.{0} int int.has_mul d d))
+                                                (@has_mul.mul.{0} int int.has_mul n n))
+                                             (@eq.rec.{0 1} Prop
+                                                (@eq.{1} rat
+                                                   (@coe.{1 1} int rat
+                                                      (@coe_to_lift.{1 1} int rat
+                                                         (@coe_base.{1 1} int rat
+                                                            (@int.cast_coe.{0} rat
+                                                               (@zero_ne_one_class.to_has_zero.{0} rat
+                                                                  (@ordered_ring.to_zero_ne_one_class.{0} rat
+                                                                     (@linear_ordered_ring.to_ordered_ring.{0} rat
+                                                                        (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                           rat
+                                                                           (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                              rat
+                                                                              rat.discrete_linear_ordered_field)))))
+                                                               (@zero_ne_one_class.to_has_one.{0} rat
+                                                                  (@ordered_ring.to_zero_ne_one_class.{0} rat
+                                                                     (@linear_ordered_ring.to_ordered_ring.{0} rat
+                                                                        (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                           rat
+                                                                           (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                              rat
+                                                                              rat.discrete_linear_ordered_field)))))
+                                                               (@distrib.to_has_add.{0} rat
+                                                                  (@ring.to_distrib.{0} rat
+                                                                     (@ordered_ring.to_ring.{0} rat
+                                                                        (@linear_ordered_ring.to_ordered_ring.{0} rat
+                                                                           (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                              rat
+                                                                              (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                 rat
+                                                                                 rat.discrete_linear_ordered_field))))))
+                                                               (@add_group.to_has_neg.{0} rat
+                                                                  (@add_comm_group.to_add_group.{0} rat
+                                                                     (@ring.to_add_comm_group.{0} rat
+                                                                        (@ordered_ring.to_ring.{0} rat
+                                                                           (@linear_ordered_ring.to_ordered_ring.{0} rat
+                                                                              (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                                 rat
+                                                                                 (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                    rat
+                                                                                    rat.discrete_linear_ordered_field))))))))))
+                                                      (@has_mul.mul.{0} int int.has_mul
+                                                         (@bit1.{0} int int.has_one int.has_add
+                                                            (@has_one.one.{0} int int.has_one))
+                                                         (@has_mul.mul.{0} int int.has_mul d d)))
+                                                   (@coe.{1 1} int rat
+                                                      (@coe_to_lift.{1 1} int rat
+                                                         (@coe_base.{1 1} int rat
+                                                            (@int.cast_coe.{0} rat
+                                                               (@zero_ne_one_class.to_has_zero.{0} rat
+                                                                  (@ordered_ring.to_zero_ne_one_class.{0} rat
+                                                                     (@linear_ordered_ring.to_ordered_ring.{0} rat
+                                                                        (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                           rat
+                                                                           (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                              rat
+                                                                              rat.discrete_linear_ordered_field)))))
+                                                               (@zero_ne_one_class.to_has_one.{0} rat
+                                                                  (@ordered_ring.to_zero_ne_one_class.{0} rat
+                                                                     (@linear_ordered_ring.to_ordered_ring.{0} rat
+                                                                        (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                           rat
+                                                                           (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                              rat
+                                                                              rat.discrete_linear_ordered_field)))))
+                                                               (@distrib.to_has_add.{0} rat
+                                                                  (@ring.to_distrib.{0} rat
+                                                                     (@ordered_ring.to_ring.{0} rat
+                                                                        (@linear_ordered_ring.to_ordered_ring.{0} rat
+                                                                           (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                              rat
+                                                                              (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                 rat
+                                                                                 rat.discrete_linear_ordered_field))))))
+                                                               (@add_group.to_has_neg.{0} rat
+                                                                  (@add_comm_group.to_add_group.{0} rat
+                                                                     (@ring.to_add_comm_group.{0} rat
+                                                                        (@ordered_ring.to_ring.{0} rat
+                                                                           (@linear_ordered_ring.to_ordered_ring.{0} rat
+                                                                              (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                                 rat
+                                                                                 (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                    rat
+                                                                                    rat.discrete_linear_ordered_field))))))))))
+                                                      (@has_mul.mul.{0} int int.has_mul n n)))
+                                                (λ (_a : Prop),
+                                                   @eq.{1} Prop
+                                                     (@eq.{1} rat
+                                                        (@coe.{1 1} int rat
+                                                           (@coe_to_lift.{1 1} int rat
+                                                              (@coe_base.{1 1} int rat
+                                                                 (@int.cast_coe.{0} rat
+                                                                    (@mul_zero_class.to_has_zero.{0} rat
+                                                                       (@semiring.to_mul_zero_class.{0} rat
+                                                                          (@ring.to_semiring.{0} rat
+                                                                             (@domain.to_ring.{0} rat
+                                                                                (@to_domain.{0} rat
+                                                                                   (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                                      rat
+                                                                                      (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                         rat
+                                                                                         rat.discrete_linear_ordered_field)))))))
+                                                                    (@monoid.to_has_one.{0} rat
+                                                                       (@ring.to_monoid.{0} rat
+                                                                          (@domain.to_ring.{0} rat
+                                                                             (@to_domain.{0} rat
+                                                                                (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                                   rat
+                                                                                   (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                      rat
+                                                                                      rat.discrete_linear_ordered_field))))))
+                                                                    (@distrib.to_has_add.{0} rat
+                                                                       (@ring.to_distrib.{0} rat
+                                                                          (@domain.to_ring.{0} rat
+                                                                             (@to_domain.{0} rat
+                                                                                (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                                   rat
+                                                                                   (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                      rat
+                                                                                      rat.discrete_linear_ordered_field))))))
+                                                                    (@add_group.to_has_neg.{0} rat
+                                                                       (@add_comm_group.to_add_group.{0} rat
+                                                                          (@ring.to_add_comm_group.{0} rat
+                                                                             (@domain.to_ring.{0} rat
+                                                                                (@to_domain.{0} rat
+                                                                                   (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                                      rat
+                                                                                      (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                         rat
+                                                                                         rat.discrete_linear_ordered_field))))))))))
+                                                           (@has_mul.mul.{0} int int.has_mul
+                                                              (@bit1.{0} int int.has_one int.has_add
+                                                                 (@has_one.one.{0} int int.has_one))
+                                                              (@has_mul.mul.{0} int int.has_mul d d)))
+                                                        (@coe.{1 1} int rat
+                                                           (@coe_to_lift.{1 1} int rat
+                                                              (@coe_base.{1 1} int rat
+                                                                 (@int.cast_coe.{0} rat
+                                                                    (@mul_zero_class.to_has_zero.{0} rat
+                                                                       (@semiring.to_mul_zero_class.{0} rat
+                                                                          (@ring.to_semiring.{0} rat
+                                                                             (@domain.to_ring.{0} rat
+                                                                                (@to_domain.{0} rat
+                                                                                   (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                                      rat
+                                                                                      (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                         rat
+                                                                                         rat.discrete_linear_ordered_field)))))))
+                                                                    (@monoid.to_has_one.{0} rat
+                                                                       (@ring.to_monoid.{0} rat
+                                                                          (@domain.to_ring.{0} rat
+                                                                             (@to_domain.{0} rat
+                                                                                (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                                   rat
+                                                                                   (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                      rat
+                                                                                      rat.discrete_linear_ordered_field))))))
+                                                                    (@distrib.to_has_add.{0} rat
+                                                                       (@ring.to_distrib.{0} rat
+                                                                          (@domain.to_ring.{0} rat
+                                                                             (@to_domain.{0} rat
+                                                                                (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                                   rat
+                                                                                   (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                      rat
+                                                                                      rat.discrete_linear_ordered_field))))))
+                                                                    (@add_group.to_has_neg.{0} rat
+                                                                       (@add_comm_group.to_add_group.{0} rat
+                                                                          (@ring.to_add_comm_group.{0} rat
+                                                                             (@domain.to_ring.{0} rat
+                                                                                (@to_domain.{0} rat
+                                                                                   (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                                      rat
+                                                                                      (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                         rat
+                                                                                         rat.discrete_linear_ordered_field))))))))))
+                                                           (@has_mul.mul.{0} int int.has_mul n n)))
+                                                     _a)
+                                                (@eq.refl.{1} Prop
+                                                   (@eq.{1} rat
+                                                      (@coe.{1 1} int rat
+                                                         (@coe_to_lift.{1 1} int rat
+                                                            (@coe_base.{1 1} int rat
+                                                               (@int.cast_coe.{0} rat
+                                                                  (@mul_zero_class.to_has_zero.{0} rat
+                                                                     (@semiring.to_mul_zero_class.{0} rat
+                                                                        (@ring.to_semiring.{0} rat
+                                                                           (@domain.to_ring.{0} rat
+                                                                              (@to_domain.{0} rat
+                                                                                 (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                                    rat
+                                                                                    (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                       rat
+                                                                                       rat.discrete_linear_ordered_field)))))))
+                                                                  (@monoid.to_has_one.{0} rat
+                                                                     (@ring.to_monoid.{0} rat
+                                                                        (@domain.to_ring.{0} rat
+                                                                           (@to_domain.{0} rat
+                                                                              (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                                 rat
+                                                                                 (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                    rat
+                                                                                    rat.discrete_linear_ordered_field))))))
+                                                                  (@distrib.to_has_add.{0} rat
+                                                                     (@ring.to_distrib.{0} rat
+                                                                        (@domain.to_ring.{0} rat
+                                                                           (@to_domain.{0} rat
+                                                                              (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                                 rat
+                                                                                 (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                    rat
+                                                                                    rat.discrete_linear_ordered_field))))))
+                                                                  (@add_group.to_has_neg.{0} rat
+                                                                     (@add_comm_group.to_add_group.{0} rat
+                                                                        (@ring.to_add_comm_group.{0} rat
+                                                                           (@domain.to_ring.{0} rat
+                                                                              (@to_domain.{0} rat
+                                                                                 (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                                    rat
+                                                                                    (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                       rat
+                                                                                       rat.discrete_linear_ordered_field))))))))))
+                                                         (@has_mul.mul.{0} int int.has_mul
+                                                            (@bit1.{0} int int.has_one int.has_add
+                                                               (@has_one.one.{0} int int.has_one))
+                                                            (@has_mul.mul.{0} int int.has_mul d d)))
+                                                      (@coe.{1 1} int rat
+                                                         (@coe_to_lift.{1 1} int rat
+                                                            (@coe_base.{1 1} int rat
+                                                               (@int.cast_coe.{0} rat
+                                                                  (@mul_zero_class.to_has_zero.{0} rat
+                                                                     (@semiring.to_mul_zero_class.{0} rat
+                                                                        (@ring.to_semiring.{0} rat
+                                                                           (@domain.to_ring.{0} rat
+                                                                              (@to_domain.{0} rat
+                                                                                 (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                                    rat
+                                                                                    (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                       rat
+                                                                                       rat.discrete_linear_ordered_field)))))))
+                                                                  (@monoid.to_has_one.{0} rat
+                                                                     (@ring.to_monoid.{0} rat
+                                                                        (@domain.to_ring.{0} rat
+                                                                           (@to_domain.{0} rat
+                                                                              (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                                 rat
+                                                                                 (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                    rat
+                                                                                    rat.discrete_linear_ordered_field))))))
+                                                                  (@distrib.to_has_add.{0} rat
+                                                                     (@ring.to_distrib.{0} rat
+                                                                        (@domain.to_ring.{0} rat
+                                                                           (@to_domain.{0} rat
+                                                                              (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                                 rat
+                                                                                 (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                    rat
+                                                                                    rat.discrete_linear_ordered_field))))))
+                                                                  (@add_group.to_has_neg.{0} rat
+                                                                     (@add_comm_group.to_add_group.{0} rat
+                                                                        (@ring.to_add_comm_group.{0} rat
+                                                                           (@domain.to_ring.{0} rat
+                                                                              (@to_domain.{0} rat
+                                                                                 (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                                    rat
+                                                                                    (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                       rat
+                                                                                       rat.discrete_linear_ordered_field))))))))))
+                                                         (@has_mul.mul.{0} int int.has_mul n n))))
+                                                (@eq.{1} int
+                                                   (@has_mul.mul.{0} int int.has_mul
+                                                      (@bit1.{0} int int.has_one int.has_add
+                                                         (@has_one.one.{0} int int.has_one))
+                                                      (@has_mul.mul.{0} int int.has_mul d d))
+                                                   (@has_mul.mul.{0} int int.has_mul n n))
+                                                (@propext
+                                                   (@eq.{1} rat
+                                                      (@coe.{1 1} int rat
+                                                         (@coe_to_lift.{1 1} int rat
+                                                            (@coe_base.{1 1} int rat
+                                                               (@int.cast_coe.{0} rat
+                                                                  (@zero_ne_one_class.to_has_zero.{0} rat
+                                                                     (@ordered_ring.to_zero_ne_one_class.{0} rat
+                                                                        (@linear_ordered_ring.to_ordered_ring.{0} rat
+                                                                           (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                              rat
+                                                                              (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                 rat
+                                                                                 rat.discrete_linear_ordered_field)))))
+                                                                  (@zero_ne_one_class.to_has_one.{0} rat
+                                                                     (@ordered_ring.to_zero_ne_one_class.{0} rat
+                                                                        (@linear_ordered_ring.to_ordered_ring.{0} rat
+                                                                           (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                              rat
+                                                                              (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                 rat
+                                                                                 rat.discrete_linear_ordered_field)))))
+                                                                  (@distrib.to_has_add.{0} rat
+                                                                     (@ring.to_distrib.{0} rat
+                                                                        (@ordered_ring.to_ring.{0} rat
+                                                                           (@linear_ordered_ring.to_ordered_ring.{0} rat
+                                                                              (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                                 rat
+                                                                                 (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                    rat
+                                                                                    rat.discrete_linear_ordered_field))))))
+                                                                  (@add_group.to_has_neg.{0} rat
+                                                                     (@add_comm_group.to_add_group.{0} rat
+                                                                        (@ring.to_add_comm_group.{0} rat
+                                                                           (@ordered_ring.to_ring.{0} rat
+                                                                              (@linear_ordered_ring.to_ordered_ring.{0}
+                                                                                 rat
+                                                                                 (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                                    rat
+                                                                                    (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                       rat
+                                                                                       rat.discrete_linear_ordered_field))))))))))
+                                                         (@has_mul.mul.{0} int int.has_mul
+                                                            (@bit1.{0} int int.has_one int.has_add
+                                                               (@has_one.one.{0} int int.has_one))
+                                                            (@has_mul.mul.{0} int int.has_mul d d)))
+                                                      (@coe.{1 1} int rat
+                                                         (@coe_to_lift.{1 1} int rat
+                                                            (@coe_base.{1 1} int rat
+                                                               (@int.cast_coe.{0} rat
+                                                                  (@zero_ne_one_class.to_has_zero.{0} rat
+                                                                     (@ordered_ring.to_zero_ne_one_class.{0} rat
+                                                                        (@linear_ordered_ring.to_ordered_ring.{0} rat
+                                                                           (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                              rat
+                                                                              (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                 rat
+                                                                                 rat.discrete_linear_ordered_field)))))
+                                                                  (@zero_ne_one_class.to_has_one.{0} rat
+                                                                     (@ordered_ring.to_zero_ne_one_class.{0} rat
+                                                                        (@linear_ordered_ring.to_ordered_ring.{0} rat
+                                                                           (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                              rat
+                                                                              (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                 rat
+                                                                                 rat.discrete_linear_ordered_field)))))
+                                                                  (@distrib.to_has_add.{0} rat
+                                                                     (@ring.to_distrib.{0} rat
+                                                                        (@ordered_ring.to_ring.{0} rat
+                                                                           (@linear_ordered_ring.to_ordered_ring.{0} rat
+                                                                              (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                                 rat
+                                                                                 (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                    rat
+                                                                                    rat.discrete_linear_ordered_field))))))
+                                                                  (@add_group.to_has_neg.{0} rat
+                                                                     (@add_comm_group.to_add_group.{0} rat
+                                                                        (@ring.to_add_comm_group.{0} rat
+                                                                           (@ordered_ring.to_ring.{0} rat
+                                                                              (@linear_ordered_ring.to_ordered_ring.{0}
+                                                                                 rat
+                                                                                 (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                                    rat
+                                                                                    (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                       rat
+                                                                                       rat.discrete_linear_ordered_field))))))))))
+                                                         (@has_mul.mul.{0} int int.has_mul n n)))
+                                                   (@eq.{1} int
+                                                      (@has_mul.mul.{0} int int.has_mul
+                                                         (@bit1.{0} int int.has_one int.has_add
+                                                            (@has_one.one.{0} int int.has_one))
+                                                         (@has_mul.mul.{0} int int.has_mul d d))
+                                                      (@has_mul.mul.{0} int int.has_mul n n))
+                                                   (@int.cast_inj.{0} rat
+                                                      (@linear_ordered_field.to_linear_ordered_ring.{0} rat
+                                                         (@discrete_linear_ordered_field.to_linear_ordered_field.{0} rat
+                                                            rat.discrete_linear_ordered_field))
+                                                      (@has_mul.mul.{0} int int.has_mul
+                                                         (@bit1.{0} int int.has_one int.has_add
+                                                            (@has_one.one.{0} int int.has_one))
+                                                         (@has_mul.mul.{0} int int.has_mul d d))
+                                                      (@has_mul.mul.{0} int int.has_mul n n))))
+                                             (@eq.mp.{0}
+                                                (@eq.{1} rat
+                                                   (@coe.{1 1} int rat
+                                                      (@coe_to_lift.{1 1} int rat
+                                                         (@coe_base.{1 1} int rat
+                                                            (@int.cast_coe.{0} rat
+                                                               (@mul_zero_class.to_has_zero.{0} rat
+                                                                  (@semiring.to_mul_zero_class.{0} rat
+                                                                     (@ring.to_semiring.{0} rat
+                                                                        (@domain.to_ring.{0} rat
+                                                                           (@to_domain.{0} rat
+                                                                              (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                                 rat
+                                                                                 (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                    rat
+                                                                                    rat.discrete_linear_ordered_field)))))))
+                                                               (@monoid.to_has_one.{0} rat
+                                                                  (@ring.to_monoid.{0} rat
+                                                                     (@domain.to_ring.{0} rat
+                                                                        (@to_domain.{0} rat
+                                                                           (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                              rat
+                                                                              (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                 rat
+                                                                                 rat.discrete_linear_ordered_field))))))
+                                                               (@distrib.to_has_add.{0} rat
+                                                                  (@ring.to_distrib.{0} rat
+                                                                     (@domain.to_ring.{0} rat
+                                                                        (@to_domain.{0} rat
+                                                                           (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                              rat
+                                                                              (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                 rat
+                                                                                 rat.discrete_linear_ordered_field))))))
+                                                               (@add_group.to_has_neg.{0} rat
+                                                                  (@add_comm_group.to_add_group.{0} rat
+                                                                     (@ring.to_add_comm_group.{0} rat
+                                                                        (@domain.to_ring.{0} rat
+                                                                           (@to_domain.{0} rat
+                                                                              (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                                 rat
+                                                                                 (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                    rat
+                                                                                    rat.discrete_linear_ordered_field))))))))))
+                                                      (@has_mul.mul.{0} int int.has_mul
+                                                         (@bit1.{0} int int.has_one int.has_add
+                                                            (@has_one.one.{0} int int.has_one))
+                                                         (@has_mul.mul.{0} int int.has_mul d d)))
+                                                   (@has_mul.mul.{0} rat rat.has_mul
+                                                      (@coe.{1 1} int rat
+                                                         (@coe_to_lift.{1 1} int rat
+                                                            (@coe_base.{1 1} int rat
+                                                               (@int.cast_coe.{0} rat rat.has_zero rat.has_one
+                                                                  rat.has_add
+                                                                  rat.has_neg)))
+                                                         n)
+                                                      (@coe.{1 1} int rat
+                                                         (@coe_to_lift.{1 1} int rat
+                                                            (@coe_base.{1 1} int rat
+                                                               (@int.cast_coe.{0} rat rat.has_zero rat.has_one
+                                                                  rat.has_add
+                                                                  rat.has_neg)))
+                                                         n)))
+                                                (@eq.{1} rat
+                                                   (@coe.{1 1} int rat
+                                                      (@coe_to_lift.{1 1} int rat
+                                                         (@coe_base.{1 1} int rat
+                                                            (@int.cast_coe.{0} rat
+                                                               (@mul_zero_class.to_has_zero.{0} rat
+                                                                  (@semiring.to_mul_zero_class.{0} rat
+                                                                     (@ring.to_semiring.{0} rat
+                                                                        (@domain.to_ring.{0} rat
+                                                                           (@to_domain.{0} rat
+                                                                              (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                                 rat
+                                                                                 (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                    rat
+                                                                                    rat.discrete_linear_ordered_field)))))))
+                                                               (@monoid.to_has_one.{0} rat
+                                                                  (@ring.to_monoid.{0} rat
+                                                                     (@domain.to_ring.{0} rat
+                                                                        (@to_domain.{0} rat
+                                                                           (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                              rat
+                                                                              (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                 rat
+                                                                                 rat.discrete_linear_ordered_field))))))
+                                                               (@distrib.to_has_add.{0} rat
+                                                                  (@ring.to_distrib.{0} rat
+                                                                     (@domain.to_ring.{0} rat
+                                                                        (@to_domain.{0} rat
+                                                                           (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                              rat
+                                                                              (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                 rat
+                                                                                 rat.discrete_linear_ordered_field))))))
+                                                               (@add_group.to_has_neg.{0} rat
+                                                                  (@add_comm_group.to_add_group.{0} rat
+                                                                     (@ring.to_add_comm_group.{0} rat
+                                                                        (@domain.to_ring.{0} rat
+                                                                           (@to_domain.{0} rat
+                                                                              (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                                 rat
+                                                                                 (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                    rat
+                                                                                    rat.discrete_linear_ordered_field))))))))))
+                                                      (@has_mul.mul.{0} int int.has_mul
+                                                         (@bit1.{0} int int.has_one int.has_add
+                                                            (@has_one.one.{0} int int.has_one))
+                                                         (@has_mul.mul.{0} int int.has_mul d d)))
+                                                   (@coe.{1 1} int rat
+                                                      (@coe_to_lift.{1 1} int rat
+                                                         (@coe_base.{1 1} int rat
+                                                            (@int.cast_coe.{0} rat
+                                                               (@mul_zero_class.to_has_zero.{0} rat
+                                                                  (@semiring.to_mul_zero_class.{0} rat
+                                                                     (@ring.to_semiring.{0} rat
+                                                                        (@domain.to_ring.{0} rat
+                                                                           (@to_domain.{0} rat
+                                                                              (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                                 rat
+                                                                                 (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                    rat
+                                                                                    rat.discrete_linear_ordered_field)))))))
+                                                               (@monoid.to_has_one.{0} rat
+                                                                  (@ring.to_monoid.{0} rat
+                                                                     (@domain.to_ring.{0} rat
+                                                                        (@to_domain.{0} rat
+                                                                           (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                              rat
+                                                                              (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                 rat
+                                                                                 rat.discrete_linear_ordered_field))))))
+                                                               (@distrib.to_has_add.{0} rat
+                                                                  (@ring.to_distrib.{0} rat
+                                                                     (@domain.to_ring.{0} rat
+                                                                        (@to_domain.{0} rat
+                                                                           (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                              rat
+                                                                              (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                 rat
+                                                                                 rat.discrete_linear_ordered_field))))))
+                                                               (@add_group.to_has_neg.{0} rat
+                                                                  (@add_comm_group.to_add_group.{0} rat
+                                                                     (@ring.to_add_comm_group.{0} rat
+                                                                        (@domain.to_ring.{0} rat
+                                                                           (@to_domain.{0} rat
+                                                                              (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                                 rat
+                                                                                 (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                    rat
+                                                                                    rat.discrete_linear_ordered_field))))))))))
+                                                      (@has_mul.mul.{0} int int.has_mul n n)))
+                                                (@eq.rec.{0 1} rat
+                                                   (@has_mul.mul.{0} rat
+                                                      (@mul_zero_class.to_has_mul.{0} rat
+                                                         (@semiring.to_mul_zero_class.{0} rat
+                                                            (@ring.to_semiring.{0} rat
+                                                               (@domain.to_ring.{0} rat
+                                                                  (@to_domain.{0} rat
+                                                                     (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                        rat
+                                                                        (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                           rat
+                                                                           rat.discrete_linear_ordered_field)))))))
+                                                      (@coe.{1 1} int rat
+                                                         (@coe_to_lift.{1 1} int rat
+                                                            (@coe_base.{1 1} int rat
+                                                               (@int.cast_coe.{0} rat
+                                                                  (@mul_zero_class.to_has_zero.{0} rat
+                                                                     (@semiring.to_mul_zero_class.{0} rat
+                                                                        (@ring.to_semiring.{0} rat
+                                                                           (@domain.to_ring.{0} rat
+                                                                              (@to_domain.{0} rat
+                                                                                 (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                                    rat
+                                                                                    (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                       rat
+                                                                                       rat.discrete_linear_ordered_field)))))))
+                                                                  (@monoid.to_has_one.{0} rat
+                                                                     (@ring.to_monoid.{0} rat
+                                                                        (@domain.to_ring.{0} rat
+                                                                           (@to_domain.{0} rat
+                                                                              (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                                 rat
+                                                                                 (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                    rat
+                                                                                    rat.discrete_linear_ordered_field))))))
+                                                                  (@distrib.to_has_add.{0} rat
+                                                                     (@ring.to_distrib.{0} rat
+                                                                        (@domain.to_ring.{0} rat
+                                                                           (@to_domain.{0} rat
+                                                                              (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                                 rat
+                                                                                 (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                    rat
+                                                                                    rat.discrete_linear_ordered_field))))))
+                                                                  (@add_group.to_has_neg.{0} rat
+                                                                     (@add_comm_group.to_add_group.{0} rat
+                                                                        (@ring.to_add_comm_group.{0} rat
+                                                                           (@domain.to_ring.{0} rat
+                                                                              (@to_domain.{0} rat
+                                                                                 (@linear_ordered_field.to_linear_ordered_ring.{0}
+                                                                                    rat
+                                                                                    (@discrete_linear_ordered_field.to_linear_ordered_field.{0}
+                                                                                       rat
+                                                                                       rat.discrete_linear_ordered_field))))))))))
+                                                         n)
+                                                      (@coe.{1 1} int rat (@coe_to_lift.{1 1} int rat …) n))
+                                                   …
+                                                   …
+                                                   …
+                                                   …)
+                                                …))))))
+                              …)
+                         Hq2_1)
+                    Hq2_1)
+               …))
