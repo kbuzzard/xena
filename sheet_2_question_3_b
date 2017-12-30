@@ -1,0 +1,750 @@
+theorem Q3b : M1F.is_irrational sqrt3 :=
+eq.mpr (id_locked (M1F.is_irrational.equations._eqn_1 sqrt3))
+  (id_locked
+     (λ (H : ∃ (q : ℚ), ↑q = sqrt3),
+        Exists.dcases_on H
+          (λ (q : ℚ) (Hq : ↑q = sqrt3),
+             let n : ℤ := q.num,
+                 d0 : ℕ := q.denom,
+                 d : ℤ := ↑d0
+             in id_locked
+                  (λ (Hq2 : ↑(q.num) / ↑↑d0 * (↑(q.num) / ↑↑d0) = 3),
+                     id_locked
+                       (λ (Hq2 : ↑(q.num) / ↑d * (↑(q.num) / ↑d) = 3),
+                          id_locked
+                            (λ (Hq2 : ↑n / ↑d * (↑n / ↑d) = 3),
+                               Exists.dcases_on
+                                 (Q3a n
+                                    (Exists.intro (d * d)
+                                       (eq.symm
+                                          (eq.mp (eq.rec (eq.refl (3 * (d * d) = n * n)) mul_self_eq_pow_two)
+                                             (eq.mp
+                                                (eq.rec (eq.refl (↑(3 * (d * d)) = ↑(n * n)))
+                                                   (propext int.cast_inj))
+                                                (eq.mp
+                                                   (eq.rec (eq.refl (↑(3 * (d * d)) = ↑n * ↑n))
+                                                      (eq.symm (int.cast_mul n n)))
+                                                   (eq.mp
+                                                      (eq.rec (eq.refl (↑3 * ↑(d * d) = ↑n * ↑n))
+                                                         (eq.symm (int.cast_mul 3 (d * d))))
+                                                      (eq.mp
+                                                         (eq.rec (eq.refl (↑3 * (↑d * ↑d) = ↑n * ↑n))
+                                                            (eq.symm (int.cast_mul d d)))
+                                                         ((eq_div_iff_mul_eq 3 (↑n * ↑n)
+                                                             (id_locked
+                                                                (λ (H1 : ↑d * ↑d = 0),
+                                                                   id_locked
+                                                                     (λ (H0 : d = 0),
+                                                                        id_locked
+                                                                          (λ (Hd0 : d0 = 0),
+                                                                             eq.mpr
+                                                                               (id_locked
+                                                                                  (imp_congr_eq
+                                                                                     (eq_false_intro
+                                                                                        (ne_of_lt
+                                                                                           (bit1_pos' zero_lt_one)))
+                                                                                     (eq.refl false)))
+                                                                               (eq.mpr (id_locked (propext imp_self))
+                                                                                  trivial)
+                                                                               (eq.mp
+                                                                                  (eq.rec (eq.refl (0 * 0 = 3))
+                                                                                     (mul_zero 0))
+                                                                                  (eq.mp
+                                                                                     (eq.rec (eq.refl (q * q = 3))
+                                                                                        (eq.mp
+                                                                                           (eq.rec
+                                                                                              (eq.refl (q = ↑n / 0))
+                                                                                              (div_zero ↑n))
+                                                                                           (eq.mp
+                                                                                              (eq.rec
+                                                                                                 (eq.refl
+                                                                                                    (q = ↑n / ↑0))
+                                                                                                 nat.cast_zero)
+                                                                                              (eq.mp
+                                                                                                 (eq.rec
+                                                                                                    (eq.refl
+                                                                                                       (q =
+                                                                                                          ↑n / ↑d0))
+                                                                                                    Hd0)
+                                                                                                 (eq.mpr
+                                                                                                    (id_locked
+                                                                                                       (eq.rec
+                                                                                                          (eq.refl
+                                                                                                             (q =
+                                                                                                                ↑n /
+                                                                                                                  ↑d0))
+                                                                                                          (rat.num_denom
+                                                                                                             q)))
+                                                                                                    (eq.mpr
+                                                                                                       (id_locked
+                                                                                                          (eq.rec
+                                                                                                             (eq.refl
+                                                                                                                (rat.mk
+                                                                                                                     (q.num)
+                                                                                                                     ↑(q.denom) =
+                                                                                                                   ↑n /
+                                                                                                                     ↑d0))
+                                                                                                             (rat.mk_eq_div
+                                                                                                                (q.num)
+                                                                                                                ↑(q.denom))))
+                                                                                                       (eq.refl
+                                                                                                          (↑(q.num) /
+                                                                                                             ↑↑(q.denom)))))))))
+                                                                                     (eq.mpr
+                                                                                        (id_locked
+                                                                                           (eq.rec (eq.refl (q * q = 3))
+                                                                                              (eq.symm
+                                                                                                 (propext
+                                                                                                    rat.cast_inj))))
+                                                                                        (eq.mpr
+                                                                                           (id_locked
+                                                                                              (eq.rec
+                                                                                                 (eq.refl
+                                                                                                    (↑(q * q) = ↑3))
+                                                                                                 (rat.cast_mul q q)))
+                                                                                           (eq.mpr
+                                                                                              (id_locked
+                                                                                                 (eq.rec
+                                                                                                    (eq.refl
+                                                                                                       (↑q * ↑q =
+                                                                                                          ↑3))
+                                                                                                    Hq))
+                                                                                              (eq.mpr
+                                                                                                 (id_locked
+                                                                                                    (eq.rec
+                                                                                                       (eq.refl
+                                                                                                          (sqrt3 *
+                                                                                                               sqrt3 =
+                                                                                                             ↑3))
+                                                                                                       mul_self_eq_pow_two))
+                                                                                                 (eq.mpr
+                                                                                                    (id_locked
+                                                                                                       ((λ
+                                                                                                         (a a_1 : ℝ)
+                                                                                                         (e_1 : a = a_1)
+                                                                                                         (a_2 a_3 : ℝ)
+                                                                                                         (e_2 :
+                                                                                                           a_2 = a_3),
+                                                                                                           congr
+                                                                                                             (congr_arg
+                                                                                                                eq
+                                                                                                                e_1)
+                                                                                                             e_2)
+                                                                                                          (sqrt3 ^ 2)
+                                                                                                          (classical.some
+                                                                                                               exists_sqrt_3 ^
+                                                                                                             2)
+                                                                                                          ((λ
+                                                                                                            [_inst_1 :
+                                                                                                              has_pow_nat
+                                                                                                                ℝ]
+                                                                                                            (a a_1 :
+                                                                                                              ℝ)
+                                                                                                            (e_2 :
+                                                                                                              a = a_1)
+                                                                                                            (a_2 a_3 :
+                                                                                                              ℕ)
+                                                                                                            (e_3 :
+                                                                                                              a_2 =
+                                                                                                                a_3),
+                                                                                                              congr
+                                                                                                                (congr_arg
+                                                                                                                   pow_nat
+                                                                                                                   e_2)
+                                                                                                                e_3)
+                                                                                                             sqrt3
+                                                                                                             (classical.some
+                                                                                                                exists_sqrt_3)
+                                                                                                             sqrt3.equations._eqn_1
+                                                                                                             2
+                                                                                                             2
+                                                                                                             (eq.refl
+                                                                                                                2))
+                                                                                                          ↑3
+                                                                                                          ↑3
+                                                                                                          (eq.refl
+                                                                                                             ↑3)))
+                                                                                                    (eq.mpr
+                                                                                                       (id_locked
+                                                                                                          (eq.rec
+                                                                                                             (eq.refl
+                                                                                                                (classical.some
+                                                                                                                       exists_sqrt_3 ^
+                                                                                                                     2 =
+                                                                                                                   ↑3))
+                                                                                                             ((sqrt3_proof.right).left)))
+                                                                                                       (eq.mpr
+                                                                                                          (id_locked
+                                                                                                             (eq.trans
+                                                                                                                ((λ
+                                                                                                                  (a a_1 :
+                                                                                                                    ℝ)
+                                                                                                                  (e_1 :
+                                                                                                                    a =
+                                                                                                                      a_1)
+                                                                                                                  (a_2 a_3 :
+                                                                                                                    ℝ)
+                                                                                                                  (e_2 :
+                                                                                                                    a_2 =
+                                                                                                                      a_3),
+                                                                                                                    congr
+                                                                                                                      (congr_arg
+                                                                                                                         eq
+                                                                                                                         e_1)
+                                                                                                                      e_2)
+                                                                                                                   3
+                                                                                                                   3
+                                                                                                                   (eq.refl
+                                                                                                                      3)
+                                                                                                                   ↑3
+                                                                                                                   3
+                                                                                                                   (eq.trans
+                                                                                                                      (rat.cast_bit1
+                                                                                                                         1)
+                                                                                                                      ((λ
+                                                                                                                        [s₁ :
+                                                                                                                          has_one
+                                                                                                                            ℝ]
+                                                                                                                        [s₂ :
+                                                                                                                          has_add
+                                                                                                                            ℝ]
+                                                                                                                        (a a_1 :
+                                                                                                                          ℝ)
+                                                                                                                        (e_3 :
+                                                                                                                          a =
+                                                                                                                            a_1),
+                                                                                                                          congr_arg
+                                                                                                                            bit1
+                                                                                                                            e_3)
+                                                                                                                         ↑1
+                                                                                                                         1
+                                                                                                                         rat.cast_one)))
+                                                                                                                (propext
+                                                                                                                   (eq_self_iff_true
+                                                                                                                      3))))
+                                                                                                          trivial))))))))))
+                                                                          (id_locked
+                                                                             (λ (H0 : ↑d0 = ↑0),
+                                                                                eq.mpr
+                                                                                  (id_locked
+                                                                                     (eq.rec (eq.refl (d0 = 0))
+                                                                                        (eq.symm
+                                                                                           (propext nat.cast_inj))))
+                                                                                  (eq.mpr
+                                                                                     (id_locked
+                                                                                        (eq.trans
+                                                                                           ((λ (a a_1 : ℤ)
+                                                                                             (e_1 : a = a_1)
+                                                                                             (a_2 a_3 : ℤ)
+                                                                                             (e_2 : a_2 = a_3),
+                                                                                               congr (congr_arg eq e_1)
+                                                                                                 e_2)
+                                                                                              ↑d0
+                                                                                              0
+                                                                                              (eq.trans
+                                                                                                 (eq.trans
+                                                                                                    (eq.trans
+                                                                                                       (int.nat_cast_eq_coe_nat
+                                                                                                          d0)
+                                                                                                       H0)
+                                                                                                    (int.nat_cast_eq_coe_nat
+                                                                                                       0))
+                                                                                                 int.coe_nat_zero)
+                                                                                              ↑0
+                                                                                              0
+                                                                                              (eq.trans
+                                                                                                 (int.nat_cast_eq_coe_nat
+                                                                                                    0)
+                                                                                                 int.coe_nat_zero))
+                                                                                           (propext
+                                                                                              (eq_self_iff_true 0))))
+                                                                                     trivial))
+                                                                             (eq.mp
+                                                                                (eq.rec (eq.refl (d = 0))
+                                                                                   (eq.symm nat.cast_zero))
+                                                                                H0)))
+                                                                     (or.dcases_on
+                                                                        (eq_zero_or_eq_zero_of_mul_eq_zero
+                                                                           (eq.mp
+                                                                              (eq.rec (eq.refl (↑(d * d) = ↑0))
+                                                                                 (propext int.cast_inj))
+                                                                              (eq.mp
+                                                                                 (eq.rec (eq.refl (↑d * ↑d = ↑0))
+                                                                                    (eq.symm (int.cast_mul d d)))
+                                                                                 (eq.mp
+                                                                                    (eq.rec (eq.refl (↑d * ↑d = 0))
+                                                                                       (eq.symm int.cast_zero))
+                                                                                    H1))))
+                                                                        (λ (a : d = 0), a)
+                                                                        (λ (a : d = 0), a))))).mp
+                                                            (eq.symm
+                                                               (eq.mp
+                                                                  (eq.rec (eq.refl (↑n / ↑d * (↑n / ↑d) = 3))
+                                                                     (div_mul_div ↑n ↑d ↑n ↑d))
+                                                                  Hq2)))))))))))
+                                 (λ (n1 : ℤ) (H5 : n = 3 * n1),
+                                    Exists.dcases_on
+                                      (Q3a d
+                                         (Exists.intro (n1 * n1)
+                                            (eq.mp (eq.rec (eq.refl (d * d = 3 * (n1 * n1))) mul_self_eq_pow_two)
+                                               (eq.mp (eq.rec (eq.refl (d * d = 3 * n1 * n1)) (mul_assoc 3 n1 n1))
+                                                  (eq.mp
+                                                     (eq.rec (eq.refl (d * d = n1 * (3 * n1))) (mul_comm n1 (3 * n1)))
+                                                     (eq_of_mul_eq_mul_left
+                                                        (eq.mpr
+                                                           (id_locked
+                                                              ((λ (a a_1 : Prop) (e_1 : a = a_1), congr_arg not e_1)
+                                                                 (3 = 0)
+                                                                 false
+                                                                 (eq_false_intro (ne_of_gt (bit1_pos' zero_lt_one)))))
+                                                           (eq.mpr (id_locked (propext not_false_iff)) trivial))
+                                                        (eq.mp
+                                                           (eq.rec (eq.refl (3 * (d * d) = 3 * n1 * (3 * n1)))
+                                                              (mul_assoc 3 n1 (3 * n1)))
+                                                           (eq.mp (eq.rec (eq.refl (3 * (d * d) = n * n)) H5)
+                                                              (eq.mp
+                                                                 (eq.rec (eq.refl (3 * (d * d) = n ^ 2))
+                                                                    (eq.symm mul_self_eq_pow_two))
+                                                                 (eq.mp
+                                                                    (eq.rec (eq.refl (3 * (d * d) = n * n))
+                                                                       mul_self_eq_pow_two)
+                                                                    (eq.mp
+                                                                       (eq.rec (eq.refl (↑(3 * (d * d)) = ↑(n * n)))
+                                                                          (propext int.cast_inj))
+                                                                       (eq.mp
+                                                                          (eq.rec
+                                                                             (eq.refl (↑(3 * (d * d)) = ↑n * ↑n))
+                                                                             (eq.symm (int.cast_mul n n)))
+                                                                          (eq.mp
+                                                                             (eq.rec
+                                                                                (eq.refl
+                                                                                   (↑3 * ↑(d * d) = ↑n * ↑n))
+                                                                                (eq.symm (int.cast_mul 3 (d * d))))
+                                                                             (eq.mp
+                                                                                (eq.rec
+                                                                                   (eq.refl
+                                                                                      (↑3 * (↑d * ↑d) =
+                                                                                         ↑n * ↑n))
+                                                                                   (eq.symm (int.cast_mul d d)))
+                                                                                ((eq_div_iff_mul_eq 3 (↑n * ↑n)
+                                                                                    (id_locked
+                                                                                       (λ (H1 : ↑d * ↑d = 0),
+                                                                                          id_locked
+                                                                                            (λ (H0 : d = 0),
+                                                                                               id_locked
+                                                                                                 (λ (Hd0 : d0 = 0),
+                                                                                                    eq.mpr
+                                                                                                      (id_locked
+                                                                                                         (imp_congr_eq
+                                                                                                            (eq_false_intro
+                                                                                                               (ne_of_lt
+                                                                                                                  (bit1_pos'
+                                                                                                                     zero_lt_one)))
+                                                                                                            (eq.refl
+                                                                                                               false)))
+                                                                                                      (eq.mpr
+                                                                                                         (id_locked
+                                                                                                            (propext
+                                                                                                               imp_self))
+                                                                                                         trivial)
+                                                                                                      (eq.mp
+                                                                                                         (eq.rec
+                                                                                                            (eq.refl
+                                                                                                               (0 * 0 =
+                                                                                                                  3))
+                                                                                                            (mul_zero
+                                                                                                               0))
+                                                                                                         (eq.mp
+                                                                                                            (eq.rec
+                                                                                                               (eq.refl
+                                                                                                                  (q *
+                                                                                                                       q =
+                                                                                                                     3))
+                                                                                                               (eq.mp
+                                                                                                                  (eq.rec
+                                                                                                                     (eq.refl
+                                                                                                                        (q =
+                                                                                                                           ↑n /
+                                                                                                                             0))
+                                                                                                                     (div_zero
+                                                                                                                        ↑n))
+                                                                                                                  (eq.mp
+                                                                                                                     (eq.rec
+                                                                                                                        (eq.refl
+                                                                                                                           (q =
+                                                                                                                              ↑n /
+                                                                                                                                ↑0))
+                                                                                                                        nat.cast_zero)
+                                                                                                                     (eq.mp
+                                                                                                                        (eq.rec
+                                                                                                                           (eq.refl
+                                                                                                                              (q =
+                                                                                                                                 ↑n /
+                                                                                                                                   ↑d0))
+                                                                                                                           Hd0)
+                                                                                                                        (eq.mpr
+                                                                                                                           (id_locked
+                                                                                                                              (eq.rec
+                                                                                                                                 (eq.refl
+                                                                                                                                    (q =
+                                                                                                                                       ↑n /
+                                                                                                                                         ↑d0))
+                                                                                                                                 (rat.num_denom
+                                                                                                                                    q)))
+                                                                                                                           (eq.mpr
+                                                                                                                              (id_locked
+                                                                                                                                 (eq.rec
+                                                                                                                                    (eq.refl
+                                                                                                                                       (rat.mk
+                                                                                                                                            (q.num)
+                                                                                                                                            ↑(q.denom) =
+                                                                                                                                          ↑n /
+                                                                                                                                            ↑d0))
+                                                                                                                                    (rat.mk_eq_div
+                                                                                                                                       (q.num)
+                                                                                                                                       ↑(q.denom))))
+                                                                                                                              (eq.refl
+                                                                                                                                 (↑(q.num) /
+                                                                                                                                    ↑↑(q.denom)))))))))
+                                                                                                            (eq.mpr
+                                                                                                               (id_locked
+                                                                                                                  (eq.rec
+                                                                                                                     (eq.refl
+                                                                                                                        (q *
+                                                                                                                             q =
+                                                                                                                           3))
+                                                                                                                     (eq.symm
+                                                                                                                        (propext
+                                                                                                                           rat.cast_inj))))
+                                                                                                               (eq.mpr
+                                                                                                                  (id_locked
+                                                                                                                     (eq.rec
+                                                                                                                        (eq.refl
+                                                                                                                           (↑(q *
+                                                                                                                                   q) =
+                                                                                                                              ↑3))
+                                                                                                                        (rat.cast_mul
+                                                                                                                           q
+                                                                                                                           q)))
+                                                                                                                  (eq.mpr
+                                                                                                                     (id_locked
+                                                                                                                        (eq.rec
+                                                                                                                           (eq.refl
+                                                                                                                              (↑q *
+                                                                                                                                   ↑q =
+                                                                                                                                 ↑3))
+                                                                                                                           Hq))
+                                                                                                                     (eq.mpr
+                                                                                                                        (id_locked
+                                                                                                                           (eq.rec
+                                                                                                                              (eq.refl
+                                                                                                                                 (sqrt3 *
+                                                                                                                                      sqrt3 =
+                                                                                                                                    ↑3))
+                                                                                                                              mul_self_eq_pow_two))
+                                                                                                                        (eq.mpr
+                                                                                                                           (id_locked
+                                                                                                                              ((λ
+                                                                                                                                (a a_1 :
+                                                                                                                                  ℝ)
+                                                                                                                                (e_1 :
+                                                                                                                                  a =
+                                                                                                                                    a_1)
+                                                                                                                                (a_2 a_3 :
+                                                                                                                                  ℝ)
+                                                                                                                                (e_2 :
+                                                                                                                                  a_2 =
+                                                                                                                                    a_3),
+                                                                                                                                  congr
+                                                                                                                                    (…
+                                                                                                                                       e_1)
+                                                                                                                                    e_2)
+                                                                                                                                 (sqrt3 ^
+                                                                                                                                    2)
+                                                                                                                                 (classical.some
+                                                                                                                                      exists_sqrt_3 ^
+                                                                                                                                    2)
+                                                                                                                                 (…
+                                                                                                                                    sqrt3
+                                                                                                                                    (classical.some
+                                                                                                                                       exists_sqrt_3)
+                                                                                                                                    sqrt3.equations._eqn_1
+                                                                                                                                    2
+                                                                                                                                    2
+                                                                                                                                    (eq.refl
+                                                                                                                                       2))
+                                                                                                                                 ↑3
+                                                                                                                                 ↑3
+                                                                                                                                 (eq.refl
+                                                                                                                                    ↑3)))
+                                                                                                                           (eq.mpr
+                                                                                                                              (id_locked
+                                                                                                                                 (eq.rec
+                                                                                                                                    (eq.refl
+                                                                                                                                       (classical.some
+                                                                                                                                              exists_sqrt_3 ^
+                                                                                                                                            2 =
+                                                                                                                                          ↑3))
+                                                                                                                                    ((sqrt3_proof.right).left)))
+                                                                                                                              (eq.mpr
+                                                                                                                                 (id_locked
+                                                                                                                                    (eq.trans
+                                                                                                                                       (…
+                                                                                                                                          3
+                                                                                                                                          3
+                                                                                                                                          (eq.refl
+                                                                                                                                             3)
+                                                                                                                                          ↑3
+                                                                                                                                          3
+                                                                                                                                          (eq.trans
+                                                                                                                                             (rat.cast_bit1
+                                                                                                                                                1)
+                                                                                                                                             ((λ
+                                                                                                                                               [s₁ :
+                                                                                                                                                 …]
+                                                                                                                                               [s₂ :
+                                                                                                                                                 …]
+                                                                                                                                               (a a_1 :
+                                                                                                                                                 ℝ)
+                                                                                                                                               (e_3 :
+                                                                                                                                                 …),
+                                                                                                                                                 …)
+                                                                                                                                                ↑1
+                                                                                                                                                1
+                                                                                                                                                rat.cast_one)))
+                                                                                                                                       (propext
+                                                                                                                                          (eq_self_iff_true
+                                                                                                                                             3))))
+                                                                                                                                 trivial))))))))))
+                                                                                                 (id_locked
+                                                                                                    (λ
+                                                                                                     (H0 :
+                                                                                                       ↑d0 = ↑0),
+                                                                                                       eq.mpr
+                                                                                                         (id_locked
+                                                                                                            (eq.rec
+                                                                                                               (eq.refl
+                                                                                                                  (d0 =
+                                                                                                                     0))
+                                                                                                               (eq.symm
+                                                                                                                  (propext
+                                                                                                                     nat.cast_inj))))
+                                                                                                         (eq.mpr
+                                                                                                            (id_locked
+                                                                                                               (eq.trans
+                                                                                                                  ((λ
+                                                                                                                    (a a_1 :
+                                                                                                                      ℤ)
+                                                                                                                    (e_1 :
+                                                                                                                      a =
+                                                                                                                        a_1)
+                                                                                                                    (a_2 a_3 :
+                                                                                                                      ℤ)
+                                                                                                                    (e_2 :
+                                                                                                                      a_2 =
+                                                                                                                        a_3),
+                                                                                                                      congr
+                                                                                                                        (congr_arg
+                                                                                                                           eq
+                                                                                                                           e_1)
+                                                                                                                        e_2)
+                                                                                                                     ↑d0
+                                                                                                                     0
+                                                                                                                     (eq.trans
+                                                                                                                        (eq.trans
+                                                                                                                           (eq.trans
+                                                                                                                              (int.nat_cast_eq_coe_nat
+                                                                                                                                 d0)
+                                                                                                                              H0)
+                                                                                                                           (int.nat_cast_eq_coe_nat
+                                                                                                                              0))
+                                                                                                                        int.coe_nat_zero)
+                                                                                                                     ↑0
+                                                                                                                     0
+                                                                                                                     (eq.trans
+                                                                                                                        (int.nat_cast_eq_coe_nat
+                                                                                                                           0)
+                                                                                                                        int.coe_nat_zero))
+                                                                                                                  (propext
+                                                                                                                     (eq_self_iff_true
+                                                                                                                        0))))
+                                                                                                            trivial))
+                                                                                                    (eq.mp
+                                                                                                       (eq.rec
+                                                                                                          (eq.refl
+                                                                                                             (d = 0))
+                                                                                                          (eq.symm
+                                                                                                             nat.cast_zero))
+                                                                                                       H0)))
+                                                                                            (or.dcases_on
+                                                                                               (eq_zero_or_eq_zero_of_mul_eq_zero
+                                                                                                  (eq.mp
+                                                                                                     (eq.rec
+                                                                                                        (eq.refl
+                                                                                                           (↑(d * d) =
+                                                                                                              ↑0))
+                                                                                                        (propext
+                                                                                                           int.cast_inj))
+                                                                                                     (eq.mp
+                                                                                                        (eq.rec
+                                                                                                           (eq.refl
+                                                                                                              (↑d *
+                                                                                                                   ↑d =
+                                                                                                                 ↑0))
+                                                                                                           (eq.symm
+                                                                                                              (int.cast_mul
+                                                                                                                 d
+                                                                                                                 d)))
+                                                                                                        (eq.mp
+                                                                                                           (eq.rec
+                                                                                                              (eq.refl
+                                                                                                                 (↑d *
+                                                                                                                      ↑d =
+                                                                                                                    0))
+                                                                                                              (eq.symm
+                                                                                                                 int.cast_zero))
+                                                                                                           H1))))
+                                                                                               (λ (a : d = 0), a)
+                                                                                               (λ (a : d = 0),
+                                                                                                  a))))).mp
+                                                                                   (eq.symm
+                                                                                      (eq.mp
+                                                                                         (eq.rec
+                                                                                            (eq.refl
+                                                                                               (↑n / ↑d *
+                                                                                                    (↑n / ↑d) =
+                                                                                                  3))
+                                                                                            (div_mul_div ↑n ↑d ↑n
+                                                                                               ↑d))
+                                                                                         Hq2)))))))))))))))))
+                                      (λ (d1 : ℤ) (H2 : d = 3 * d1),
+                                         let n0 : ℕ := int.nat_abs n
+                                         in id_locked
+                                              (λ (H0 : nat.coprime n0 d0),
+                                                 let n2 : ℕ := int.nat_abs n1,
+                                                     d2 : ℕ := int.nat_abs d1
+                                                 in eq.mpr
+                                                      (id_locked
+                                                         (imp_congr_eq
+                                                            (eq_false_intro
+                                                               (ne_of_gt
+                                                                  (norm_num.lt_add_of_pos_helper 1 2 3
+                                                                     (norm_num.subst_into_sum 1 2 1 2 3 (eq.refl 1)
+                                                                        (eq.refl 2)
+                                                                        (norm_num.one_add_bit0 1))
+                                                                     (bit0_pos zero_lt_one))))
+                                                            (eq.refl false)))
+                                                      (eq.mpr (id_locked (propext imp_self)) trivial)
+                                                      (nat.eq_one_of_dvd_one
+                                                         (eq.mp
+                                                            (eq.rec (eq.refl (3 ∣ nat.gcd 3 3))
+                                                               (nat.coprime.coprime_mul_left
+                                                                  (eq.mp
+                                                                     (eq.rec (eq.refl (nat.coprime (3 * n2) 3))
+                                                                        (mul_comm 3 n2))
+                                                                     (nat.coprime.coprime_mul_right_right
+                                                                        (eq.mp
+                                                                           (eq.rec (eq.refl (nat.coprime (3 * n2) d0))
+                                                                              (eq.mpr
+                                                                                 (id_locked
+                                                                                    (eq.rec (eq.refl (d0 = 3 * d2))
+                                                                                       (eq.symm
+                                                                                          (int.nat_abs_of_nat d0))))
+                                                                                 (id_locked
+                                                                                    (id_locked
+                                                                                       (eq.mpr
+                                                                                          (id_locked
+                                                                                             (eq.rec
+                                                                                                (eq.refl
+                                                                                                   (int.nat_abs ↑d0 =
+                                                                                                      int.nat_abs 3 *
+                                                                                                        int.nat_abs d1))
+                                                                                                (eq.symm
+                                                                                                   (int.nat_abs_mul 3
+                                                                                                      d1))))
+                                                                                          (eq.mpr
+                                                                                             (id_locked
+                                                                                                (eq.rec
+                                                                                                   (eq.refl
+                                                                                                      (int.nat_abs
+                                                                                                           ↑d0 =
+                                                                                                         int.nat_abs
+                                                                                                           (3 * d1)))
+                                                                                                   (eq.symm H2)))
+                                                                                             (eq.refl
+                                                                                                (int.nat_abs
+                                                                                                   ↑d0))))))))
+                                                                           (eq.mp
+                                                                              (eq.rec (eq.refl (nat.coprime n0 d0))
+                                                                                 (id_locked
+                                                                                    (eq.mpr
+                                                                                       (id_locked
+                                                                                          (eq.rec
+                                                                                             (eq.refl
+                                                                                                (n0 =
+                                                                                                   int.nat_abs 3 * n2))
+                                                                                             (eq.symm
+                                                                                                (int.nat_abs_mul 3
+                                                                                                   n1))))
+                                                                                       (eq.mpr
+                                                                                          (id_locked
+                                                                                             (eq.rec
+                                                                                                (eq.refl
+                                                                                                   (n0 =
+                                                                                                      int.nat_abs
+                                                                                                        (3 * n1)))
+                                                                                                (eq.symm H5)))
+                                                                                          (eq.refl n0)))))
+                                                                              H0))))))
+                                                            (nat.dvd_gcd (Exists.intro 1 (mul_one 3))
+                                                               (Exists.intro 1 (mul_one 3))))))
+                                              (q.cop))))
+                            Hq2)
+                       Hq2)
+                  (eq.mp
+                     (eq.rec (eq.refl (rat.mk (q.num) ↑(q.denom) * rat.mk (q.num) ↑(q.denom) = 3))
+                        (rat.mk_eq_div (q.num) ↑(q.denom)))
+                     (eq.mp (eq.rec (eq.refl (q * q = 3)) (rat.num_denom q))
+                        (eq.mpr (id_locked (eq.rec (eq.refl (q * q = 3)) (eq.symm (propext rat.cast_inj))))
+                           (eq.mpr (id_locked (eq.rec (eq.refl (↑(q * q) = ↑3)) (rat.cast_mul q q)))
+                              (eq.mpr (id_locked (eq.rec (eq.refl (↑q * ↑q = ↑3)) Hq))
+                                 (eq.mpr (id_locked (eq.rec (eq.refl (sqrt3 * sqrt3 = ↑3)) mul_self_eq_pow_two))
+                                    (eq.mpr
+                                       (id_locked
+                                          ((λ (a a_1 : ℝ) (e_1 : a = a_1) (a_2 a_3 : ℝ) (e_2 : a_2 = a_3),
+                                              congr (congr_arg eq e_1) e_2)
+                                             (sqrt3 ^ 2)
+                                             (classical.some exists_sqrt_3 ^ 2)
+                                             ((λ [_inst_1 : has_pow_nat ℝ] (a a_1 : ℝ) (e_2 : a = a_1)
+                                               (a_2 a_3 : ℕ) (e_3 : a_2 = a_3), congr (congr_arg pow_nat e_2) e_3)
+                                                sqrt3
+                                                (classical.some exists_sqrt_3)
+                                                sqrt3.equations._eqn_1
+                                                2
+                                                2
+                                                (eq.refl 2))
+                                             ↑3
+                                             ↑3
+                                             (eq.refl ↑3)))
+                                       (eq.mpr
+                                          (id_locked
+                                             (eq.rec (eq.refl (classical.some exists_sqrt_3 ^ 2 = ↑3))
+                                                ((sqrt3_proof.right).left)))
+                                          (eq.mpr
+                                             (id_locked
+                                                (eq.trans
+                                                   ((λ (a a_1 : ℝ) (e_1 : a = a_1) (a_2 a_3 : ℝ) (e_2 : a_2 = a_3),
+                                                       congr (congr_arg eq e_1) e_2)
+                                                      3
+                                                      3
+                                                      (eq.refl 3)
+                                                      ↑3
+                                                      3
+                                                      (eq.trans (rat.cast_bit1 1)
+                                                         ((λ [s₁ : has_one ℝ] [s₂ : has_add ℝ] (a a_1 : ℝ)
+                                                           (e_3 : a = a_1), congr_arg bit1 e_3)
+                                                            ↑1
+                                                            1
+                                                            rat.cast_one)))
+                                                   (propext (eq_self_iff_true 3))))
+                                             trivial))))))))))))
