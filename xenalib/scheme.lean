@@ -8,14 +8,15 @@ structure ring_morphism (α : Type u) (β : Type v) (Ra : comm_ring α) (Rb : co
 (f_add : ∀ {a₁ a₂ : α}, f (a₁ + a₂) = f a₁ + f a₂)
 (f_mul : ∀ {a₁ a₂ : α}, f (a₁ * a₂) = f a₁ * f a₂) 
 
-structure presheaf_of_rings (α : Type u) [T : topological_space α] :=
-(F : {U : set α // T.is_open U} → Type)
-(Fring : ∀ U, comm_ring (F U))
-(res : ∀  (U V : {U : set α // T.is_open U}) (H : V.1 ⊆ U.1), 
-  ring_morphism (F U) (F V) (Fring U) (Fring V))
-(Hid : ∀ {U : {U : set α // T.is_open U}}, (res U U (set.subset.refl _)).f = id)  
-(Hcomp : ∀ {U V W : {U : set α // T.is_open U}} (HUV : V.1 ⊆ U.1) (HVW : W.1 ⊆ V.1),
-  (res U W (set.subset.trans HVW HUV)).f = (res V W HVW).f ∘ (res U V HUV).f )
+structure presheaf_of_rings (α : Type u) [T : topological_space α] 
+  (F : Π U : set α, T.is_open U → Type) :=
+[Fring : ∀ U O, comm_ring (F U O)]
+(res : ∀ (U V : set α) (OU : T.is_open U) (OV : T.is_open V) (H : V ⊆ U), 
+  ring_morphism (F U OU) (F V OV) (Fring U OU) (Fring V OV))
+(Hid : ∀ (U : set α) (OU : T.is_open U), (res U U OU OU (set.subset.refl _)).f = id)  
+(Hcomp : ∀ (U V W : set α) (OU : T.is_open U) (OV : T.is_open V) (OW : T.is_open W)
+  (HUV : V ⊆ U) (HVW : W ⊆ V),
+  (res U W OU OW (set.subset.trans HVW HUV)).f = (res V W OV OW HVW).f ∘ (res U V OU OV HUV).f )
 
 def inter {α : Type u} [ T : topological_space α] (U V : {U : set α // T.is_open U})
 : {U : set α // T.is_open U} :=
@@ -33,15 +34,21 @@ lemma inter_sub_right {α : Type u} [T : topological_space α]
   (U V : {U : set α // T.is_open U}) : (inter U V).1 ⊆ V.1 :=
 λ x Hx,Hx.right
 
-def res_to_inter_left {α : Type u} [T : topological_space α] (FP : presheaf_of_rings α) 
-  (U V : { U : set α // T.is_open U}) : ring_morphism (FP.F U) (FP.F (inter U V)) _ _:=
+def res_to_inter_left {α : Type u} [T : topological_space α] 
+  (F : Π U : set α, T.is_open U → Type)
+  (FP : presheaf_of_rings α F) 
+  (U V : set α) (OU : T.is_open U) (OV : T.is_open V) : 
+    ring_morphism (F U OU) (F (U ∩ V) (T.is_open_inter U V OU OV)) (FP.Fring _ _) (FP.Fring _ _):=
 begin
-let W := inter U V,
-exact (FP.res U W (inter_sub_left U V))
+let W := U ∩ V,
+exact (FP.res U W OU _ (set.inter_subset_left U V))
 end
 
-def res_to_inter_right {α : Type u} [T : topological_space α] (FP : presheaf_of_rings α)
-  (U V : {U : set α // T.is_open U}) : ring_morphism _ _ _ _ :=
+def res_to_inter_right {α : Type u} [T : topological_space α]
+  (F : Π U : set α, T.is_open U → Type)
+  (FP : presheaf_of_rings α F)
+  (U V : set α) (OU:...)
+  ({U : set α // T.is_open U}) : ring_morphism _ _ _ _ :=
 begin
 let W := inter U V,
 exact (FP.res V W (inter_sub_right U V))
@@ -86,21 +93,41 @@ structure sheaf_of_rings (α : Type u) [T : topological_space α] :=
 )
 
 structure ideal (R : Type u) [RR : comm_ring R] :=
-(I : set R)
-(Izero : RR.zero ∈ I)
-(I_ab_group : ∀ a b : R, a ∈ I → b ∈ I → a-b ∈ I)
-(I_module : ∀ (r : R) (i ∈ I), r*i ∈ I)
+(I_set : set R)
+(I_zero : RR.zero ∈ I_set)
+(I_ab_group : ∀ a b : R, a ∈ I_set → b ∈ I_set → a-b ∈ I_set)
+(I_module : ∀ (r : R) (i ∈ I_set), r*i ∈ I_set)
+
+
+
 
 /-
-ring_morphism: make Ra and Rb instance implicit
 
-In fact you might even want to move the type family component into a parameter
+Mario said: "ring_morphism: make Ra and Rb instance implicit" -- try this later
 
-Uncurrying will save you the trouble of stuff like def inter and inter_sub_left which
-are duplicates of existing theorems
+Uncurrying will save you the trouble of stuff like def inter and
+inter_sub_left which are duplicates of existing theorems
 
-I might also suggest removing the is_open parameter from F entirely, but I don't
-know if that will interfere with some construction or another since that's not an
-isomorphic modification (seeing as how partial functions are not nice to work 
-with in practice)
+Note that you can mark fields as instance implicit too
+
+and by make F a parameter I meant this
+
+structure presheaf_of_rings (α : Type u) [topological_space α] (F : Π U : set α, is_open U → Type) :=
+[Fring : ∀ U O, comm_ring (F U O)]
+
+It's good for the digestion if you've had too much curry
+
+    why don't you use add_comm_group?
+
+Re: ideal, you should have a is_subgroup predicate for asserting that I is closed under group operations for this
+It should be similar to is_submodule in algebra/module
+Mario Carneiro
+@digama0
+05:26
+
+    with now no clue as to how to figure out that F U is a ring
+
+Whenever you are trying to make a typeclass instance solvable, you need to add an instance keyed to the form of the thing being inferred. If it's FP.F then this is easy, just have a theorem like instance : comm_ring (FP.F U O) or whatever
+If it's a parameter, the comm_ring part will also need to be a parameter, so it shows up in the local context of all such theorems (or else it is derivable from something in the context that only depends on F)
+
 -/
