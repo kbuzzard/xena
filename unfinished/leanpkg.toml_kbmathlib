@@ -1,0 +1,7 @@
+[package]
+name = "xena"
+version = "0.1"
+lean_version = "master"
+
+[dependencies]
+mathlib = {path = "/home/buzzard/Encfs/Computer_languages/Lean/mathlib-kbuzzard"}
