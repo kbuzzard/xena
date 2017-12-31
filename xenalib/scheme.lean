@@ -1,85 +1,98 @@
 import analysis.topology.topological_space data.set 
-universes u v
 
-structure ring_morphism (α : Type u) (β : Type v) (Ra : comm_ring α) (Rb : comm_ring β) :=
-(f : α → β)
+structure ring_morphism {α : Type*} {β : Type*} [Ra : comm_ring α] [Rb : comm_ring β] (f : α → β) :=
 (f_zero : f 0 = 0)
 (f_one : f 1 = 1)
 (f_add : ∀ {a₁ a₂ : α}, f (a₁ + a₂) = f a₁ + f a₂)
 (f_mul : ∀ {a₁ a₂ : α}, f (a₁ * a₂) = f a₁ * f a₂) 
 
-structure presheaf_of_rings (α : Type u) [T : topological_space α] 
-  (F : Π U : set α, T.is_open U → Type) :=
+local attribute [class] topological_space.is_open 
+
+structure presheaf_of_rings (α : Type*) [T : topological_space α] 
+  (F : Π U : set α, T.is_open U → Type*) :=
 [Fring : ∀ U O, comm_ring (F U O)]
-(res : ∀ (U V : set α) (OU : T.is_open U) (OV : T.is_open V) (H : V ⊆ U), 
-  ring_morphism (F U OU) (F V OV) (Fring U OU) (Fring V OV))
-(Hid : ∀ (U : set α) (OU : T.is_open U), (res U U OU OU (set.subset.refl _)).f = id)  
-(Hcomp : ∀ (U V W : set α) (OU : T.is_open U) (OV : T.is_open V) (OW : T.is_open W)
+(res : ∀ (U V : set α) [OU : T.is_open U] [OV : T.is_open V] (H : V ⊆ U), 
+  (F U OU) → (F V OV))
+(res_is_ring_morphism : ∀ (U V : set α) [OU : T.is_open U] [OV : T.is_open V] (H : V ⊆ U),
+ring_morphism (res U V H))
+(Hid : ∀ (U : set α) [OU : T.is_open U], (res U U (set.subset.refl _)) = id)  
+(Hcomp : ∀ (U V W : set α) [OU : T.is_open U] [OV : T.is_open V] [OW : T.is_open W]
   (HUV : V ⊆ U) (HVW : W ⊆ V),
-  (res U W OU OW (set.subset.trans HVW HUV)).f = (res V W OV OW HVW).f ∘ (res U V OU OV HUV).f )
+  (res U W (set.subset.trans HVW HUV)) = (res V W HVW) ∘ (res U V HUV) )
 
-def inter {α : Type u} [ T : topological_space α] (U V : {U : set α // T.is_open U})
-: {U : set α // T.is_open U} :=
+attribute [class] presheaf_of_rings
+attribute [instance] presheaf_of_rings.Fring
+local attribute [instance] topological_space.is_open_inter
+
+--#check presheaf_of_rings.res 
+
+--variables (α : Type*) (T : topological_space α) (F : Π U : set α, T.is_open U → Type*)
+--  (FP : presheaf_of_rings α F) 
+
+def res_to_inter_left {α : Type*} [T : topological_space α] 
+  (F : Π U : set α, T.is_open U → Type*)
+  [FP : presheaf_of_rings α F]
+  (U V : set α) [OU : T.is_open U] [OV : T.is_open V] : 
+    (F U OU) → (F (U ∩ V) (T.is_open_inter U V OU OV)) :=
 begin
-let W : set α := U.val ∩ V.val,
-have W_is_open : T.is_open W := T.is_open_inter U.1 V.1 U.2 V.2,
-exact ⟨W,W_is_open⟩,
+--let W := U ∩ V,
+have OW : T.is_open (U ∩ V) := T.is_open_inter U V OU OV,
+exact (FP.res U (U ∩ V) (set.inter_subset_left U V)),
 end
 
-lemma inter_sub_left {α : Type u} [T : topological_space α] 
-  (U V : {U : set α // T.is_open U}) : (inter U V).1 ⊆ U.1 :=
-λ x Hx,Hx.left
-
-lemma inter_sub_right {α : Type u} [T : topological_space α] 
-  (U V : {U : set α // T.is_open U}) : (inter U V).1 ⊆ V.1 :=
-λ x Hx,Hx.right
-
-def res_to_inter_left {α : Type u} [T : topological_space α] 
+def res_to_inter_right {α : Type*} [T : topological_space α]
   (F : Π U : set α, T.is_open U → Type)
-  (FP : presheaf_of_rings α F) 
-  (U V : set α) (OU : T.is_open U) (OV : T.is_open V) : 
-    ring_morphism (F U OU) (F (U ∩ V) (T.is_open_inter U V OU OV)) (FP.Fring _ _) (FP.Fring _ _):=
+  [FP : presheaf_of_rings α F]
+  (U V : set α) [OU : T.is_open U] [OV : T.is_open V] :
+    (F V OV) → (F (U ∩ V) (T.is_open_inter U V OU OV)) :=
 begin
-let W := U ∩ V,
-exact (FP.res U W OU _ (set.inter_subset_left U V))
+have OW : T.is_open (U ∩ V) := T.is_open_inter U V OU OV,
+exact (FP.res V (U ∩ V) (set.inter_subset_right U V))
 end
 
-def res_to_inter_right {α : Type u} [T : topological_space α]
-  (F : Π U : set α, T.is_open U → Type)
-  (FP : presheaf_of_rings α F)
-  (U V : set α) (OU:...)
-  ({U : set α // T.is_open U}) : ring_morphism _ _ _ _ :=
+/- this shd be inbuilt -/
+--set.Union_subset_iff.1 
+/-
+lemma cov_is_subs {α : Type*} [T : topological_space α]
+  (U : set α)
+  [OU : T.is_open U] 
+  {γ : Type*} (Ui : γ → set α)
+  [OUi : ∀ x : γ, T.is_open (Ui x)]
+  (Hcov : (⋃ (x : γ), (Ui x)) = U) : ∀ x : γ, (Ui x) ⊆ U :=
 begin
-let W := inter U V,
-exact (FP.res V W (inter_sub_right U V))
-end
-
-lemma cov_is_subs {α : Type u} [T : topological_space α]
-  (U : {U : set α // T.is_open U}) 
-  {γ : Type v} (Ui : γ → {U : set α // T.is_open U}) 
-  (Hcov : (⋃ (x : γ), (Ui x).1) = U.1) : ∀ x : γ, (Ui x).1 ⊆ U.1 :=
-begin
-have H₁ : (⋃ (x : γ), (Ui x).1) ⊆ U.1,
+have H₁ : (⋃ (x : γ), (Ui x)) ⊆ U,
 { rw Hcov,
   exact set.subset.refl _ },
 have H₂ := set.Union_subset_iff.1 H₁,
 exact H₂,
 end 
+-/
 
-def gluing {α : Type u} [T : topological_space α] (FP : presheaf_of_rings α)
-  (U : {U : set α // T.is_open U}) 
-  {γ : Type v} (Ui : γ → {U : set α // T.is_open U}) 
-  (Hcov : (⋃ (x : γ), (Ui x).1) = U.1) : 
-  (FP.F U) → {a : (Π (x : γ), (FP.F (Ui x))) | ∀ (x y : γ), 
-    (res_to_inter_left FP (Ui x) (Ui y)).f (a x) = 
-    (res_to_inter_right FP (Ui x) (Ui y)).f (a y)} :=
+#check res_to_inter_left
+
+def gluing {α : Type*} [T : topological_space α] (F : Π U : set α, T.is_open U → Type*) 
+  [FP : presheaf_of_rings α F]
+  (U :  set α)
+  [UO : T.is_open U]
+  {γ : Type*} (Ui : γ → set α)
+  [UiO : ∀ i : γ, T.is_open (Ui i)]
+  (Hcov : (⋃ (x : γ), (Ui x)) = U) : 
+  (F U UO) → {a : (Π (x : γ), (F (Ui x) _)) | ∀ (x y : γ), 
+    (res_to_inter_left F (Ui x) (Ui y)) (a x) = 
+    (res_to_inter_right F (Ui x) (Ui y)) (a y)} :=
 begin
 intro r,
-existsi (λ x,(FP.res U (Ui x) (cov_is_subs U Ui Hcov x)).f r),
+existsi (λ x,(FP.res U (Ui x) (Hcov ▸ set.subset_Union Ui x) r)),
 intros x₁ y₁,
-show (
-      (FP.res (Ui x₁) (inter (Ui x₁) (Ui y₁)) _).f ∘ (FP.res U (Ui x₁) _).f) r =
-      ((FP.res (Ui y₁) (inter (Ui x₁) (Ui y₁)) _).f ∘ (FP.res U (Ui y₁) _).f) r,
+unfold res_to_inter_left,
+unfold res_to_inter_right,
+--hmm
+suffices : (presheaf_of_rings.res FP (Ui x₁) ((Ui x₁) ∩ (Ui y₁)) _)
+      (presheaf_of_rings.res FP U (Ui x₁) _ r) =
+    (presheaf_of_rings.res FP (Ui y₁) ((Ui x₁) ∩ (Ui y₁)) _)
+      (presheaf_of_rings.res FP U (Ui y₁) _ r),
+--show ((FP.res (Ui x₁) (inter (Ui x₁) (Ui y₁)) _) ∘ (FP.res U (Ui x₁) _)) r =
+--      ((FP.res (Ui y₁) (inter (Ui x₁) (Ui y₁)) _) ∘ (FP.res U (Ui y₁) _)) r,
 rw [←(FP.Hcomp (cov_is_subs U Ui Hcov x₁) (inter_sub_left  (Ui x₁) (Ui y₁)))],
 rw [←(FP.Hcomp (cov_is_subs U Ui Hcov y₁) (inter_sub_right (Ui x₁) (Ui y₁)))],
 end
