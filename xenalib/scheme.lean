@@ -86,6 +86,7 @@ structure ideal (R : Type u) [RR : comm_ring R] :=
 (I_module : ∀ (r : R) (i ∈ I_set), r*i ∈ I_set)
 
 
+-/
 
 /-
 
