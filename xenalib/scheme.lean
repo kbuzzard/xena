@@ -21,13 +21,8 @@ ring_morphism (res U V H))
   (res U W (set.subset.trans HVW HUV)) = (res V W HVW) ∘ (res U V HUV) )
 
 attribute [class] presheaf_of_rings
-attribute [instance] presheaf_of_rings.Fring
-local attribute [instance] topological_space.is_open_inter
-
---#check presheaf_of_rings.res 
-
---variables (α : Type*) (T : topological_space α) (F : Π U : set α, T.is_open U → Type*)
---  (FP : presheaf_of_rings α F) 
+--attribute [instance] presheaf_of_rings.Fring
+--local attribute [instance] topological_space.is_open_inter
 
 def res_to_inter_left {α : Type*} [T : topological_space α] 
   (F : Π U : set α, T.is_open U → Type*)
@@ -49,28 +44,6 @@ begin
 have OW : T.is_open (U ∩ V) := T.is_open_inter U V OU OV,
 exact (FP.res V (U ∩ V) (set.inter_subset_right U V))
 end
-
-/- this shd be inbuilt -/
---set.Union_subset_iff.1 
-/-
-lemma cov_is_subs {α : Type*} [T : topological_space α]
-  (U : set α)
-  [OU : T.is_open U] 
-  {γ : Type*} (Ui : γ → set α)
-  [OUi : ∀ x : γ, T.is_open (Ui x)]
-  (Hcov : (⋃ (x : γ), (Ui x)) = U) : ∀ x : γ, (Ui x) ⊆ U :=
-begin
-have H₁ : (⋃ (x : γ), (Ui x)) ⊆ U,
-{ rw Hcov,
-  exact set.subset.refl _ },
-have H₂ := set.Union_subset_iff.1 H₁,
-exact H₂,
-end 
--/
-
-#check res_to_inter_left
-
-#check topological_space.is_open_inter 
 
 def gluing {α : Type*} [T : topological_space α] (F : Π U : set α, T.is_open U → Type*) 
   [FP : presheaf_of_rings α F]
@@ -112,7 +85,6 @@ structure ideal (R : Type u) [RR : comm_ring R] :=
 (I_ab_group : ∀ a b : R, a ∈ I_set → b ∈ I_set → a-b ∈ I_set)
 (I_module : ∀ (r : R) (i ∈ I_set), r*i ∈ I_set)
 
--/
 
 
 /-
