@@ -23,7 +23,6 @@ sends a real number x to the non-negative square root of abs x (a.k.a. |x|).
 import analysis.real tactic.norm_num
 -- analysis.real -- for reals
 -- tactic.norm_num -- because I want to do proofs of things like 1/4 < 1 in ℝ quickly
--- init.classical -- don't know why yet.
 
 -- Can I just dump the below things into Lean within no namespace?
 infix ` ** `: 80 := monoid.pow 
@@ -34,15 +33,7 @@ by simp [monoid.pow]
 theorem mul_self_eq_pow_two {α : Type} [monoid α] {x : α} : x * x = x ** 2 :=
 eq.symm pow_two_eq_mul_self
 
-theorem imp_of_not_or {A B : Prop} : (A ∨ B) → (¬ A) → B :=
-begin
-intros Hor HnBofA,
-cases Hor,
-  contradiction,
-exact a
-end
-
--- #check @abs_sub_square -- why is that even there?
+theorem imp_of_not_or {A B : Prop} : (A ∨ B) → (¬ A) → B := by cc
 
 /-
 
@@ -64,12 +55,10 @@ begin
 assume H_x_ge_zero : x ≥ 0,
 assume H_y_ge_zero : y ≥ 0,
 assume H : x ** 2 = y ** 2,
-rw [pow_two_eq_mul_self,pow_two_eq_mul_self,mul_self_eq_mul_self_iff] at H,
-cases H with Heq Hneg,
-  exact Heq,
-have H2 : x = 0 ∧ y = 0,
-  exact (add_eq_zero_iff_eq_zero_of_nonneg H_x_ge_zero H_y_ge_zero).1 (add_eq_zero_iff_eq_neg.2 Hneg), 
-rw [H2.left,H2.right],
+rw [pow_two_eq_mul_self,pow_two_eq_mul_self] at H,
+have Hle : x ≤ y := nonneg_le_nonneg_of_squares_le H_y_ge_zero (le_of_eq H),
+have Hge : y ≤ x := nonneg_le_nonneg_of_squares_le H_x_ge_zero (le_of_eq H.symm),
+exact le_antisymm Hle Hge,
 end
 
 theorem square_cont_at_zero : ∀ (r : ℝ), r > 0 → 
@@ -305,7 +294,8 @@ have H3 : ¬ (q**2>r),
   cases lt_or_eq_of_le H with Hlt Heq,
     exfalso,
     exact H2 Hlt,
-  exact Heq
+  rw ←Heq,
+  exact mul_self_eq_pow_two
 end
 
 
