@@ -66,12 +66,20 @@ end
 #print partial_order 
 
 /-- a non-zero ring has a maximal ideal-/
-lemma stacks_tag_00E0_2 {R : Type*} [comm_ring R] : (∃ r : R, r ≠ 0) → (∃ m : set R, is_maximal_ideal m) :=
+lemma stacks_tag_00E0_2 {R : Type*} [comm_ring R] : 
+  (∃ r : R, r ≠ 0) → (∃ m : set R, is_maximal_ideal m) :=
 begin
-let α := { I : set R | is_proper_ideal I},
+let P := {I : set R // is_proper_ideal I},
+have H : has_coe P (set R) := ⟨λ x, x.val⟩, 
+have PP : partial_order P :=
+{ le := (λ P Q, P.val ⊆ Q.val),
+  lt := (λ P Q, P.val ⊂ Q.val),
+  le_refl := λ a, set.subset.refl,
+  le_trans := λ a b c,set.subset.trans,
+  lt_iff_le_not_le := _,
+  le_antisymm := by simp
+},
 
-admit,
 end
 
---theorem zorn_partial_order {α : Type u} [partial_order α]
---  (h : ∀c:set α, @chain α (≤) c → ∃ub, ∀a∈c, a ≤ ub) : ∃m:α, ∀a, m ≤ a → a = m :=
+>>>>>>> cac385f638e63a7bb0ce00969943ef133a49ee8a
