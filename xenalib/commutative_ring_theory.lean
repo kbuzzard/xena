@@ -1,4 +1,6 @@
 import order.zorn
+noncomputable theory
+local attribute [instance] classical.prop_decidable
 
 class is_ideal {R : Type*} [comm_ring R] (J : set R) : Prop :=
 (zero : (0:R) ∈ J)
@@ -16,7 +18,6 @@ class is_prime_ideal {R : Type*} [comm_ring R] (P : set R)
 class is_maximal_ideal {R : Type*} [comm_ring R] (m : set R)
   extends is_proper_ideal m : Prop :=
 (is_maximal : ∀ J : set R, (is_proper_ideal J) → m ⊆ J → J = m)
-
 
 /-- increasing union of ideals is an ideal --/
 lemma union_of_ideals {R : Type*} [comm_ring R] {γ : Type*} [inhabited γ] [decidable_linear_order γ]
@@ -62,24 +63,59 @@ begin
     exact (IxI x).is_not_everything }
 end
 
-
-#print partial_order 
-
 /-- a non-zero ring has a maximal ideal-/
-lemma stacks_tag_00E0_2 {R : Type*} [comm_ring R] : 
+lemma stacks_tag_00E0_2 {R : Type*} [comm_ring R] :
   (∃ r : R, r ≠ 0) → (∃ m : set R, is_maximal_ideal m) :=
 begin
-let P := {I : set R // is_proper_ideal I},
-have H : has_coe P (set R) := ⟨λ x, x.val⟩, 
-have PP : partial_order P :=
-{ le := (λ P Q, P.val ⊆ Q.val),
-  lt := (λ P Q, P.val ⊂ Q.val),
-  le_refl := λ a, set.subset.refl,
-  le_trans := λ a b c,set.subset.trans,
-  lt_iff_le_not_le := _,
-  le_antisymm := by simp
-},
+  let P := {I : set R // is_proper_ideal I},
+
+  --have H : has_coe P (set R) := ⟨λ x, x.val⟩, 
+  have PP : partial_order P :=
+  { le := (λ P Q, P.val ⊆ Q.val),
+    le_refl := λ a, set.subset.refl a.val,
+    le_trans := λ a b c Hab Hbc, set.subset.trans Hab Hbc,
+    le_antisymm := λ a b Hab Hba, subtype.eq (set.subset.antisymm Hab Hba)
+  },
+  have Zorn := @zorn.zorn_partial_order P PP,
+  have Zorn_assumption: (∀ (c : set P), zorn.chain c → (∃ (ub : P), ∀ (a : P), a ∈ c → a ≤ ub)),
+  { intros c Hc,
+    unfold zorn.chain at Hc,
+    unfold set.pairwise_on at Hc,
+
+
+  }
+  intro H_nonzero,
+  suffices : ∃ m, ∀ a : P, m ≤ a → a = m,
+  { cases this with m Hm,
+    existsi m.val,
+    constructor,
+    { show is_proper_ideal m.val,
+      exact m.property,
+    },
+    intros J HJ Hsub,
+    let JJ:P := ⟨J,HJ⟩,
+    have := Hm ⟨J,HJ⟩,
+    have Htemp : (⟨J,HJ⟩ : P).val = J := by simp,
+    rw ←Htemp,
+    suffices : (⟨J,HJ⟩:P) = m,
+    { rw [this] },
+    apply this,
+    --  unfold has_le.le preorder.le partial_order.le partial_order.le partial_order.le,
+    show m ≤ JJ,
+    suffices : m.val ⊆ JJ.val,
+    { admit },
+    simp [Hsub],
+  },
+apply zorn.zorn_partial_order,
 
 end
+--#check set.ssubset_def
 
->>>>>>> cac385f638e63a7bb0ce00969943ef133a49ee8a
+#check @zorn.zorn_partial_order 
+
+--#check zorn.zorn_partial_order
+/-
+zorn.zorn_partial_order :
+  (∀ (c : set ?M_1), zorn.chain c → (∃ (ub : ?M_1), ∀ (a : ?M_1), a ∈ c → a ≤ ub)) →
+  (∃ (m : ?M_1), ∀ (a : ?M_1), m ≤ a → a = m)
+-/
