@@ -47,6 +47,8 @@ exact is_ideal.mul r j Hx,
 }
 end
 
+--set_option pp.all true
+
 lemma union_of_proper_ideals {R : Type*} [comm_ring R] {γ : Type*} [inhabited γ] [decidable_linear_order γ]
   (Ix : γ → set R) (IxI : ∀ x : γ, is_proper_ideal (Ix x))
   (I_inc : ∀ {x y : γ}, x ≤ y → Ix x ⊆ Ix y) 
@@ -54,13 +56,22 @@ lemma union_of_proper_ideals {R : Type*} [comm_ring R] {γ : Type*} [inhabited �
 begin
   constructor,
   { show is_ideal {r : R | ∃ x : γ, r ∈ Ix x},
-    exact union_of_ideals Ix (λ x, (IxI x).to_is_ideal) @I_inc }, -- why the @ needed?
+    exact union_of_ideals Ix (λ x, (IxI x).to_is_ideal) @I_inc },
   { show (1:R) ∉ {r : R | ∃ x : γ, r ∈ Ix x},
     intro H,cases H with x Hx, revert Hx,
     exact (IxI x).is_not_everything }
 end
 
 
+#print partial_order 
 
 /-- a non-zero ring has a maximal ideal-/
--- lemma stacks_tag_00E0_2 : nonzero ring has max ideal
+lemma stacks_tag_00E0_2 {R : Type*} [comm_ring R] : (∃ r : R, r ≠ 0) → (∃ m : set R, is_maximal_ideal m) :=
+begin
+let α := { I : set R | is_proper_ideal I},
+
+admit,
+end
+
+--theorem zorn_partial_order {α : Type u} [partial_order α]
+--  (h : ∀c:set α, @chain α (≤) c → ∃ub, ∀a∈c, a ≤ ub) : ∃m:α, ∀a, m ≤ a → a = m :=
