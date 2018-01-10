@@ -20,7 +20,7 @@ class is_maximal_ideal {R : Type*} [comm_ring R] (m : set R)
 (is_maximal : ∀ J : set R, (is_proper_ideal J) → m ⊆ J → J = m)
 
 /-- increasing union of ideals is an ideal --/
-lemma union_of_ideals {R : Type*} [comm_ring R] {γ : Type*} [inhabited γ] [decidable_linear_order γ]
+lemma union_of_ideals {R : Type*} [comm_ring R] {γ : Type*} [inhabited γ] [linear_order γ]
   (Ix : γ → set R) (IxI : ∀ x : γ, is_ideal (Ix x))
   (I_inc : ∀ {x y : γ}, x ≤ y → Ix x ⊆ Ix y) 
   : is_ideal {r : R | ∃ x : γ, r ∈ Ix x} :=
@@ -49,8 +49,7 @@ exact is_ideal.mul r j Hx,
 end
 
 --set_option pp.all true
-
-lemma union_of_proper_ideals {R : Type*} [comm_ring R] {γ : Type*} [inhabited γ] [decidable_linear_order γ]
+lemma union_of_proper_ideals {R : Type*} [comm_ring R] {γ : Type*} [inhabited γ] [linear_order γ]
   (Ix : γ → set R) (IxI : ∀ x : γ, is_proper_ideal (Ix x))
   (I_inc : ∀ {x y : γ}, x ≤ y → Ix x ⊆ Ix y) 
   : is_proper_ideal {r : R | ∃ x : γ, r ∈ Ix x} :=
@@ -61,7 +60,9 @@ begin
   { show (1:R) ∉ {r : R | ∃ x : γ, r ∈ Ix x},
     intro H,cases H with x Hx, revert Hx,
     exact (IxI x).is_not_everything }
-end
+end 
+
+#print zorn.chain 
 
 /-- a non-zero ring has a maximal ideal-/
 lemma stacks_tag_00E0_2 {R : Type*} [comm_ring R] :
@@ -79,11 +80,24 @@ begin
   have Zorn := @zorn.zorn_partial_order P PP,
   have Zorn_assumption: (∀ (c : set P), zorn.chain c → (∃ (ub : P), ∀ (a : P), a ∈ c → a ≤ ub)),
   { intros c Hc,
+    let c_subtype := {I : P // c I},
+    have H_par_c : partial_order c_subtype :=
+    { le := λ P Q, P.val.val ⊆ Q.val.val,
+      le_refl := λ a, set.subset.refl a.val.val,
+      le_trans := λ a b c Hab Hbc, set.subset.trans Hab Hbc,
+      le_antisymm := λ a b Hab Hba, subtype.eq (subtype.eq (set.subset.antisymm Hab Hba))
+    },
+    have H_lin_c : linear_order c_subtype :=
+    { le_total := λ a b, zorn.chain.total _ _ _,
+    ..H_par_c,
+    },
     unfold zorn.chain at Hc,
     unfold set.pairwise_on at Hc,
+    -- Hc : ∀ (x : P), x ∈ c → ∀ (y : P), y ∈ c → x ≠ y → ?m_1[c] x y ∨ ?m_1[c] y x
+    let ub_val := set.Union (λ (I : { I : P // c I}), (I.val).val), 
+    
 
-
-  }
+  },
   intro H_nonzero,
   suffices : ∃ m, ∀ a : P, m ≤ a → a = m,
   { cases this with m Hm,
