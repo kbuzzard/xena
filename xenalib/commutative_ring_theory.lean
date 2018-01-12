@@ -20,7 +20,7 @@ class is_maximal_ideal {R : Type*} [comm_ring R] (m : set R)
 (is_maximal : ∀ J : set R, (is_proper_ideal J) → m ⊆ J → J = m)
 
 /-- increasing union of ideals is an ideal --/
-lemma union_of_ideals {R : Type*} [comm_ring R] {γ : Type*} [inhabited γ] [linear_order γ]
+lemma union_of_ideals {R : Type*} [comm_ring R] {γ : Type*} [inhabited γ] [decidable_linear_order γ]
   (Ix : γ → set R) (IxI : ∀ x : γ, is_ideal (Ix x))
   (I_inc : ∀ {x y : γ}, x ≤ y → Ix x ⊆ Ix y) 
   : is_ideal {r : R | ∃ x : γ, r ∈ Ix x} :=
@@ -49,7 +49,7 @@ exact is_ideal.mul r j Hx,
 end
 
 --set_option pp.all true
-lemma union_of_proper_ideals {R : Type*} [comm_ring R] {γ : Type*} [inhabited γ] [linear_order γ]
+lemma union_of_proper_ideals {R : Type*} [comm_ring R] {γ : Type*} [inhabited γ] [decidable_linear_order γ]
   (Ix : γ → set R) (IxI : ∀ x : γ, is_proper_ideal (Ix x))
   (I_inc : ∀ {x y : γ}, x ≤ y → Ix x ⊆ Ix y) 
   : is_proper_ideal {r : R | ∃ x : γ, r ∈ Ix x} :=
@@ -69,17 +69,33 @@ lemma stacks_tag_00E0_2 {R : Type*} [comm_ring R] :
   (∃ r : R, r ≠ 0) → (∃ m : set R, is_maximal_ideal m) :=
 begin
   let P := {I : set R // is_proper_ideal I},
-
-  --have H : has_coe P (set R) := ⟨λ x, x.val⟩, 
   have PP : partial_order P :=
   { le := (λ P Q, P.val ⊆ Q.val),
     le_refl := λ a, set.subset.refl a.val,
     le_trans := λ a b c Hab Hbc, set.subset.trans Hab Hbc,
     le_antisymm := λ a b Hab Hba, subtype.eq (set.subset.antisymm Hab Hba)
   },
+  intro HR_nonzero,
+  suffices : ∃ (m : P), ∀ (a : P), m ≤ a → a = m,
+  { cases this with m Hm,
+    existsi m.val,
+    constructor,
+    { exact m.property},
+    intros J HJ H3,
+    let H2 := Hm ⟨J,HJ⟩,
+    have : m ≤ ⟨J,HJ⟩,
+    unfold has_le.le,
+    unfold preorder.le,
+    unfold partial_order.le,
+    show m ≤ ⟨J,HJ⟩ → ⟨J,HJ⟩ = m,
+    change m ≤ ⟨J,HJ⟩ with m.val ⊆ J at H2,
+
+  }
+
   have Zorn := @zorn.zorn_partial_order P PP,
-  have Zorn_assumption: (∀ (c : set P), zorn.chain c → (∃ (ub : P), ∀ (a : P), a ∈ c → a ≤ ub)),
-  { intros c Hc,
+  have : (∃ (m : P), ∀ (a : P), m ≤ a → a = m),
+  { apply Zorn,
+    intros c Hc,
     let c_subtype := {I : P // c I},
     have H_par_c : partial_order c_subtype :=
     { le := λ P Q, P.val.val ⊆ Q.val.val,
@@ -87,10 +103,10 @@ begin
       le_trans := λ a b c Hab Hbc, set.subset.trans Hab Hbc,
       le_antisymm := λ a b Hab Hba, subtype.eq (subtype.eq (set.subset.antisymm Hab Hba))
     },
-    have H_lin_c : linear_order c_subtype :=
-    { le_total := λ a b, zorn.chain.total _ _ _,
-    ..H_par_c,
-    },
+    have H_lin_c : decidable_linear_order c_subtype,
+    refine {..H_par_c,..},
+    { intros a b,
+    exact λ a b, zorn.chain.total Hc _ _,
     unfold zorn.chain at Hc,
     unfold set.pairwise_on at Hc,
     -- Hc : ∀ (x : P), x ∈ c → ∀ (y : P), y ∈ c → x ≠ y → ?m_1[c] x y ∨ ?m_1[c] y x
@@ -125,6 +141,7 @@ apply zorn.zorn_partial_order,
 end
 --#check set.ssubset_def
 
+#check nat.succ_pos
 #check @zorn.zorn_partial_order 
 
 --#check zorn.zorn_partial_order
@@ -133,3 +150,4 @@ zorn.zorn_partial_order :
   (∀ (c : set ?M_1), zorn.chain c → (∃ (ub : ?M_1), ∀ (a : ?M_1), a ∈ c → a ≤ ub)) →
   (∃ (m : ?M_1), ∀ (a : ?M_1), m ≤ a → a = m)
 -/
+#check @zorn.chain
