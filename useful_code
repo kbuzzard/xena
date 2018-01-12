@@ -1,0 +1,4 @@
+local attribute [instance] classical.prop_decidable
+
+-- makes everything decidable.
+
