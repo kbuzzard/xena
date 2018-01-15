@@ -62,14 +62,14 @@ begin
     exact (IxI x).is_not_everything }
 end 
 
-#print zorn.chain 
-
+--#print zorn.chain 
+--set_option pp.all true
 /-- a non-zero ring has a maximal ideal-/
 lemma stacks_tag_00E0_2 {R : Type*} [comm_ring R] :
   (∃ r : R, r ≠ 0) → (∃ m : set R, is_maximal_ideal m) :=
 begin
   let P := {I : set R // is_proper_ideal I},
-  have PP : partial_order P :=
+  let PP : partial_order P :=
   { le := (λ P Q, P.val ⊆ Q.val),
     le_refl := λ a, set.subset.refl a.val,
     le_trans := λ a b c Hab Hbc, set.subset.trans Hab Hbc,
@@ -82,28 +82,17 @@ begin
     constructor,
     { exact m.property},
     intros J HJ H3,
-    let H2 := Hm ⟨J,HJ⟩,
-    have : m ≤ ⟨J,HJ⟩,
-    unfold has_le.le,
-    unfold preorder.le,
-    unfold partial_order.le,
-    show m ≤ ⟨J,HJ⟩ → ⟨J,HJ⟩ = m,
-    change m ≤ ⟨J,HJ⟩ with m.val ⊆ J at H2,
-
-  }
-
-  have Zorn := @zorn.zorn_partial_order P PP,
-  have : (∃ (m : P), ∀ (a : P), m ≤ a → a = m),
-  { apply Zorn,
-    intros c Hc,
+    rw ←(Hm ⟨J,HJ⟩ H3) },
+  apply @zorn.zorn_partial_order P PP,
+  intros c Hc,
     let c_subtype := {I : P // c I},
-    have H_par_c : partial_order c_subtype :=
+    let H_par_c : partial_order c_subtype :=
     { le := λ P Q, P.val.val ⊆ Q.val.val,
       le_refl := λ a, set.subset.refl a.val.val,
       le_trans := λ a b c Hab Hbc, set.subset.trans Hab Hbc,
       le_antisymm := λ a b Hab Hba, subtype.eq (subtype.eq (set.subset.antisymm Hab Hba))
     },
-    have H_lin_c : decidable_linear_order c_subtype,
+    let H_lin_c : decidable_linear_order c_subtype,
     refine {..H_par_c,..},
     { intros a b,
     exact λ a b, zorn.chain.total Hc _ _,
