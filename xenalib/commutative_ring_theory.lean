@@ -9,7 +9,7 @@ class is_ideal {R : Type*} [comm_ring R] (J : set R) : Prop :=
 
 class is_proper_ideal {R : Type*} [comm_ring R] (J : set R)
   extends is_ideal J : Prop :=
-(is_not_everything : ¬ ((1:R) ∈ J) )
+(one_not_in : ¬ ((1:R) ∈ J) )
 
 class is_prime_ideal {R : Type*} [comm_ring R] (P : set R)
   extends is_proper_ideal P : Prop :=
@@ -49,7 +49,7 @@ exact is_ideal.mul r j Hx,
 end
 
 --set_option pp.all true
-lemma union_of_proper_ideals {R : Type*} [comm_ring R] {γ : Type*} [inhabited γ] [decidable_linear_order γ]
+lemma union_of_proper_ideals {R : Type*} [comm_ring R] {γ : Type*} [decidable_linear_order γ] (Iγ : inhabited γ)
   (Ix : γ → set R) (IxI : ∀ x : γ, is_proper_ideal (Ix x))
   (I_inc : ∀ {x y : γ}, x ≤ y → Ix x ⊆ Ix y) 
   : is_proper_ideal {r : R | ∃ x : γ, r ∈ Ix x} :=
@@ -59,11 +59,30 @@ begin
     exact union_of_ideals Ix (λ x, (IxI x).to_is_ideal) @I_inc },
   { show (1:R) ∉ {r : R | ∃ x : γ, r ∈ Ix x},
     intro H,cases H with x Hx, revert Hx,
-    exact (IxI x).is_not_everything }
+    exact (IxI x).one_not_in }
 end 
 
 --#print zorn.chain 
 --set_option pp.all true
+#check dite
+#check or.inl
+#check @rfl
+--set_option pp.all true
+lemma proper_ideal_of_non_zero_ring {R : Type*} [comm_ring R] (H : ∃ r : R, r ≠ 0) : is_proper_ideal ({0}:set R) :=
+{ zero := set.mem_singleton _,
+  add := λ x y, match x, y with .(0), .(0), or.inl (@rfl _ 0), or.inl (@rfl _ 0) := or.inl (add_zero 0) end,
+  mul := _,
+  one_not_in := _,
+  }
+/-
+begin
+constructor,
+{ show (is_ideal {r : R | r = 0}),
+  constructor,
+  { simp},
+  { simp,
+end
+-/
 /-- a non-zero ring has a maximal ideal-/
 lemma stacks_tag_00E0_2 {R : Type*} [comm_ring R] :
   (∃ r : R, r ≠ 0) → (∃ m : set R, is_maximal_ideal m) :=
@@ -93,13 +112,22 @@ begin
       le_antisymm := λ a b Hab Hba, subtype.eq (subtype.eq (set.subset.antisymm Hab Hba))
     },
     let H_lin_c : decidable_linear_order c_subtype,
-    refine {..H_par_c,..},
+    refine { ..H_par_c,.. },
     { intros a b,
-    exact λ a b, zorn.chain.total Hc _ _,
-    unfold zorn.chain at Hc,
-    unfold set.pairwise_on at Hc,
-    -- Hc : ∀ (x : P), x ∈ c → ∀ (y : P), y ∈ c → x ≠ y → ?m_1[c] x y ∨ ?m_1[c] y x
+      cases classical.em (a=b),
+      { left, exact le_of_eq h},
+      have H1 := Hc a.val a.property b.val b.property,
+      have H2 : a.val ≠ b.val := λ H, h (subtype.eq H),
+      have H3 := H1 H2,
+      exact H3,
+    },
+    { apply_instance},
     let ub_val := set.Union (λ (I : { I : P // c I}), (I.val).val), 
+    let ub_prop := union_of_proper_ideals (λ I : { I : P // c I},I.val.val)
+--lemma union_of_proper_ideals {R : Type*} [comm_ring R] {γ : Type*} [inhabited γ] [decidable_linear_order γ]
+--  (Ix : γ → set R) (IxI : ∀ x : γ, is_proper_ideal (Ix x))
+--  (I_inc : ∀ {x y : γ}, x ≤ y → Ix x ⊆ Ix y) 
+--  : is_proper_ideal {r : R | ∃ x : γ, r ∈ Ix x} :=
     
 
   },
