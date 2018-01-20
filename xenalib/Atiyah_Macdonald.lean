@@ -45,12 +45,14 @@ theorem quot_map_is_group_hom (M : Type*) [add_comm_group M] (N : set M) [is_add
 begin
 apply quot.sound,
 unfold add_quot_group_reln,
+--rw sub_self,
+--exact is_add_subgroup.zero _,
 simp [is_add_subgroup.zero],
 end 
 
 instance add_quot_group_is_group {M : Type*} [add_comm_group M] {N : set M} [is_add_subgroup N]
   : add_comm_group (add_quot_group M N) :=
-  let r : M → M → Prop := λ x y, (x - y ∈ N) in
+  let r : M → M → Prop := add_quot_group_reln M N in
   let Q := add_quot_group M N in 
   { add := add_quot_group_add,
     add_assoc := begin
@@ -60,13 +62,27 @@ instance add_quot_group_is_group {M : Type*} [add_comm_group M] {N : set M} [is_
       intro b,
       refine quot.ind _,
       intro c,
-      unfold add_quot_group_add,
-      suffices : quot.mk (add_quot_group_reln M N) (a + b + c) = quot.mk (add_quot_group_reln M N) (a + (b + c)),
-        simp [quot_map_is_group_hom,this],
-      rw [add_assoc],
-      refl,
+--      unfold add_quot_group_add,
+--      suffices : quot.mk (add_quot_group_reln M N) (a + b + c) = quot.mk (add_quot_group_reln M N) (a + (b + c)),
+--        simp [quot_map_is_group_hom,this],
+--      rw [add_assoc],
+--      refl,
+      simp [add_assoc,eq.symm (quot_map_is_group_hom M N _ _)]
     end,
-    zero := quot.mk r 0,
+    zero := quot.mk (add_quot_group_reln M N) 0,
+    zero_add := begin
+      refine quot.ind _,
+      intro a,
+      show add_quot_group_add (quot.mk (add_quot_group_reln M N) 0) (quot.mk (add_quot_group_reln M N) a) = quot.mk (add_quot_group_reln M N) a,
+      simp [zero_add,eq.symm (quot_map_is_group_hom M N 0 a)]
+    end,
+    add_zero := begin
+      refine quot.ind _,
+      intro a,
+      show add_quot_group_add (quot.mk (add_quot_group_reln M N) 0) (quot.mk (add_quot_group_reln M N) a) = quot.mk (add_quot_group_reln M N) a,
+      simp [zero_add,eq.symm (quot_map_is_group_hom M N 0 a)]
+    end,
+    
     neg := quot.lift (λ m : M, quot.mk r (-m)) (begin
       intros a b HabN,
       apply quot.sound,
