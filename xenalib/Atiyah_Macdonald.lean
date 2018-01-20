@@ -42,12 +42,14 @@ theorem quot_map_is_group_hom (M : Type*) [add_comm_group M] (N : set M) [is_add
   quot.mk r (a+b) = add_quot_group_add (quot.mk r a) (quot.mk r b) :=
 begin
 apply quot.sound,
-simp [is_add_subgroup.zero],
+unfold add_quot_group_reln,
+rw sub_self,
+exact is_add_subgroup.zero _,
 end 
 
 instance add_quot_group_is_group {M : Type*} [add_comm_group M] {N : set M} [is_add_subgroup N]
   : add_comm_group (add_quot_group M N) :=
-  let r : M → M → Prop := λ x y, (x - y ∈ N) in
+  let r : M → M → Prop := add_quot_group_reln M N in
   let Q := add_quot_group M N in 
   { add := add_quot_group_add,
     add_assoc := begin
@@ -57,24 +59,22 @@ instance add_quot_group_is_group {M : Type*} [add_comm_group M] {N : set M} [is_
       intro b,
       refine quot.ind _,
       intro c,
-      simp [add_assoc,quot_map_is_group_hom],
-      intros a b c,
-      rw quot_map_is_group_hom,
-      show quot.lift (λ (m₁ : M), quot.lift (λ (m₂ : M), quot.mk r (m₁ + m₂)) _) _
-      (quot.lift (λ (m₁ : M), quot.lift (λ (m₂ : M), quot.mk r (m₁ + m₂)) _) _ a b)
-      c =
-    quot.lift (λ (m₁ : M), quot.lift (λ (m₂ : M), quot.mk r (m₁ + m₂)) _) _ a
-      (quot.lift (λ (m₁ : M), quot.lift (λ (m₂ : M), quot.mk r (m₁ + m₂)) _) _ b c),
-
-
-      apply congr_fun,
-            show  quot.lift (λ (m₁ : M), quot.lift (λ (m₂ : M), quot.mk r (m₁ + m₂)) _) _
-      (quot.lift (λ (m₁ : M), quot.lift (λ (m₂ : M), quot.mk r (m₁ + m₂)) _) _ a b) =
-    λ (c : add_quot_group M N),
-      quot.lift (λ (m₁ : M), quot.lift (λ (m₂ : M), quot.mk r (m₁ + m₂)) _) _ a
-        (quot.lift (λ (m₁ : M), quot.lift (λ (m₂ : M), quot.mk r (m₁ + m₂)) _) _ b c),
+      simp [add_assoc,eq.symm (quot_map_is_group_hom M N _ _)]
     end,
-    zero := quot.mk r 0,
+    zero := quot.mk (add_quot_group_reln M N) 0,
+    zero_add := begin
+      refine quot.ind _,
+      intro a,
+      show add_quot_group_add (quot.mk (add_quot_group_reln M N) 0) (quot.mk (add_quot_group_reln M N) a) = quot.mk (add_quot_group_reln M N) a,
+      simp [zero_add,eq.symm (quot_map_is_group_hom M N 0 a)]
+    end,
+    add_zero := begin
+      refine quot.ind _,
+      intro a,
+      show add_quot_group_add (quot.mk (add_quot_group_reln M N) 0) (quot.mk (add_quot_group_reln M N) a) = quot.mk (add_quot_group_reln M N) a,
+      simp [zero_add,eq.symm (quot_map_is_group_hom M N 0 a)]
+    end,
+    
     neg := quot.lift (λ m : M, quot.mk r (-m)) (begin
       intros a b HabN,
       apply quot.sound,
