@@ -118,18 +118,20 @@ instance add_quot_group_is_group {M : Type u} [add_comm_group M] {N : set M} [is
 lemma quot_map_zero (M : Type u) [add_comm_group M] (N : set M) [is_add_subgroup N] :
   quot.mk (add_quot_group_reln M N) 0 = (0:add_quot_group M N) := rfl
 
-set_option trace.class_instances true
+--set_option trace.class_instances true
 
 lemma quot_map_neg (M : Type u) [add_comm_group M] (N : set M) [is_add_subgroup N] (a : M) :
   let r : M → M → Prop := add_quot_group_reln M N in
   let H : add_comm_group (add_quot_group M N) := add_comm_group.add_quot_group_is_group in
-  quot.mk r (-a) = -((quot.mk r a):(add_quot_group M N)) := sorry -- neg fails
-  
+  quot.mk r (-a) = @add_comm_group.neg _ H ((quot.mk r a):(add_quot_group M N)) := sorry 
+
 --begin
 --apply quot.sound,
 --unfold add_quot_group_reln,
 --simp [is_add_subgroup.zero],
 --end 
+
+#check @add_comm_group.neg 
 
 def subgroup_to_quot_subgroup {M : Type*} [add_comm_group M] (N : set M) [is_add_subgroup N] (I : set M)
   : set (add_quot_group M N) :=
