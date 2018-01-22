@@ -4,14 +4,54 @@ local attribute [instance] classical.prop_decidable
 universe u
 namespace add_comm_group
 
+--section additive_quotient_groups
+--variables (M : Type*) [add_comm_group M]
+--include M
+
 class is_add_subgroup {M : Type u} [add_comm_group M] (N : set M) : Prop :=
 (zero : (0:M) ∈ N)
 (add  : ∀ {x y}, x ∈ N → y ∈ N → x + y ∈ N)
 (neg : ∀ {x}, x ∈ N → -x ∈ N)
 
+--variables (N : set M) [is_add_subgroup N]
+
 def add_quot_group_reln (M : Type u) [add_comm_group M] (N : set M) [is_add_subgroup N] := λ x y : M, x - y ∈ N
 
-def add_quot_group (M : Type u) [add_comm_group M] (N : set M) [is_add_subgroup N] := quot (add_quot_group_reln M N)
+lemma add_quot_group_reln_is_equiv {M : Type u} [add_comm_group M] {N : set M} [is_add_subgroup N] : equivalence (add_quot_group_reln M N) :=
+begin
+  split,
+  { show reflexive (add_quot_group_reln M N),
+    intro x,
+    unfold add_quot_group_reln,
+    rw sub_self,
+    exact is_add_subgroup.zero N,
+  },
+  split,
+  { intros x y,
+    unfold add_quot_group_reln,
+    intro H,
+    rw [←neg_sub],
+    apply is_add_subgroup.neg,     
+    exact H,
+  },
+  { intros x y z,
+    unfold add_quot_group_reln,
+    intros Hxy Hyz,
+    suffices : (x-y)+(y-z) ∈ N,
+      simp at this,simp [this],
+    refine is_add_subgroup.add _ _,
+      assumption,
+      assumption,
+  }
+end
+
+instance add_group_setoid (M : Type*) [add_comm_group M] (N : set M) [is_add_subgroup N] : setoid M :=
+{ r:= add_quot_group_reln M N,
+  iseqv := add_quot_group_reln_is_equiv
+}
+
+@[reducible] def add_quot_group (M : Type u) [add_comm_group M] (N : set M) [is_add_subgroup N] := quot (add_quot_group_reln M N)
+--@[reducible] def add_quot_group (M : Type u) [add_comm_group M] (N : set M) [is_add_subgroup N] := quotient (add_comm_group.add_group_setoid M N)
 
 def add_quot_group_add {M : Type u} [add_comm_group M] {N : set M} [is_add_subgroup N] : 
   add_quot_group M N → add_quot_group M N → add_quot_group M N :=
@@ -123,43 +163,100 @@ lemma quot_map_zero (M : Type u) [add_comm_group M] (N : set M) [is_add_subgroup
 lemma quot_map_neg (M : Type u) [add_comm_group M] (N : set M) [is_add_subgroup N] (a : M) :
   let r : M → M → Prop := add_quot_group_reln M N in
   let H : add_comm_group (add_quot_group M N) := add_comm_group.add_quot_group_is_group in
-  quot.mk r (-a) = @add_comm_group.neg _ H ((quot.mk r a):(add_quot_group M N)) := sorry 
-
---begin
---apply quot.sound,
---unfold add_quot_group_reln,
---simp [is_add_subgroup.zero],
---end 
-
-#check @add_comm_group.neg 
+--  quot.mk r (-a) = @add_comm_group.neg _ H ((quot.mk r a):(add_quot_group M N)) := sorry 
+  quot.mk r (-a) = -((quot.mk r a):(add_quot_group M N)) := 
+  begin
+  show quot.mk (add_quot_group_reln M N) (-a) = -quot.mk (add_quot_group_reln M N) a,
+  apply eq_neg_of_add_eq_zero,
+  apply quot.sound,
+  rw [neg_add_eq_sub,sub_self],
+  unfold add_quot_group_reln,
+  simp [is_add_subgroup.zero],
+end 
 
 def subgroup_to_quot_subgroup {M : Type*} [add_comm_group M] (N : set M) [is_add_subgroup N] (I : set M)
   : set (add_quot_group M N) :=
   set.image (quot.mk (add_quot_group_reln M N)) I
 
-instance image_of_subgroup_is_subgroup {M : Type*} [add_comm_group M] {N : set M} [is_add_subgroup N] (I : set M) 
+instance image_of_subgroup_is_subgroup {M : Type*} [add_comm_group M] {N : set M} [is_add_subgroup N] (I : set M) [is_add_subgroup I]
   : is_add_subgroup (subgroup_to_quot_subgroup N I) := 
 { zero := begin
-    admit,
+    existsi (0:M),
+    split,
+    { exact is_add_subgroup.zero I },
+    { exact quot_map_zero M N
+    },
   end,
   add := begin
-    admit, -- quot_map_add
+    intros x y Hx Hy,
+    cases Hx with a Ha,
+    cases Hy with b Hb,
+    existsi (a+b),
+    split,
+    { exact is_add_subgroup.add Ha.1 Hb.1 },
+    { rw ←Ha.2,rw ←Hb.2,
+      exact quot_map_add M N a b },
   end,
   neg := begin
-    admit,
+    intros x Hx,
+    cases Hx with a Ha,
+    existsi (-a),
+    split,
+    { exact is_add_subgroup.neg Ha.1},
+    { rw ←Ha.2,
+      exact quot_map_neg _ _ _
+    }
   end
-
-
 }
 
-
-
 def quot_subgroup_to_subgroup {M : Type*} [add_comm_group M] {N : set M} [is_add_subgroup N] (Ibar : set (add_quot_group M N))
-  : set M :=
+  [is_add_subgroup Ibar] : set M :=
   set.preimage (quot.mk (add_quot_group_reln M N)) Ibar
 
+--set_option pp.all true
+instance preimage_of_subgroup_is_subgroup {M : Type*} [add_comm_group M] {N : set M} [is_add_subgroup N] (Ibar : set (add_quot_group M N))
+  [ is_add_subgroup Ibar] : is_add_subgroup (quot_subgroup_to_subgroup Ibar) := 
+{
+  zero := begin
+    show quot.mk (add_quot_group_reln M N) 0 ∈ Ibar,
+    rw quot_map_zero,
+    exact is_add_subgroup.zero Ibar
+  end,
+  add := begin
+    intros x y Hx Hy,
+    show quot.mk (add_quot_group_reln M N) (x+y) ∈ Ibar,
+    suffices : add_quot_group_add (quot.mk (add_quot_group_reln M N) x) (quot.mk (add_quot_group_reln M N) y) ∈ Ibar,
+      have H:quot.mk (add_quot_group_reln M N) (x + y) =
+        add_quot_group_add (quot.mk (add_quot_group_reln M N) x) (quot.mk (add_quot_group_reln M N) y) := (quot_map_add M N x y),
+      simp [this,H],
+    show (quot.mk (add_quot_group_reln M N) x) + (quot.mk (add_quot_group_reln M N) y) ∈ Ibar,
+    apply is_add_subgroup.add,
+      exact Hx,
+      exact Hy,
+  end,
+  neg := begin
+    intros x Hx,
+    show quot.mk (add_quot_group_reln M N) (-x) ∈ Ibar,
+    unfold has_mem.mem set.mem,
+    have H : quot.mk (add_quot_group_reln M N) (-x) = -quot.mk (_) x := quot_map_neg M N x,
+    rw H,
+    apply is_add_subgroup.neg,
+    exact Hx,
+  end
+}
 
-#print notation 
+theorem preimage_of_image {M : Type*} [add_comm_group M] {N : set M} [is_add_subgroup N] (I : set M) [is_add_subgroup I]
+  : N ⊆ I → quot_subgroup_to_subgroup (subgroup_to_quot_subgroup N I) = I :=
+begin
+  intro H,
+  apply set.eq_of_subset_of_subset,
+  { intros x Hx,
+  cases Hx with y H2,
+  have H3 : add_quot_group_reln M N y x,
+  { apply quotient.exact H2.2}
+
+end
+
 
 
 end add_comm_group
