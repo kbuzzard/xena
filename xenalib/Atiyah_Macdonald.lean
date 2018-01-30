@@ -208,7 +208,8 @@ def quot_subgroup_to_subgroup
  --{M : Type*} [add_comm_group M] {N : set M} [is_add_subgroup N] 
  (Ibar : set (Qu))
   [is_add_subgroup Ibar] : set M :=
-  set.preimage (quot.mk (add_quot_group_reln N)) Ibar
+  set.preimage (λ (x:M), (⟦x⟧:Qu)) Ibar
+--  set.preimage (quot.mk (add_quot_group_reln N)) Ibar
 
 --set_option pp.all true
 instance preimage_of_subgroup_is_subgroup 
@@ -245,10 +246,12 @@ instance preimage_of_subgroup_is_subgroup
   end
 }
 
-variable I' : set M
-#check quot_subgroup_to_subgroup
-#check (subgroup_to_quot_subgroup N I')
-theorem preimage_of_image_eq
+#check @quotient.mk 
+#check @setoid.r 
+#check @quotient.exact
+#print notation ⟦ 
+--set_option pp.all true
+theorem eq_preimage_of_image
  --{M : Type*} [add_comm_group M] {N : set M} [is_add_subgroup N] 
  (I : set M) [is_add_subgroup I]
   : N ⊆ I → quot_subgroup_to_subgroup N (subgroup_to_quot_subgroup N I) = I :=
@@ -257,13 +260,51 @@ begin
   apply set.eq_of_subset_of_subset,
   { intros x Hx,
     cases Hx with y H2,
-    have H3 : @setoid.r M (add_group_setoid M N) y x,
-    { apply quotient.exact H2.2}
+    have H3 : @setoid.r _ (add_group_setoid N) y x := 
+      @quotient.exact _ (add_group_setoid N) _ _ H2.2,
+    have H4 : y-x ∈ I := H H3,
+    have H5 : x = -(y-x) + y := by simp,
+    rw H5,
+    refine is_add_subgroup.add _ _,
+      refine is_add_subgroup.neg _,assumption,
+    exact H2.1
   },
-  { admit}
+  { intros x Hx,
+    show @quotient.mk M (add_group_setoid N) x ∈ subgroup_to_quot_subgroup N I,
+    existsi x,
+    split,exact Hx,
+    refl
+  }
 end
 
-#check @setoid.r 
+#check quot.exists_rep
+
+theorem eq_image_of_preimage
+ --{M : Type*} [add_comm_group M] {N : set M} [is_add_subgroup N] 
+ (Ibar : set Qu) [is_add_subgroup Ibar] :
+  subgroup_to_quot_subgroup N (quot_subgroup_to_subgroup N Ibar) = Ibar :=
+begin
+  apply set.eq_of_subset_of_subset,
+  { intros xbar Hxbar,
+    cases Hxbar with y Hy,
+    rw [←Hy.2],
+    exact Hy.1
+  },
+  { intros xbar Hxbar,
+    unfold subgroup_to_quot_subgroup,
+    unfold set.image,
+    have H := quot.exists_rep xbar,
+    cases H with a Ha,
+    existsi a,
+    split,
+    { show Ibar (quot.mk setoid.r a),
+      rw Ha,
+      exact Hxbar
+    },
+    { exact Ha,
+    },
+  }
+end
 
 end add_comm_group
 
@@ -273,8 +314,6 @@ class is_ideal {R : Type*} [comm_ring R] (J : set R) : Prop :=
 (zero : (0:R) ∈ J)
 (add  : ∀ {x y}, x ∈ J → y ∈ J → x + y ∈ J)
 (mul : ∀ r x : R, x ∈ J → r * x ∈ J)
-
-
 
 
 end comm_ring
