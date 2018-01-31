@@ -268,7 +268,27 @@ class is_ideal {R : Type*} [comm_ring R] (J : set R) : Prop :=
 (add  : ∀ {x y}, x ∈ J → y ∈ J → x + y ∈ J)
 (mul : ∀ r x : R, x ∈ J → r * x ∈ J)
 
-
+-- now add
+-- structure ideal...
 
 
 end comm_ring
+/-
+So it would be reasonable to have both definitions in a commutative algebra file?
+Mario Carneiro
+@digama0
+21:55
+yes
+I would use is_ideal in the definition of ideal to avoid repeating myself
+Kevin Buzzard
+@kbuzzard
+21:56
+Oh! Great. but then don't I now have 100 questions about how to formulate 100 lemmas about ideals?
+i.e. which one to use?
+Mario Carneiro
+@digama0
+21:56
+Use is_ideal when it makes sense, use ideal for the rest
+
+
+-/
