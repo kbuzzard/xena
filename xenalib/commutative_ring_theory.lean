@@ -1,4 +1,4 @@
-import order.zorn xenalib.Atiyah_Macdonald
+import order.zorn
 noncomputable theory
 local attribute [instance] classical.prop_decidable
 
@@ -13,8 +13,6 @@ structure is_proper_ideal {R : Type*} [comm_ring R] (J : set R)
 
 lemma is_proper_iff_not_univ {R : Type*} [comm_ring R] (J : set R) (HJI : is_ideal J) :
 is_proper_ideal J ↔ J ≠ set.univ :=
---⟨λ H HJu,match H with ⟨_,H_one_not_in⟩ :=H_one_not_in (eq.symm HJu ▸ (_:1 ∈ set.univ)) end,_⟩ 
--- just can't be bothered
 begin
   split,
   { intros H HJu,
@@ -217,10 +215,10 @@ begin
   exact HI_le_J
 end
 
-def quotient_ring (R : Type*) [comm_ring R] (I : set R) [is_ideal I] : Type* := quot (λ (x y : R), x-y ∈ I)
+--def quotient_ring (R : Type*) [comm_ring R] (I : set R) [is_ideal I] : Type* := quot (λ (x y : R), x-y ∈ I)
 
-instance quotient_ring_is_add_comm_group (R : Type*) [comm_ring R] (I : set R) [is_ideal I] : add_comm_group (quotient_ring R I) :=
-{ }
+--instance quotient_ring_is_add_comm_group (R : Type*) [comm_ring R] (I : set R) [is_ideal I] : add_comm_group (quotient_ring R I) :=
+
 
 
 
