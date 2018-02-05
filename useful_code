@@ -2,3 +2,6 @@ local attribute [instance] classical.prop_decidable
 
 -- makes everything decidable.
 
+local infix ` ^ ` := monoid.pow 
+
+-- makes ^ work better
