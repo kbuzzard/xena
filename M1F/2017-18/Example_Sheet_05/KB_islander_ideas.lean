@@ -71,6 +71,19 @@ revert H2,
 exact dec_trivial,
 end
 
+-- Basic lemma with easy induction proof: if (on any day at all) an Islander
+-- can see s blue-eyed islanders, then the only possible worlds have
+-- w=s or w=s+1.
+
+lemma blue_or_brown (d s w) : thinks d s w → w = s ∨ w = s + 1 :=
+begin
+induction d with d Hd,
+{ exact and.elim_left },
+intro H,
+apply Hd,
+exact H.left
+end 
+
 -- The general theorem is that for all worlds w, we cannot make it to day w+1
 
 theorem blue_eyed_islanders_leave : ∀ w, ∀ s, thinks (w+1) s w → false := begin
@@ -83,7 +96,31 @@ induction w with w Hw,
   apply H3,simp,
 },
 -- inductive step
-admit,
+intros s H, -- H : thinks (nat.succ w + 1) s (nat.succ w)
+-- d=w+1,w=w+1
+have H2 : thinks (w+1) s (w+1) 
+          ∧ ((w+1=s+1 ∧ thinks (w+1) s s) 
+           ∨ (w+1=s ∧ s≠0 ∧ thinks (w+1) (s-1) (s-1) ∧ thinks (w+1) (s-1) s)),
+  exact H,
+clear H,
+have H3 : ((w+1=s+1 ∧ thinks (w+1) s s) 
+           ∨ (w+1=s ∧ s≠0 ∧ thinks (w+1) (s-1) (s-1) ∧ thinks (w+1) (s-1) s)),
+exact H2.right,
+clear H2,
+cases H3 with H4 H5,
+{ apply (Hw s),
+  have H6 : w = s := nat.succ_inj H4.1,
+  have H7 : thinks (w+1) s s = thinks (w+1) s w := congr_arg (λ t, thinks (w+1) s t) (eq.symm H6),
+  rw eq.symm H7,
+  exact H4.right
+},
+{ have H1 : w=s-1,rw H5.left.symm,simp,
+  apply Hw (s-1),
+  have H2 : thinks (w + 1) (s - 1) w = thinks (w + 1) (s - 1) (s - 1) :=
+    congr_arg _ H1,
+  rw H2,
+  exact H5.right.right.left
+}
 end
 
 
