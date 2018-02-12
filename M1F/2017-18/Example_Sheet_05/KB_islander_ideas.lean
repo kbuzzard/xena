@@ -34,7 +34,7 @@ def thinks : ℕ → ℕ → ℕ → Prop
 --test suite
 
 -- if there are 3 blue-eyed islanders then even on day 0 they
--- must believe that there are 
+-- must believe that there are either 3 or 4 blue eyed islanders.
 example : thinks 0 3 0 → false := by unfold thinks;simp
 
 example : thinks 0 3 7 → false := begin
@@ -122,5 +122,3 @@ cases H3 with H4 H5,
   exact H5.right.right.left
 }
 end
-
-
