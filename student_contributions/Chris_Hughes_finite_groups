@@ -75,10 +75,6 @@ begin
 
 end
 
-lemma poo (p q : Prop) (hp : p) (hq : q) : hp == hq := 
-have h : p = q := propext ⟨λ h, hq, λ h, hp⟩,
-by induction h; refl 
-
 class subgroup {α : Type*} [group α] (s : set α) : Prop :=
 (one_mem : (1 : α) ∈ s)
 (mul_mem : ∀ {x y}, x ∈ s → y ∈ s → x * y ∈ s)
