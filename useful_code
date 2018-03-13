@@ -2,6 +2,9 @@ local attribute [instance] classical.prop_decidable
 
 -- makes everything decidable.
 
+****
+
+import algebra.group_power
 local infix ` ^ ` := monoid.pow 
 
 -- makes ^ work better
