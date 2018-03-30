@@ -39,6 +39,8 @@ end
 definition my_sum_to_n (summand : ℕ → ℕ) : ℕ → ℕ :=
 sorry -- delete this and then fill in your definition here.
 
+-- Exercise 2.
+
 -- The function you defined comes with a law of induction,
 -- and you now need to prove the zero and successor results
 -- for your function.
@@ -47,10 +49,14 @@ theorem my_zero_theorem (summand : ℕ → ℕ) : my_sum_to_n summand 0 = 0 := s
 theorem my_successor_theorem (summand : ℕ → ℕ) (n : ℕ) : 
   my_sum_to_n summand (nat.succ n) = my_sum_to_n summand n + summand n := sorry
 
+-- Exercise 3.
+
 -- Now can you prove my_odd_square_theorem, the fact that the sum of the 
 -- first n odd numbers is n ^ 2?
 
 theorem my_odd_square_theorem (n : ℕ) : my_sum_to_n odd n = square n := sorry 
+
+-- Exercise 4.
 
 -- Finally, find someone who has given a completely different definition
 -- of my_sum_to_n (try looking in the comments below, for example) and 
