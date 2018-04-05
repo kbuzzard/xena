@@ -1,7 +1,0 @@
-To mark a definition as reducible try
-
-
-instance nat_one : ℕ := 1
-/- The command instance is syntax sugar for
-def nat_one : ℕ := 1
-attribute [instance, reducible] nat_one
