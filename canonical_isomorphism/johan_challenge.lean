@@ -1,3 +1,6 @@
+-- Questions by Johan Commelin
+-- Solutions by Kevin Buzzard and Kenny Lau
+
 import data.equiv
 #check equiv.refl 
 
@@ -18,17 +21,25 @@ def Prod : Type u → Type v → Type (max u v) := λ α β, α × β
 def Swap : Type u → Type v → Type (max u v) := λ α β, β × α
 
 -- level 1
+-- most code is written twice in these answers
+
 lemma Const.transportable : (transportable Const) := { 
-  on_equiv := λ α β H,⟨λ _,punit.star,λ _,punit.star,λ α,begin cases α,simp end,λ α,begin cases α,simp end⟩,
-  --I was repeating myself in that last line.
-  on_refl := λ α,begin 
-  congr,
-  { funext s,cases s,refl},
-  { funext s,cases s,refl} -- I just wrote this
-  end,
+  on_equiv := λ α β H,⟨λ _,punit.star,λ _,punit.star,λ ⟨⟩,rfl,λ ⟨⟩,rfl⟩,
+  on_refl := λ α, equiv.ext _ _ (λ ⟨⟩,rfl),
   on_trans := λ α β γ Hαβ Hβγ,by congr
   }  
-lemma Fun.transportable (α : Type u) : (transportable (Fun α)) := sorry
+-- level 2
+lemma Fun.transportable (α : Type u) : (transportable (Fun α)) := {
+    on_equiv := λ β γ Hβγ,⟨
+        λ f a,Hβγ (f a),
+        λ f a,Hβγ.symm (f a),
+        λ f, funext $ λ x, by simp,
+        λ g,by funext a;simp
+    ⟩,
+    on_refl := λ β,by congr,
+    on_trans := λ β γ δ Hβγ Hγδ,by congr
+}
+
 lemma Prod.transportable (α : Type u) : (transportable (Prod α)) := sorry
 lemma Swap.transportable (α : Type u) : (transportable (Swap α)) := sorry
 
