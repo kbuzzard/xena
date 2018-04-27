@@ -1,4 +1,4 @@
-# what is a canonical isomorphism?
+# What is a canonical isomorphism?
 
 Mathematicians (by which I mean ZFC-speakers) have an intuitive idea of a
 "canonical isomorphism", and an intuitive idea of "transport de structure",
@@ -6,7 +6,7 @@ a term which as far as I know dates back to Grothendieck or Deligne from the
 EGA/SGA period. It would be interesting to try and port some of this
 concept into Lean. Here is the plan.
 
-# equiv
+### equiv
 
 Recall the equiv structure and notation:
 /-- `α ≃ β` is the type of functions from `α → β` with a two-sided inverse. -/
