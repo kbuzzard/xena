@@ -1,1 +1,0 @@
-/home/buzzard/xena/private/scratch/palindrome.lean
