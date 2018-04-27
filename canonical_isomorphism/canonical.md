@@ -150,7 +150,7 @@ Kenny's work, covering functions such as
 `Prod : Type u → Type v → Type (max u v) := λ α β, α × β`
 `Swap : Type u → Type v → Type (max u v) := λ α β, β × α`
 
-can be found at (his github site)[https://github.com/kckennylau/Lean/blob/df5a7a1dacff369b81f6cd807d24e2c6623c30a3/johan_challenge.lean#L5].
+can be found at [his github site](https://github.com/kckennylau/Lean/blob/df5a7a1dacff369b81f6cd807d24e2c6623c30a3/johan_challenge.lean#L5).
 
 # The original application.
 
