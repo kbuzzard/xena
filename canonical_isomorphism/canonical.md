@@ -37,7 +37,7 @@ def transport_ring {α β : Type*} [ring α] (f : α ≃ β) : ring β :=
 This says that an equivalence `α ≃ β` gives us the ability to
 "transport the ring structure" from `α` to `β`.
 
-Now Kenny kindly supplied a proof of this trivial statement:
+Kenny Lau kindly supplied a proof of this trivial statement:
 
 ```lean
 import data.equiv
@@ -75,8 +75,10 @@ def transport_topological_ring {α β : Type}
 
 Two of the `sorry`s are because one needs to first write `transport_topological_space` and `transport_ring`.
 
-Secondly, as we have noted, we should also
-be proving some kind of reflexivity and transitivity. 
+Secondly, together with the construction we should also
+be proving some kind of reflexivity and transitivity properties,
+for example we want to know that the identity equivalence
+`equiv.refl α` gets transported into `equiv.refl (ring α)`.
 
 This led Scott Morrison to formalise the `transportable` class:
 
@@ -106,6 +108,8 @@ It will need to inspect its argument, which will be something like ring or list,
 
 The final step of initialize_transport is trivial: just emit the final instance declaration above."
 
+Scott also suggested that "@Simon Hudon knows how to implement @[derive transportable] for many type constructors. :-)"
+
 Questions Kevin has:
 1) Why is f a function and not a Pi type?
 2) Does it matter if `α` and `β` live in different universe?
@@ -128,6 +132,7 @@ class transportable (f : Type u → Type v) :=
 def ring.transportable : transportable ring := sorry
 -- def topological_ring.transportable : transportable topological_ring := sorry -- type mismatch
 ```
+# A tactic?
 
 It was suggested that if a few "basic" types were proved to be transportable, then perhaps a tactic could take over, and that perhaps Simon Hudon would be able to write a tactic. Johan Commelin formalised some basic definitions of the form `transportable XXX` and Kenny Lau proved them. In many cases he used destructors which were already in mathlib, in `data.equiv`. Here is an example:
 
@@ -147,18 +152,16 @@ Kenny's work, covering functions such as
 
 can be found at (his github site)[https://github.com/kckennylau/Lean/blob/df5a7a1dacff369b81f6cd807d24e2c6623c30a3/johan_challenge.lean#L5].
 
-# a tactic/
-
-It was generally wondered whether there could be a tactic. Scott suggested
-that "@Simon Hudon knows how to implement @[derive transportable] for many type constructors. :-)"
-
 # The original application.
 
-You are given commutative rings $A$, $$R_i$$ for $$i$$ in an indexing set
-and $$S_j$$ for $$j$$ in another indexing set. You have maps
-$$\alpha : A \to R := \Prod_{i\in I}R_i$$
+I will write this part in LaTeX because I will use the language of ZFC.
+Patrick -- is there a nice way of getting this to show up in maths?
+
+You are given commutative rings $A$, $R_i$ for $i$ in an indexing set
+and $S_j$ for $j$ in another indexing set. You have maps
+$\alpha : A \to R := \Prod_{i\in I}R_i$
 and
-$$\beta : R \to S := \Prod_{j\in J}S_j.$$
+$\beta : R \to S := \Prod_{j\in J}S_j.$
 These maps are both abelian group homomorphisms. Note that they are built
 from maps $A\to R_i$ and $R\to S_j$, all of which are abelian group
 homomorphisms, but not all of which are ring homomorphisms (some are
@@ -167,14 +170,14 @@ the difference of two ring homomorphisms).
 You are given a proof of the theorem that the sequence is exact,
 that is, that the image of $$\alph$$ equals the kernel of $$\beta$$.
 
-You also have commutative rings $$A'$$, $$R'_i$$ and $$S'_j$$
+You also have commutative rings $A'$, $R'_i$ and $S'_j$
 and for each of the primed rings you are given an equivalence with the
 corresponding non-primed rings, and the equivalences all commute with
-all the abelian group homomorphisms. [This is because $$A$$ and $$A'$$
-are canonically isomorphic, as are the $$R$$'s and $$S$$'s.]
+all the abelian group homomorphisms. [This is because $A$ and $A'$
+are canonically isomorphic, as are the $R$'s and $S$'s.]
 
-Your goal is to produce a one-line proof of the statement that the
-corresponding sequence $$A' \to \Prod_i R'_i \to \Prod_j S'_j$$
-is also exact, because this fact is obvious. No ideas need to be had
+The question is how to produce a one-line proof of the statement that the
+corresponding sequence $A' \to \Prod_i R'_i \to \Prod_j S'_j$
+is also exact, because this fact is "obvious". No ideas need to be had
 to prove this, it is just an extremely long exercise in following
 your nose.
