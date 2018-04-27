@@ -9,12 +9,14 @@ concept into Lean. Here is the plan.
 ### equiv
 
 Recall the equiv structure and notation:
+```lean
 /-- `α ≃ β` is the type of functions from `α → β` with a two-sided inverse. -/
 structure equiv (α : Sort*) (β : Sort*) :=
 (to_fun    : α → β)
 (inv_fun   : β → α)
 (left_inv  : left_inverse inv_fun to_fun)
 (right_inv : right_inverse inv_fun to_fun)
+```
 
 The idea is that something of type `equiv α β` can be thought of as a bijection
 between  `α` and `β`.
