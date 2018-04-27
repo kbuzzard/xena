@@ -34,5 +34,4 @@ definition equiv_mul {α β : Type zfc_u} : equiv' α β → equiv' (has_mul α)
   end, -- didn't I just write that?
 }
 
-definition mul_to_add {α β : Type} [has_mul α] (f : equiv' α β) : 
-equiv' α β → equiv' (has_add α) (has_add β) := sorry 
+definition mul_to_add {α β : Type} : equiv' α β → equiv' (has_add α) (has_add β) := sorry
