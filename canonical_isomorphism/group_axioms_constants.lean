@@ -18,25 +18,23 @@ variables [has_mul G] [has_one G] [has_inv G]
 -- using constants seemed to break type class inference
 
 constants 
-(mul_assoc : ∀ {a b c : G}, a * b * c = a * (b * c))
-(one_mul : ∀ {a : G}, 1 * a = a)
-(mul_left_inv : ∀ {a : G}, a⁻¹ * a = 1)
+(mul_assoc : ∀ (a b c : G), a * b * c = a * (b * c))
+(one_mul : ∀ (a : G), 1 * a = a)
+(mul_left_inv : ∀ (a : G), a⁻¹ * a = 1)
 
 -- if I use (a b c : G) I end up with _s everywhere in the calc proof
 -- that I don't know how to avoid.
 
 -- This comes out nicely
 lemma mul_left_cancel : ∀ {a b c : G}, a * b = a * c → b = c := 
-begin
-  intros a b c Habac,
-  exact calc b = 1 * b : (one_mul).symm
-           ... = (a⁻¹ * a) * b : by rw [mul_left_inv] -- why does that line even work? I believe it should fail. Is it a bug?
-           ... = a⁻¹ * (a * b) : mul_assoc
-           ... = a⁻¹ * (a * c) : by rw Habac
-           ... = (a⁻¹ * a) * c : (mul_assoc).symm
-           ... = 1 * c : by rw [mul_left_inv]
-           ... = c : one_mul
-end
+λ (a b c : G) (Habac : a * b = a * c),
+ calc b = 1 * b         : by rw one_mul
+    ... = (a⁻¹ * a) * b : by rw mul_left_inv
+    ... = a⁻¹ * (a * b) : by rw mul_assoc
+    ... = a⁻¹ * (a * c) : by rw Habac
+    ... = (a⁻¹ * a) * c : by rw mul_assoc
+    ... = 1 * c         : by rw mul_left_inv
+                ... = c : by rw one_mul
 
 -- No blanks at all! Unification enabled us not to
 -- have to tell Lean about the inputs to mul_left_inv. The fact that the
