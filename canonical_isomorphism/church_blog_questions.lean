@@ -34,10 +34,12 @@ example (X f x) : c2 X f x = f (f x) := rfl
 example (X f x) : c3 X f x = f (f (f x)) := rfl
 -- and so on
 
--- we can go back from chℕ to ℕ 
+-- we can go back from chℕ to ℕ
 definition to_nat : chℕ → ℕ := λ m, m ℕ nat.succ 0 -- there is a beauty here
 -- it is almost as if the structure ℕ were built to be fed into chℕ 
 -- Why does this happen? KB doesn't understand
+
+-- that definition needs to be moved if we can't prove functoriality wrt succ
 
 example : to_nat c3 = 3 := rfl 
 
@@ -45,13 +47,13 @@ example : to_nat c3 = 3 := rfl
 def succ :chℕ → chℕ := sorry -- KB can do this one
 -- no notation
 
---unit tests -- I can pass these
+--unit tests -- KB can pass these
 example : succ c0 = c1 := sorry
 example : succ c2 = c3 := sorry
 
 example (n : ℕ) : of_nat (nat.succ n) = succ (of_nat n) := sorry
 
--- I can't do this one. Is it unprovable?
+--KB can't do this one. Is it unprovable? If so, move definition of to_nat much further down.
 example (m : chℕ) : to_nat (succ m) = nat.succ (to_nat m) := sorry
 
 -- exercise : define add
@@ -59,7 +61,7 @@ def add : chℕ → chℕ → chℕ := sorry -- KB can do this
 instance : has_add chℕ := ⟨add⟩ -- now we have + notation
 
 example : c2 + c1 = c3 := sorry 
--- I didn't do this one yet. Is it true?
+-- KB didn't do this one yet but feels it should be true.
 example (m n : ℕ) : of_nat (m + n) = of_nat m + of_nat n := sorry 
 
 -- exercise : define mul
@@ -69,7 +71,7 @@ instance : has_mul chℕ := ⟨mul⟩ -- incantation to give us *
 -- KB can do this one
 example : c1 + c2 + c3 = c2 * c3 := sorry
 -- KB didn't try this one
-example (m n : ℕ) : of_nat (m + n) = of_nat m + of_nat n := sorry 
+example (m n : ℕ) : of_nat (m * n) = of_nat m * of_nat n := sorry 
 
 -- exercise : define pow
 def pow : chℕ → chℕ → chℕ := sorry -- KB can do this one
@@ -77,10 +79,15 @@ def pow : chℕ → chℕ → chℕ := sorry -- KB can do this one
 
 -- KB can do this
 example : pow c2 c3 + c1 = pow c3 c2 := sorry 
+-- KB didn't try this
+example (m n : ℕ) : nat.pow m n = pow (of_nat m) (of_nat n) := sorry 
 
 -- exercise : define Ackermann
 def ack : chℕ → chℕ → chℕ := sorry -- KB didn't try this one
 -- Is it possible?
+
+-- if it's possible, prove it agrees with usual ackermnann
+-- example : ack m n = ack (of_nat m) (of_nat n) := sorry
 
 -- question : Is this provable? KB couldn't do this one
 theorem add_comm (m n : chℕ) : m + n = n + m := sorry 
@@ -110,9 +117,9 @@ end
 
 -- KB can't do this one
 theorem ji : ∀ c : chℕ, of_nat (to_nat c) = c := sorry
+-- Can someone write down an uncomputable counterexample?
 
-
--- so I can't do this either
+-- so KB can't do this either
 definition ℕ_is_chℕ : equiv' ℕ chℕ := sorry 
 
 -- idle question
