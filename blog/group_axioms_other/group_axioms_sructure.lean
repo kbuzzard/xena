@@ -10,40 +10,38 @@
 -- mul : G → G → G := λ g h, g * h
 -- one : G := 1
 -- inv : G → G := λ a, a⁻¹
-universe u
 
-class has_group_notation (G : Type u) extends has_mul G, has_one G, has_inv G
+class has_group_notation (G : Type) extends has_mul G, has_one G, has_inv G
 
-class group' (G : Type u) extends has_group_notation G :=
+class group' (G : Type) extends has_group_notation G :=
 (mul_assoc : ∀ (a b c : G), a * b * c = a * (b * c))
 (one_mul : ∀ (a : G), 1 * a = a)
 (mul_left_inv : ∀ (a : G), a⁻¹ * a = 1)
 
-namespace group'
-
-variables {G : Type u} [group' G]  
+variables {G : Type} (group'.G : group' G) [has_group_notation G]  
 -- variables (H : Type) [has_mul H] [has_one H] [has_inv H]
 
 -- We prove left_mul_cancel for group'
 
-lemma mul_left_cancel : ∀ (a b c : G), a * b = a * c → b = c := 
-begin
-  intros a b c Habac,
-  exact calc b = 1 * b : (one_mul _).symm
-           ... = (a⁻¹ * a) * b : by rw [←mul_left_inv _]
-           ... = a⁻¹ * (a * b) : by rw [mul_assoc]
-           ... = a⁻¹ * (a * c) : by rw Habac
-           ... = (a⁻¹ * a) * c : (group'.mul_assoc _ _ _).symm
-           ... = 1 * c : by rw [group'.mul_left_inv a]
-           ... = c : group'.one_mul _
-end
+open group'
+lemma group'.mul_left_cancel : ∀ (a b c : G), a * b = a * c → b = c := 
+λ a b c Habac,
+ calc b = 1 * b         : by rw one_mul
+    ... = (a⁻¹ * a) * b : by rw mul_left_inv
+    ... = a⁻¹ * (a * b) : by rw mul_assoc
+    ... = a⁻¹ * (a * c) : by rw Habac
+    ... = (a⁻¹ * a) * c : by rw mul_assoc
+    ... = 1 * c         : by rw mul_left_inv
+                ... = c : by rw one_mul
+
+
 -- why do I seem to have to fill in far more blanks with _ in term mode?
 
-theorem mul_one : ∀ (a : G) [group' G], a * 1 = a :=
+theorem group'.mul_one : ∀ (a : G), a * 1 = a :=
 begin
 intro a,
- apply mul_left_cancel a⁻¹,
- rw [←mul_assoc,mul_left_inv,one_mul],
+ apply group'.mul_left_cancel a⁻¹,
+ rw [←group'.mul_assoc,group'.mul_left_inv,group'.one_mul],
 end 
 
 -- other than the group' everywhere, I really like how this came out.
