@@ -9,6 +9,7 @@
 
 class has_group_notation (G : Type) extends has_mul G, has_one G, has_inv G
 
+-- definition of the group' structure
 class group' (G : Type) extends has_group_notation G :=
 (mul_assoc : ∀ (a b c : G), a * b * c = a * (b * c))
 (one_mul : ∀ (a : G), 1 * a = a)
@@ -35,7 +36,16 @@ theorem group'.mul_one : ∀ (a : G), a * 1 = a :=
 begin
 intro a, -- goal is a * 1 = a
  apply mul_left_cancel a⁻¹, -- goal now a⁻¹ * (a * 1) = a⁻¹ * a
- rw [←mul_assoc,mul_left_inv,one_mul], -- apply each axiom once to finish!
-end 
+ exact calc a⁻¹ * (a * 1) = (a⁻¹ * a) * 1 : by rw mul_assoc
+ ... = 1 * 1 : by rw mul_left_inv
+ ... = 1 : by rw one_mul
+ ... = a⁻¹ * a : by rw mul_left_inv
+ end
+
+#exit
+
+-- when you're better at driving this thing you just write this:
+theorem group'.mul_one' : ∀ (a : G), a * 1 = a :=
+λ a, mul_left_cancel a⁻¹ (by rw [←mul_assoc,mul_left_inv,one_mul]) 
 
 end group'
