@@ -32,7 +32,7 @@ lemma mul_left_cancel : ∀ (a b c : G), a * b = a * c → b = c :=
     ... = 1 * c         : by rw mul_left_inv
                 ... = c : by rw one_mul
 
-theorem group'.mul_one : ∀ (a : G), a * 1 = a :=
+theorem mul_one : ∀ (a : G), a * 1 = a :=
 begin
 intro a, -- goal is a * 1 = a
  apply mul_left_cancel a⁻¹, -- goal now a⁻¹ * (a * 1) = a⁻¹ * a
