@@ -5,18 +5,96 @@
 -- The church nat, chℕ (happy to change the name) is a pi type
 -- and not a structure. So proofs are not done by induction!
 --import data.equiv 
+--open or
 
-def chℕ := {n : Π X : Type, (X → X) → X → X // ∀ (X Y : Type) (a : X → Y) (h : X → X) (x : X), 
-  n (X → Y) (λ g, g ∘ h) a x = a (n X h x)}
+def chℕ := Π X : Type, (X → X) → X → X
+
+def chℕfree := {m : Π X : Type, (X → X) → X → X // ∀ (X Y : Type) (a : X → Y) (f : X → X) (x : X),
+  m (X → Y) (λ g, g ∘ f) a x = a (m X f x)}
 
 namespace chnat
 
-open nat 
+-- forgetful functor
+definition chnatfree_to_chnat : chℕfree → chℕ := λ m, m.val 
+
+-- we can go back from chℕ to ℕ
+definition chnat_to_nat : chℕ → ℕ := λ m, m ℕ nat.succ 0 -- there is a beauty here
+-- it is almost as if the structure ℕ were built to be fed into chℕ 
+-- chℕ is the church encoding of ℕ.
+
+--open nat 
 -- map from normal nats
+namespace chnat
+open nat
 def of_nat : ℕ → chℕ 
-| 0 := ⟨λ X f x, x,by intros;refl⟩
-| (succ n) := ⟨λ X f x, f ((of_nat n).val X f $ x),by {intros,have H := (of_nat n).property X Y a h x,simp * at *,
-rw ←H,sorry}⟩
+| (zero) := λ X f x, x
+| (succ n) := λ X f x, f (of_nat n X f x) --this works
+
+--| (n + 1) := λ X f x, of_nat n X f (f x) --I couldn't get this to work immediately
+-- in the below
+theorem nat_of_chnat_of_nat (n : ℕ) : chnat_to_nat (chnat.of_nat n) = n := begin
+  induction n with d Hd,
+  -- n = 0 case
+  { refl },
+  -- n = d + 1
+  unfold of_nat,
+  intros,unfold chnat_to_nat,
+  unfold chnat_to_nat at Hd,
+  rw Hd,
+end 
+
+definition of_nat' : ℕ → chℕ 
+| 0 := λ X f x, x
+| (n + 1) := λ X f x, of_nat' n X f (f x) --a bit different
+
+theorem of_nat'_is_of_nat (n : ℕ) : of_nat n = of_nat' n := sorry 
+#exit
+begin
+induction n with d Hd,
+{ refl},
+unfold of_nat,
+unfold of_nat',
+funext,
+rw Hd,
+conv {
+  to_rhs,
+  rw ←Hd,
+},
+--clear Hd,
+cases d with e,
+{ refl},
+unfold of_nat at *,
+unfold of_nat' at *,
+exact Hd,
+end
+
+
+
+theorem of_nat_is_chnatfree (n : ℕ) : 
+∀ (X Y : Type) (a : X → Y) (f : X → X) (x : X),
+  (of_nat n) (X → Y) (λ g, g ∘ f) a x = a ((of_nat n) X f x) := begin
+  induction n with d Hd,
+    -- base case
+    intros,refl,
+  -- inductive step
+  intros,unfold of_nat,
+  -- v1
+  have H1 := Hd X Y (a ∘ f) f x,
+  -- goal : f (of_nat d X f x) = of_nat d X f (f x)
+  have H2 := Hd X Y a f (f x),
+
+end 
+
+
+--| 0 := ⟨λ X f x, x,by intros;refl⟩
+--| (succ n) := ⟨λ X f x, 
+--  f ((of_nat n).val X f x),
+--    by {intros,have H := (of_nat n).property X Y a h x,simp * at *, rw ←H,sorry}⟩
+--  (of_nat n).val X f $ f x,
+--    by {intros, have H := (of_nat n).property X Y a f (f x),rw ←H,
+--    show (of_nat n).val (X → Y) (λ (g : X → Y), g ∘ f) (a ∘ f) x =
+--    (of_nat n).val (X → Y) (λ (g : X → Y), g ∘ f) a (f x),
+--    exact _}⟩
 -- can I close nat now?
 
 -- examples of chnats
@@ -37,10 +115,7 @@ example (X f x) : c2 X f x = f (f x) := rfl
 example (X f x) : c3 X f x = f (f (f x)) := rfl
 -- and so on
 
--- we can go back from chℕ to ℕ
-definition to_nat : chℕ → ℕ := λ m, m ℕ nat.succ 0 -- there is a beauty here
--- it is almost as if the structure ℕ were built to be fed into chℕ 
--- Why does this happen? KB doesn't understand
+
 
 -- that definition needs to be moved if we can't prove functoriality wrt succ
 
