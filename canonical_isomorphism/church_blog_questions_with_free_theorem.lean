@@ -15,16 +15,15 @@ def chℕfree := {m : Π X : Type, (X → X) → X → X // ∀ (X Y : Type) (a 
 namespace chnat
 
 -- forgetful functor
-definition chnatfree_to_chnat : chℕfree → chℕ := λ m, m.val 
+definition of_chnatfree : chℕfree → chℕ := λ m, m.val 
 
 -- we can go back from chℕ to ℕ
-definition chnat_to_nat : chℕ → ℕ := λ m, m ℕ nat.succ 0 -- there is a beauty here
+definition to_nat : chℕ → ℕ := λ m, m ℕ nat.succ 0 -- there is a beauty here
 -- it is almost as if the structure ℕ were built to be fed into chℕ 
 -- chℕ is the church encoding of ℕ.
 
 --open nat 
 -- map from normal nats
-namespace chnat
 open nat
 def of_nat : ℕ → chℕ 
 | (zero) := λ X f x, x
@@ -32,16 +31,22 @@ def of_nat : ℕ → chℕ
 
 --| (n + 1) := λ X f x, of_nat n X f (f x) --I couldn't get this to work immediately
 -- in the below
-theorem nat_of_chnat_of_nat (n : ℕ) : chnat_to_nat (chnat.of_nat n) = n := begin
+theorem nat_of_chnat_of_nat (n : ℕ) : to_nat (of_nat n) = n := begin
   induction n with d Hd,
   -- n = 0 case
   { refl },
   -- n = d + 1
   unfold of_nat,
-  intros,unfold chnat_to_nat,
-  unfold chnat_to_nat at Hd,
+  intros,unfold to_nat,
+  unfold to_nat at Hd,
   rw Hd,
 end 
+
+--theorem chnatfree_of_nat_of_chnatfree (m : chℕfree) :
+
+/-
+
+-- can't get this to work
 
 definition of_nat' : ℕ → chℕ 
 | 0 := λ X f x, x
@@ -65,23 +70,35 @@ cases d with e,
 { refl},
 unfold of_nat at *,
 unfold of_nat' at *,
-exact Hd,
+exact Hd, -- I think the error was here
 end
+-/
+
+lemma of_nat_functorial (n : ℕ) (X : Type) (f : X → X) (x : X) : 
+of_nat n X f x = of_nat n (ℕ → X) (λ g n', f (g n')) (@nat.rec (λ n,X) x (λ _,f)) 0 :=
+begin
+
+end 
 
 
 
+#check of_nat_functorial
+
+#exit
 theorem of_nat_is_chnatfree (n : ℕ) : 
 ∀ (X Y : Type) (a : X → Y) (f : X → X) (x : X),
   (of_nat n) (X → Y) (λ g, g ∘ f) a x = a ((of_nat n) X f x) := begin
   induction n with d Hd,
     -- base case
     intros,refl,
+
   -- inductive step
   intros,unfold of_nat,
   -- v1
   have H1 := Hd X Y (a ∘ f) f x,
   -- goal : f (of_nat d X f x) = of_nat d X f (f x)
   have H2 := Hd X Y a f (f x),
+
 
 end 
 
