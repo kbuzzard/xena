@@ -29,8 +29,6 @@ def of_nat : ℕ → chℕ
 | (zero) := λ X f x, x
 | (succ n) := λ X f x, f (of_nat n X f x) --this works
 
---| (n + 1) := λ X f x, of_nat n X f (f x) --I couldn't get this to work immediately
--- in the below
 theorem nat_of_chnat_of_nat (n : ℕ) : to_nat (of_nat n) = n := begin
   induction n with d Hd,
   -- n = 0 case
@@ -42,18 +40,16 @@ theorem nat_of_chnat_of_nat (n : ℕ) : to_nat (of_nat n) = n := begin
   rw Hd,
 end 
 
---theorem chnatfree_of_nat_of_chnatfree (m : chℕfree) :
-
-/-
-
--- can't get this to work
-
 definition of_nat' : ℕ → chℕ 
 | 0 := λ X f x, x
 | (n + 1) := λ X f x, of_nat' n X f (f x) --a bit different
 
-theorem of_nat'_is_of_nat (n : ℕ) : of_nat n = of_nat' n := sorry 
-#exit
+-- Might need to write a different destructor for ℕ? True for n implies true for 1 + n?
+
+-- broken and I don't kow why
+
+/-
+theorem of_nat'_is_of_nat (n : ℕ) : of_nat n = of_nat' n := 
 begin
 induction n with d Hd,
 { refl},
@@ -70,21 +66,25 @@ cases d with e,
 { refl},
 unfold of_nat at *,
 unfold of_nat' at *,
-exact Hd, -- I think the error was here
+exact Hd, -- error is here
 end
 -/
 
-lemma of_nat_functorial (n : ℕ) (X : Type) (f : X → X) (x : X) : 
-of_nat n X f x = of_nat n (ℕ → X) (λ g n', f (g n')) (@nat.rec (λ n,X) x (λ _,f)) 0 :=
-begin
 
+variable (n : ℕ)
+#reduce (n + 1)
+
+lemma of_nat_functorial (n : ℕ) (X Y : Type) (a : X → Y) (f : X → X) (x : X) : 
+a (of_nat n X f x) = of_nat n (X → Y) (λ g x', g (f x')) a x :=
+begin
+induction n with d Hd,refl,
+unfold of_nat, -- I have the wrong constructor.
 end 
 
 
 
 #check of_nat_functorial
 
-#exit
 theorem of_nat_is_chnatfree (n : ℕ) : 
 ∀ (X Y : Type) (a : X → Y) (f : X → X) (x : X),
   (of_nat n) (X → Y) (λ g, g ∘ f) a x = a ((of_nat n) X f x) := begin
@@ -99,7 +99,7 @@ theorem of_nat_is_chnatfree (n : ℕ) :
   -- goal : f (of_nat d X f x) = of_nat d X f (f x)
   have H2 := Hd X Y a f (f x),
 
-
+admit,
 end 
 
 
