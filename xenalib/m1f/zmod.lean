@@ -121,7 +121,7 @@ introv H,
 cases H with k Hk,
 apply quot.sound,
 existsi k*m,
-simp [Hk,mul_add],
+simp [Hk,mul_add,mul_assoc,mul_comm],
 end)
 
 def mul { n : ℕ } : Zmod n → Zmod n → Zmod n :=
@@ -139,7 +139,7 @@ rw [←Hctilde],
 apply quot.sound,
 existsi (ctilde*k),
 rw [mul_assoc,Hk,mul_sub],
-simp, 
+simp [mul_comm], 
 end)
 
 instance {n : ℕ} : has_add (Zmod n) := ⟨Zmod.add⟩
@@ -271,7 +271,7 @@ instance {n : ℕ}: comm_ring (Zmod n) :=
   rw [←Ha,←Hb],
   apply quot.sound,
   existsi (0:ℤ),
-  simp,
+  simp [mul_comm],
   end,
   ..Zmod.add_comm_group
 }
