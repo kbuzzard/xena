@@ -12,7 +12,7 @@ begin
   exact absurd H dec_trivial -- ...but denominator of 1/2 isn't 1.
 end 
 
-lemma real_half_not_an_integer : ¬ ∃ n : ℤ, (1/2 : ℝ) = ↑n :=
+lemma real_half_not_an_integer : ¬ (∃ n : ℤ, (1/2 : ℝ) = (n : ℝ) ) :=
 begin
   rintro ⟨n,Hn⟩, -- n is an integer, Hn the proof that it's 1/2
   apply rational_half_not_an_integer,
