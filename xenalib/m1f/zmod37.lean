@@ -1,6 +1,6 @@
 -- Integers mod 37
 
--- a demonstration of how to use equivalence relations and equivalence classes.
+-- a demonstration of how to use equivalence relations and equivalence classes in Lean.
 
 -- We define the "congruent mod 37" relation on integers,
 -- prove it is an equivalence relation, define Zmod37 to be the equivalence classes,
