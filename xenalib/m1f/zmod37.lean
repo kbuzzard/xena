@@ -6,10 +6,7 @@
 -- prove it is an equivalence relation, define Zmod37 to be the equivalence classes,
 -- and put a ring structure on the quotient.
 
---import algebra.group_power
-
--- mathlib's extension of equivalence relation stuff
-import data.quot 
+-- this is just so I can cheat when proving multiplication is well-defined mod 37
 import tactic.ring
 
 definition cong_mod37 (a b : ℤ) := ∃ (k : ℤ), k * 37 = b - a
