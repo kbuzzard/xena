@@ -1,0 +1,27 @@
+\documentclass[10pt]{article}
+\usepackage{amsfonts}
+\usepackage{a4wide}
+\usepackage{amsmath}
+\thispagestyle{empty}
+% for fancy 2 column lists with letters
+\usepackage{multicol}
+\usepackage[shortlabels]{enumitem}
+\newcommand{\R}{\mathbf{R}}
+\newcommand{\Z}{\mathbf{Z}}
+\begin{document}
+
+\medskip\noindent{\bf S0107.}
+
+(a) is false, because $B\subseteq\Z$ by definition, so $\frac{1}{2}\not\in B$, so $\frac{1}{2}\not\in A\cap B$.
+
+(b) is true, because $\frac12\in\R$ and $\left(\frac12\right)^2=\frac14<3$, so $\frac12\in A$ and hence $\frac12\in A\cup B$.
+
+(c) is false, because $x=\frac32\in\R$ satisfies $x^2=9/4<3$ and $x^3=27/8>3$, so $x\in A$ but $x\not\in C$, which means $A\not\subseteq C$.
+
+(d) is true. In fact if $x\in\Z$ and $|x|\geq2$ then $x^2\geq4$, meaning $x\not\in B$. On the other hand $\pm1$ and~$0\in B$, meaning $B=\{-1,0,1\}$. All of these elements are easily checked to be in~$C$.
+
+(e) is not true, because $-100\in C$ (as its cube is less than zero) but $(-100)^2=10^4>3$ so $-100\not\in A$ and $-100\not\in B$.
+
+(f) is not true. To check that these sets are not equal, all we need to do is to find a real number which is in one but not the other. Again I claim $x=-100$ will work. For we've just seen it's in~$C$, so it's definitely in $(A\cap B)\cup C$. However we've also just seen it's not in $A\cup B$, so it's also not in $(A\cup B)\cap C$.
+
+\end{document}
