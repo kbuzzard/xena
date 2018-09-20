@@ -1,0 +1,114 @@
+\documentclass[10pt]{article}
+\usepackage{amsfonts}
+\usepackage{a4wide}
+\usepackage{amsmath}
+\thispagestyle{empty}
+% for fancy 2 column lists with letters
+\usepackage{multicol}
+\usepackage[shortlabels]{enumitem}
+\newcommand{\R}{\mathbf{R}}
+\newcommand{\Q}{\mathbf{Q}}
+\newcommand{\Z}{\mathbf{Z}}
+\begin{document}
+
+
+\begin{flushright} KMB,\ 18/11/17\end{flushright}
+
+\noindent{\large \bf M1F Foundations of Analysis, Problem Sheet 6 solutions.}
+
+\medskip\noindent{\bf 1.} 
+
+a) The polyhedron in question is called a ``triangular bipyramid'', in case you were wondering, so you can now look for pictures of it using google images, and you'll see that it has 6 faces, 9 edges and 5 vertices, so $F-E+V$ is indeed~2. It's not regular because three of the vertices have 4 triangles meeting at that vertex, and the other two only have three triangles meeting there.
+
+b) Each edge lies between two faces, so if we count all the edges of each face we'll have counted each edge twice. But each face has $n$ edges, so $nF=2E$.
+
+Each vertex has $r$ edges coming off it, but again each edge has a vertex at each and so we count every edge twice this way, and deduce $rV=2E$.
+
+c) We have $n=5$ and $r=3$, so $3V=2E=5F$. Let this number be~$X$. We know $F-E+V=2$ and multiplying by~30, the lowest common multiple of 2, 3, and 5, we see
+$$30F-30E+30V=60.$$
+But $30F=6X$, $30E=15X$ and $30V=10X$, so
+$$6X-15X+10X=60$$
+giving $X=60$, and hence $V=20$, $E=30$ and $F=12$.
+
+d) No! It proves that there is at \emph{most} one way that you can hope to fit a bunch of regular pentagons together to form a convex polyhedron, and if it works there will be 12 pentagons etc. Proving that 12 regular pentagons actually do exactly fit together is a different question. Even if you have seen a dodecahedron before, this is not a proof that one exists -- perhaps if you zoom in super-closely then the faces don't quite fit together, and this needs to be ruled out (and can't be ruled out just by building a real one). You can look up the coordinates for the vertices of a dodecahedron on Wikipedia if you want to see a proof that one exists (or you can wait until you do the representation theory course to see a more conceptual approach).
+
+\medskip\noindent{\bf 2.} 
+
+Say $G$ is a (finite) connected planar graph with $v$ vertices, $e$ edges and $f$ faces, and each face has at least three sides (this would be the case if, for example, all the edges of our graph were straight lines). 
+
+a) Let $X$ be the sum of the numbers of edges around each face. Then $3f\leq X$. However each edge on the graph is counted at most twice by~$X$, as each edge can only border at most 2 faces, so $X\leq 2e$ and we're done.
+
+b) If every vertex had at least 6 edges coming from it, then we would have $6v\leq 2e$, so $v\leq \frac{1}{3}e$, and by (a) we have $f\leq\frac{2}{3}e$, giving $v+f\leq e$. This contradicts $v+f=e+1$.
+
+c) Consider the obvious infinite tessalation of the plane by equilateral triangles (imagine a honeycomb pattern of hexagons and then chop each hexagon into 6 equilateral triangles).
+
+\medskip\noindent{\bf 3.} 
+
+(a) $s\in S$ implies $s<0$, so clearly 0 is an upper bound. I claim it's the least upper bound. For if $b\in\R$ is an upper bound then either $b\geq0$ (which is what we want) or $b<0$, which gives us a contradiction because then $b<b/2<0$ so $b/2\in S$ is bigger than this supposed upper bound.
+
+(b) $\Q$ has no upper bound because it's unbounded. Indeed for any real number $x$ there's some $n\in\Z$ with $n>x$ (this is fact (Ineq5) from lectures) and because $n\in S$ we see that $x$ isn't an upper bound for~$S$. But $x$ was arbitrary, so no upper bound exists.
+
+c) We see
+\begin{align*}
+(x+1)^2&<x^2\\
+\iff x^2+2x+1&<x^2\\
+\iff 2x+1<0\\
+\iff x<-1/2
+\end{align*}
+so (because all steps were if and only if's) we have $S=\{x\in\R\,:\,x<-1/2\}$.
+
+We claim $-1/2$ is a least upper bound (aka LUB, aka sup). Indeed $-1/2$ is an upper bound, and if $b<-1/2$ is real then $b$ isn't an upper bound, becasue $b<(b-1/2)/2<-1/2$ and $(b-1/2)/2\in S$ as it's less than $-1/2$.
+
+d) By definition $s\in S$ implies $s<2$, so 2 is an upper bound. We claim 2 is a sup for $S$. So say $b\in\R$ with $b<2$. We need to check that $b$ is \emph{not} an upper bound. But by (Ineq6) we know that $\Q$ is dense in~$\R$, which here implies that there exists some $q\in\Q$ with $b<q<2$. Let $q'=\max\{q,1\}$. Then $q'>b$ and $q'\in S$, so $b$ is not an upper bound for~$S$, meaning that 2 is the sup.
+
+\medskip\noindent{\bf 4.} Say $y$ is any upper bound for~$S$. Then by definition $s\leq y$ for all $s\in S$. In particular $x\leq y$. But this is exactly what we need to prove (the definition of the sup says that it's an upper bound and it's at most all other upper bounds).
+
+\medskip\noindent{\bf 5.} 
+
+a) $S$ is bounded below iff there exists some $x\in\R$ with $x\leq s$ for all $s\in S$. But $x\leq s$ iff $-x\geq -s$, so $S$ is bounded below by $x$ if and only if  $-S$ is bounded above by $-x$, and in particular $S$ is bounded below if and only if $-S$ is bounded above.
+
+Now say $x$ is a greatest lower bound for $S$. This is equivalent to 
+
+(i) $x$ is a lower bound for $S$
+
+and
+
+(ii) if $y$ is a lower bound for $S$ then $x\geq y$
+
+and, from the earlier argument, this is equivalent to 
+
+(i') $-x$ is an upper bound for $-S$
+
+and
+
+(ii') if $-y$ is an upper bound for $-S$ then $-x\leq -y$
+
+which is equivalent to $-x$ being a sup for $S$.
+
+b) We could either use the result in lectures -- if $x_1$ and $x_2$ are both greatest lower bounds for~$S$, then $-x_1$ and $-x_2$ are both sup's for $-S$, so $-x_1=-x_2$ from a lemma in lectures (Lemma 5.2) and hence $x_1=x_2$.
+
+Alternatively one could prove it directly: if $x_1$ and $x_2$ are both inf's for $S$ then by definition $x_1$ and $x_2$ are lower bounds for~$S$, and hence $x_1\leq x_2$ and $x_2\leq x_1$, giving $x_1=x_2$.
+
+c) If~$S$ is any non-empty bounded-below set of reals, then $-S$ is a non-empty bounded-above set of reals, so has a sup~$x$, and we saw above that this means that $-x$ is an inf for~$S$.
+
+\medskip\noindent{\bf 6.} 
+
+a) $a_n\in S_n$ so it's non-empty. It's also bounded above because any element of $S_n$ is of the form $a_m$ for some $m\geq n$ and we are given that $a_m\leq B$ for all $m$, so $B$ is an upper bound for $S_n$, for all~$n$.
+
+b) I will show that $b_n$ is an upper bound for $S_{n+1}$. If we can check this, we're done, because $b_{n+1}$ is the sup for $S_{n+1}$ and hence $b_{n+1}\leq b_n$.
+
+So let's show $b_n$ is an upper bound for $S_{n+1}$. By definition, $b_n$ is an upper bound for $S_n$, so $s\leq b_n$ for all $s\in S_n$. But $S_{n+1}\subseteq S_n$ and hence $s\leq b_n$ for all $s\in S_{n+1}$. This is what we wanted.
+
+c) (i) All $S_n=\{1\}$, so all $b_n=1$ (an easy check shows that the sup of $\{x\}$ is $x$) and the inf of $\{1,1,1,\ldots\}$ is just 1 again.
+
+(ii) We know $S_n=\{1/n,1/(n+1),\ldots\}$ and we also know $n\leq m$ implies $\frac{1}{n}\geq\frac{1}{m}$. In particular we see $1/n\geq s$ for all $s\in S_n$, and because $1/n\in S_n$, Q4 says that $1/n$ is a sup for $S_n$, so $b_n=\frac{1}{n}$. The $b_n$ form a decreasing sequence of positive reals, so 0 is a lower bound, and it is the greatest lower bound because if $0<x$ then there exists some $n\in\Z_{\geq1}$ with $1/x<n$ and hence $b_n=1/n<x$ meaning that $x$ is not a lower bound for the set $\{b_1,b_2,\ldots,b_n,\ldots\}$. So the limsup of this sequence is zero (which, note, is strictly less than every term in the sequence!).
+
+(iii) Here $S_n=\{0,1\}$ for all~$n$, and 1 is a sup (as it's a bound, and in $S_n$), hence $b_1=b_2=b_3=\cdots=1$ meaning that the inf of the $b_i$ is also~1. So here the limsup is 1.
+
+d) The liminf of $a_n$ equals $x$, where $-x$ is the limsup of the sequence $-a_1,-a_2,\ldots$. Alternatively, just rewrite all the definitions replacing upper bounds with lower bounds and lower bounds with upper bounds etc.
+
+The liminfs for the sequences are 1, 0 and 0.
+
+Note that the first two sequences converge (to the limsup and the liminf, which are the same) and the third does not (and here the limsup and liminf are not the same).
+
+\end{document}

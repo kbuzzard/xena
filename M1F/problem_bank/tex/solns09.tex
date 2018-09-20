@@ -1,0 +1,110 @@
+\documentclass[10pt]{article}
+\usepackage{amsfonts}
+\usepackage{a4wide}
+\usepackage{amsmath}
+\thispagestyle{empty}
+% for fancy 2 column lists with letters
+\usepackage{multicol}
+\usepackage[shortlabels]{enumitem}
+\newcommand{\R}{\mathbf{R}}
+\DeclareMathOperator{\cl}{cl}
+\newcommand{\Q}{\mathbf{Q}}
+\newcommand{\Z}{\mathbf{Z}}
+\input xy \xyoption{all}
+\begin{document}
+
+
+\begin{flushright} KMB,\ 7/12/17\end{flushright}
+
+\noindent{\large \bf M1F Foundations of Analysis, Problem Sheet 9, solutions.}
+
+\medskip\noindent{\bf 1${}^*$} Some of this stuff is only a mild extension of what I did in lectures, but rather than referring you to the proofs in lectures I'm just going to do everything in full again.
+
+(i) Note that $a\sim b$ if and only if $a\equiv b$~mod~2 does define an equivalence relation (by 6.12). If $a\in\Z$ then $\cl(a)$ means all the $b\in\Z$ such that $a\equiv b$~mod~2, which is the integers~$b$ such that $b-a$ is even (by definition). If $a$ is even then $b-a$ is even iff $b$ is even, so $\cl(a)$ is all the even integers. Conversely if $a$ is odd then $b-a$ is even iff $b$ is odd, so $\cl(a)$ is all the odd integers. So every equivalence class is either the set of all even integers, or the set of all odd integers, and in particular there are only two choices.
+
+(ii) Sure this is possible. For example $\cl(1)=\cl(3)$ (both of these sets are all the odd integers).
+
+(iii) This is not possible. The only possibilities are that $X$ is either the set of all odd integers, or the set of all even integers; the same is true for~$Y$. So if $X\not=Y$ then one had better be all the even integers and the other all the odd integers, which forces $X\cap Y=\emptyset$.
+
+(iv) Say $\cl(a)=\cl(b)$. Recall that $\cl(b)=\{c\in S\,:\, b\sim c\}$. We know~$\sim$ is an equivalence relation, so $b\sim b$, so $b\in\cl(b)$. If we're assuming $\cl(a)=\cl(b)$ then this means $b\in\cl(a)$, so by definition we have $a\sim b$.
+
+The other way I did in lectures; if $a\sim b$ then for any $c\in\cl(b)$ we have $b\sim c$ (by definition) so $a\sim c$ (by transitivity), so $c\in\cl(a)$. This shows $\cl(b)\subseteq\cl(a)$. I'll now explicitly do the other way: say $x\in\cl(a)$; then $a\sim x$, so $x\sim a$ (symmetry) so $x\sim b$ (transitivity) so $b\sim x$ (symmetry) so $x\in\cl(b)$. Hence $\cl(a)\subseteq\cl(b)$ and so $\cl(a)=\cl(b)$.
+
+(v) If there exists some $s\in\cl(a)\cap\cl(b)$ then $a\sim s$ and $b\sim s$; by symmetry $s\sim b$ and by transitivity $a\sim b$, so (a) implies (b). 
+
+We just proved (b) implies (c) in (iv).
+
+For (c) implies (a) we note that $a\in\cl(a)$ by reflexivity, and so $a\in\cl(b)$ meaning $\cl(a)\cap\cl(b)\not=\emptyset$, so (c) implies (a).
+
+Thus (a), (b) and (c) are all equivalent.
+
+\medskip\noindent{\bf 2.} 
+
+(i) To prove that it \emph{is} possible to show that reflexive and transitive implies symmetric, we just have to write down a proof that if $\sim$ is any binary relation on any set~$S$ and $\sim$ is reflexive and transitive, then $\sim$ is symmetric. To prove that it is \emph{not} possible, we need to write down a counterexample, which in this context would mean an example of a set~$S$ and a binary relation~$\sim$ which is reflexive and is transitive but is not symmetric.
+
+(ii) We know $a\leq a$ for all $a$, so $\sim$ is reflexive. We also know that $a\leq b$ and $b\leq c$ implies $a\leq c$, so $\sim$ is transitive. But $\sim$ is not symmetric because $3\sim 4$ but $4\not\sim 3$.
+
+(iii) If $x\in\R$ then $|x-x|=0\leq 1$, so $x\sim x$. Hence $\sim$ is reflexive. Next, if $|x-y|\leq 1$ then $|y-x|=|-(x-y)|=|x-y|\leq 1$, so $\sim$ is symmetric. However $1\sim2$ and $2\sim 3$ but $1\not\sim 3$, so $\sim$ is not transitive.
+
+(iv) $0\sim0$ is false, so $\sim$ is not reflexive. However $\sim$ is symmetric and transitive, because whatever $x$ and $y$ are, $(x\sim y)$ is always false, so $(x\sim y)\implies (y\sim x)$ is true (because false implies anything). Similarly transitivity is true (because false implies anything).
+
+\medskip\noindent{\bf 3.} The mistake is that you might not be able to choose~$t$ with $s\sim t$, because perhaps there are no $t\in S$ at all (including $t=s$) satisfying $s\sim t$. 
+
+\medskip\noindent{\bf 4.} 
+
+(i) This is straightforward: $f(a)=f(a)$ so $a\sim a$, if $a\sim b$ then $f(a)=f(b)$ so $f(b)=f(a)$ so $b\sim a$, and if $a\sim b$ and $b\sim c$ then $f(a)=f(b)=f(c)$ so $f(a)=f(c)$ so $a\sim c$.
+
+(ii) $\cl(x)=\{s\in X\,:\,x\sim s\}=\{s\in X\,:\,f(x)=f(s)\}=\{s\in X\,:\,f(s)=y\}=f^{-1}(y)$.
+
+(iii) Say $W$ is an equivalence class. By definition this means $W=\cl(x)$ for some $x\in X$. Now choose $w\in W$. Then $x\sim w$ so $W=\cl(w)$ by a previous question. I want to define $g(W)=f(w)$. So now let's see what happens if we choose $w'\in W$. Then $w\sim w'$ because $W=\cl(w)$, and hence $f(w)=f(w')$ by definition of $\sim$. In particular this means that our definition of $g(W)$ was indeed independent of the choice of element of $W$ we used to define $g(W)$, so $g(W)$ is indeed well-defined.
+
+(iv) Say $W_1$ and $W_2$ are two equivalence classes. Choose $w_1\in W_1$ and $w_2\in W_2$. Then $W_1$ has non-trivial intersection with $\cl(w_1)$ (they both contain $w_1$) so $\cl(w_1)=W_1$ and similarly $\cl(w_2)=W_2$. By definition, $g(W_1)=f(w_1)$ and $g(W_2)=f(w_2)$. Now let's say $g(W_1)=g(W_2)$. Then $f(w_1)=f(w_2)$, so $w_1\sim w_2$, so $\cl(w_1)=\cl(w_2)$. Hence $W_1=W_2$. But $W_1$ and $W_2$ were arbitrary, so $g$ is injective.
+
+(v) Say $W\in Z$. Then by definition $W$ is an equivalence class, so by definition $W=\cl(x)$ for some $x\in X$. Hence $h(x)=\cl(x)=W$. But~$W\in Z$ was arbitrary, so $h$ is surjective.
+
+(vi) To prove that $f=g\circ h$ we need to check that for all $x\in X$ we have $f(x)=g(h(x))$. So set $W=h(x)=\cl(x)$. Now to define $g(W)$ we need to choose some element of~$W$ but we know for sure (by reflexivity) that $x\in\cl(x)$ so let's choose $x$, and then $g(W)=f(x)$. Hence $g(h(x))=f(x)$. But $x\in X$ was arbitrary, so $g\circ h=f$.
+
+(vii) Say $j\in J$. Then by definition of the image of~$f$ we must have $j=f(x)$ for some $x\in X$. Define $i(j)=f^{-1}(j)$; by part (ii) this is $\cl(x)$. In particular $i$ is a well-defined map. 
+
+The reason it is injective is that if $j_1\not=j_2\in J$ then we can choose $x_1,x_2\in X$ such that $f(x_1)=j_1$ and $f(x_2)=j_2$; now $x_1\not\sim x_2$ (as $j_1\not=j_2$) so $\cl(x_1)\not=\cl(x_2)$, meaning that indeed $i$ is injective.
+
+The reason~$i$ is surjective, is that if $W$ is an equivalence class and $w\in W$ then $f(w)=j\in J$ and $i(j)=f^{-1}(j)$ is an equivalence class containing~$w$ so must be~$\cl(w)=W$.
+
+Hence~$i$ is bijective.
+
+(viii) If $x\in X$ and $f(x)=j$ then $i(\tilde{h}(x))=i(f(x))=i(j)=f^{-1}(j)=\{x'\in X\,:\,f(x')=f(x)\}=\cl(x)=h(x)$. Because $x\in X$ was arbitrary we have proved $i\circ\tilde{h}=h$.
+
+Finally, if $j\in J$ then by definition $j=f(x)$ for some $x\in X$. If $i(x)=W$ then $W=f^{-1}(j)$ which contains~$x$, so $g(i(j))=g(W)=f(x)=j=\tilde{g}(j)$, and because $j\in J$ was arbitrary we have proved $g\circ i=\tilde{g}$.
+
+\medskip\noindent{\bf 5.} If $x\in\Z$ then $x\sim x+8\sim x+16$ (using $n=x$ and $n=x+8$) and similarly $x+1\sim x+6\sim x+11\sim x+16$. By symmetry $x+16\sim x+1$ and by transitivity $x\sim x+1$ for all $x\in\Z$. Now by induction we can prove that if $y$ is fixed and $z=y+n$ for some integer $n\geq0$ then $y\sim z$. The base case is reflexivity, and the inductive step follows from transitivity and the fact that $x\sim x+1$. As a consequence we deduce that if $y\leq z$ then $y\sim z$. By symmetry we deduce that if $y\leq z$ then $y\sim z$, and hence $y\sim z$ for all $y,z\in\Z$.
+
+\medskip\noindent{\bf 6.} 
+
+(i) $f$ is bijective; indeed if we define $g=f$ then $g$ is a two-sided inverse function for $f$. For $f(f(0))=f(0)=0$, and if $x\not=0$ then $f(f(x))=f(1/x)=1/(1/x)=x$, so $f\circ f$ is the identity function $\R\to\R$.
+
+(ii) $f:\Z\to\Z$, $f(n)=2n+1$. This is injective, because if $f(a)=f(b)$ then $2a+1=2b+1$ and hence $2a=2b$, so $a=b$. But it is not surjective, as $f(n)$ is always odd, so there cannot be any $n$ such that $f(n)=2$ (indeed if $f(n)=2$ then $2n=1$ but no integer satisfies this equation). 
+
+(iii) $f:\R\to\R$, $f(x)=x^3$. This is bijective. It's pretty obvious that if $g(x)=x^{1/3}$ then $g$ is a two-sided inverse for $f$, but if I was going to be super-fussy I would say that in the question I only said that you could assume that every positive real has a unique positive real cube root, so first you should make the following observations. (a) The cube of a non-positive real is non-positive, hence every positive real has a unique real cube root; (b) the cube of a non-zero number is non-zero, so zero has a unique real cube root (namely zero); (c) if $y^3=x$ then $(-y)^3=-x$, from which it follows that every negative number has a unique real cube root. We've just checked carefully that every real number $x$ has a unique real cube root, and if we define $g(x)$ to be the unique real cube root of $x$ then $g(y)^3=y$ and $g(x^3)=x$ (by uniqueness), hence $f(g(y))=y$ and $g(f(x))=x$ for all $x,y$ meaning that $f$ and $g$ are inverse functions.
+
+(iv) $f:\R\to\R$ defined by $f(x)=x^3$ if the Riemann hypothesis is true, and $f(x)=-x$ if not. This function is bijective, and the two-sided inverse function is $g$ defined by $g(y)=y^{1/3}$ if the Riemann hypothesis is true, and $g(y)=-y$ if it is false. A case by case check shows that whether or not the Riemann Hypothesis is true, $f\circ g$ and $g\circ f$ are both the identity function.
+
+(v) This question is easier than I thought -- one of my tutees last year pointed out that $f(n+1)-f(n)$ was a quadratic with negative discriminant, hence (by completing the square) $f(n+1)>f(n)$ for all $n$. This can be used to prove both that $f$ is injective ($a<b$ implies $f(a)<f(b)$ by induction on $b-a$) and not surjective ($f(1)=0$ and $f(2)=3$ so there can be no integer $n$ such that $f(n)=1$). Here is my original answer though (much more complicated).
+
+This function is not surjective. For example I claim there can be no integer $n$ such that $f(n)=1$; indeed such an integer~$n$ would satisfy $n^3-2n^2+2n=2$ and hence $n(n^2-2n+2)=2$; hence $n$ would have to be a divisor of~2. But the only divisors of~2 are $\pm1$ and $\pm2$, and $f(1)=0$, $f(2)=3$, $f(-1)=-6$ and $f(-2)=-21$, so none of these work.
+
+It is injective however, although this is perhaps a little tough to prove. We do it by contradiction. Say $m,n\in\Z$ with $m\not=n$ and $f(m)=f(n)$. Then $f(m)-f(n)=0$, so $(m^3-n^3)-2(m^2-n^2)+2(m-n)=0$. Because $m\not=n$ we can divide out by $m-n$ and deduce $m^2+mn+n^2-2(m+n)+2=0$ and our job is to show that this equation has no solutions. By completing the square and then multiplying by~12 to clear denominators we deduce that $3(2m+n-2)^2+(3n-2)^2+8=0$ and this has no real solutions, let alone integer ones, so this is the contradiction we seek.
+
+\medskip\noindent{\bf 7.} 
+
+(i) $f$ is not defined at zero, so it is not a function with domain~$\R$.
+
+(ii) $f$ is not defined for $x<0$ as whatever you mean by $\sqrt{x}$ it can't be real.
+
+(iii) $f(0)=1/2$ which is not in the codomain.
+
+(iv) We don't say which solution (and sometimes there is more than one -- for example $y^3-y=0$ has three real solutions). If we were careful to explain exactly which solution we chose (for example we could choose the largest real solution) then this would be well-defined (but it would not be continuous -- can you find an example of a discontinuity if we chose the largest real solution in every case?)
+
+(v) If $|x|<1$ then $1+x+x^2+x^3+\cdots=1/(1-x)$ (you will see a proof of this next term when you will also learn rigorously what the definition of an infinite sum is). However if $|x|>1$ then the sum does not converge (even though $1/(1-x)$ makes perfect sense) so as it stands this function is not defined when $|x|>1$.
+
+
+\end{document}

@@ -1,0 +1,95 @@
+\documentclass[10pt]{article}
+\usepackage{amsfonts}
+\usepackage{a4wide}
+\usepackage{amsmath}
+\thispagestyle{empty}
+% for fancy 2 column lists with letters
+\usepackage{multicol}
+\usepackage[shortlabels]{enumitem}
+\newcommand{\R}{\mathbf{R}}
+\newcommand{\Z}{\mathbf{Z}}
+\usepackage{hyperref} 
+\begin{document}
+
+
+\begin{flushright} KMB,\ 31/10/17\end{flushright}
+
+\noindent{\large \bf M1F Foundations of Analysis, Problem Sheet 4, Solutions.}
+
+\medskip
+\noindent{\bf 1.} 
+
+a) If $p=a+ib$ then $\overline{p}=a-ib$ so the ``$x$ coordinate'' of $p$ is the same and the ``$y$ coordinate'' has changed sign, which is indeed a reflection along the line $y=0$.
+
+b) The picture I was expecting is a little arrow from the origin to $p$, and then another one from $p$ to $p+q$, and then the reflection of the entire picture in the real line. The point is that adding then reflecting is the same as reflecting everything then adding.
+
+c) The reflection of a complex number has the same size as the complex number, but clearly the angle we're rotating by is now the negative of the old angle.
+
+d) Again I want to argue that scaling commutes with reflection (i.e. if you scale then reflect, it's the same as reflecting and then scaling) and that rotating anticlockwise and then reflecting is the same as reflecting and then rotating clockwise, so it's all obvious.
+is obvious.
+
+e${}^*$) Speaking as a formalist, I do not think that the arguments above are rigorous mathematical proofs. Fort me, a rigorous mathematical proof is something you can type into a computer running a certain kind of logic program that knows the axioms of mathematics, and then the computer can look at what you typed in and either say ``yes, this is a valid proof'' or ``no, this is not watertight, the first problematic step is on line 24'' (or whatever). Indeed I really felt when typing up the answers above how hand-wavy and non-rigorous I was being.
+
+However I do not want to reject (b) and (d) completely, by any means. Here's what I think they are.
+
+Firstly, they are a way of convincing another mathematician that the results are true, and they are a way of conveying the general idea of why they are true. So ``hand-wavy'' arguments like this are hugely important, because even though this is not how a formalist does mathematics, it is how people explain mathematics to each other. 
+
+Secondly, they are a way of convincing yourself not only that the results are true, but also that you can prove them by grinding out the algebra which a formalist would expect to see in a formal proof. 
+
+One can read more about formalism \href{https://en.wikipedia.org/wiki/Formalism_(philosophy_of_mathematics)}{here}. The main beliefs can perhaps be summarised by saying that mathematics is just a game, like chess: you prove a theorem in mathematics by deducing it from the axioms, just like you play a game of chess by following the rules. Your tutor might not be a formalist, especially if they are an applied mathematician; indeed, they might have a very different take on what mathematics is to mine. I think that one of my jobs in M1F is to teach you that mathematical formalism \emph{exists}, and one of your jobs as a student of M1F is to realise that formalism is often what I am expecting from you in your answers, even though many of us will think in pictures.
+
+\medskip
+\noindent{\bf 2.} 
+
+b) $y=x-2$ so $x=y+2$ and substituting this in gives
+$$3y^3 - 9y + 2=0.$$
+
+Note: the more cavalier amongst you might have instead wanted to make
+the substitution $x=x-2$. I used to do this when I was your age, but it
+was around this time that I realised that substitutions of this form are
+high-risk, because the meaning of $x$ changes when you do this, and if you
+don't ensure that every single old $x$ gets changed to a new $x$ very
+quickly, you will have a broken equation. Furthermore, the route back
+(and we will be going back later) then involves the substitution $x=x+2$,
+as we move back from the new $x$ to the old, and in general this is
+just asking for trouble.
+
+Those of you who resolutely want to stick with $x=x-2$ can feel free
+to then substitute $x=x/2$ for the next part and then get their answer,
+and then try and figure out what the original $x$ was, without making
+any mistakes. And good luck to them! When I make a substitution I always
+change the name of the variable, and I usually instantly write down the
+inverse substitution straight away (see the very first thing I wrote
+in this solution).
+
+c) Set $c=y/2$, so $y=2c$. Subbing in gives
+$$24c^3 - 18c + 2=0$$
+and dividing by~6 yields
+$$4c^3-3c=-1/3.$$
+
+d) If $c=\cos(\theta)$ (note: those of you who are insisting on still using $x$ for all your variables should now write $x=\cos(x)$ and still try to remain unconfused) and the equation becomes $\cos(3\theta)=-1/3$. My calculator, which is firmly switched onto degrees, says $3\theta=109.471220634490691369\ldots$, so $\theta=36.49040687816356378\ldots$, so $c=\cos(\theta)=0.8039564414574\ldots$, so $y=2c=1.60791288291483229043\ldots$, so $x=y+2=3.607912882914832290431\ldots$.
+
+Note while we're here, how easy it was to get back to $x$, because we used different variable names all the way through.
+
+e) It works!
+
+f) The cubic should have three roots, and one way of seeing the others is the following. Recall that when we solved $\cos(3\theta)=-1/3$ we took an inverse cosine and got $3\theta=109.471220634490691369\ldots$. But we could just add 360 degrees to this (or $2\pi$ radians) and we would get a new value for $3\theta$ which would still work; however when we divided everything by 3 we'd find that $\theta$ had only gone up by $120$ degrees, so $\cos(\theta)$ will probably have changed. Indeed it has, and it gives us another root. Doing this trick again gives the third root.
+
+g) Unfortunately you can't solve all quartics this way (as far as I know). There's not quite enough degrees of freedom. We have $\cos(4\theta)=8c^4-8c^2+1$, and given a general quartic we can ``complete the 4th power'' setting $y=x+\mbox{constant}$ to get the equation into the form $Ay^4+By^2+Cy+D=0$, and then scale by $c=y/\mbox{constant}$ to get it into the form $Ac^4+Ac^2+Bc+C=0$, and then multiply by $8/A$ to get very nearly there, but the $Bc$ term might be non-zero, so it doesn't work.
+
+\medskip\noindent{\bf 3.} $(1+i)^{100}=\left(\sqrt{2}e^{i\pi/4}\right)^{100}=2^{50}e^{25i\pi}=-2^{50}$, and now expanding out $(1+i)^{100}$ using the binomial theorem gives us that the sum is $-2^{50}$.
+
+\medskip\noindent{\bf 4.} 
+
+(a) Check $1+i=\sqrt{2}e^{i\pi/4}$ and $\sqrt{3}+i=2e^{i\pi/6}$, so $\sqrt{3}-i=2e^{-i\pi/6}$. Multiplying these together, using the Cartesian $x+iy$ product on one side and the De Moivre one on the other (noting $1/4-1/6=1/12$), gives
+$$(\sqrt{3}+1)+i(\sqrt{3}-1)=2\sqrt{2}e^{i\pi/12}.$$
+Now the real part of the right hand side is $2\sqrt{2}\cos(\pi/12)$, and this must equal the real part of the left hand side, and the result follows on equating these. Pretty cool, huh? Note that the proof of de Moivre used the formulae for $\cos(A+B)$ etc, and given that most of you probably know $\cos(30)$ and $\cos(45)$ etc you could have done it by $\cos(45-30)$ and expanding it out. But using complex numbers is so much cooler, and saves you from having to remember the formula for $\cos(A-B)$\ldots.
+
+(b) Let's prove it by contradiction. So let's assume for a contradiction that $\cos(\pi/12)$ is rational. Then its square would be too, which is $\frac{6+2+2\sqrt{12}}{16}$ and because $\sqrt{12}=2\sqrt{3}$ it's easy to deduce from this that $\sqrt{3}$ is rational. However this contradicts something you proved last week on the example sheet, so we've made a mistake somewhere, and the mistake is our dodgy assumption above. Hence $\cos(\pi/12)$ is irrational.
+
+\medskip\noindent{\bf 5.} (a) The picture should be the 10 vertices of a regular decagon on the unit circle $\{|z|=1\}$, making angles with the real axis of $9$ degrees, $9+36=45$ degrees, $45+36=81$ degrees and so on. Those of you working with radians -- I pity you at this point. The line $x=y$ should be a line of symmetry, by the way.
+
+The one closest to $i$ looks, from the picture, like it's the one corresponding to $81$ degrees, or $e^{81\pi i/180}$. But is this a proof? The formalist in me wants to work out the $x$ and $y$ coordinates of every one of the points, to ten decimal places, and then to work out the 10 distances using Pythagoras' theorem, and then prove that each of these calculations is accurate to, say, 5 decimal places, and then say that this accuracy is enough to guarantee that indeed the 81 degree point was the closest. Maybe I'll be less formalist for this question\ldots.
+
+(b) If one of the roots is~$A=p$ then the other two are $B=\omega p$ and $C=\omega^2 p$ for $\omega=e^{2\pi i/3}$. Geometrically, multiplying by $\omega$ corresponds to rotating anticlockwise by 120 degrees, and because $\omega^3=1$ we see that rotating by 120 degrees sends the line $AB$ to $BC$, and sends $BC$ to $CA$. So the triangle $ABC$ has all its sides the same length and is hence equilateral.
+\end{document}

@@ -1,0 +1,63 @@
+\documentclass[10pt]{article}
+\usepackage{amsfonts}
+\usepackage{a4wide}
+\usepackage{amsmath}
+\thispagestyle{empty}
+% for fancy 2 column lists with letters
+\usepackage{multicol}
+\usepackage[shortlabels]{enumitem}
+\newcommand{\R}{\mathbf{R}}
+\newcommand{\Z}{\mathbf{Z}}
+\begin{document}
+
+
+\begin{flushright} KMB,\ 8/11/17\end{flushright}
+
+\noindent{\large \bf M1F Foundations of Analysis, Problem Sheet 5.}
+
+\medskip\noindent{\bf 1.} The Fibonacci sequence is defined thus: $F_1=F_2=1$ and for $m\geq3$, $F_m=F_{m-1}+F_{m-2}$. 
+
+a) Let $P(n)$ denote the statement ``$F_{3n-2}$ and $F_{3n-1}$ are odd, and $F_{3n}$ is even''. Prove $P(n)$ is true for all $n\geq1$, by induction.
+
+b) Is $F_{2017}$ even or odd?
+
+\medskip\noindent{\bf 2.} Prove that if $n\geq2$ is an integer, then $4^n>3^n+2^n$, making sure that the word ``obvious'' does not appear in your proof but that the word ``induction'' does.
+
+\medskip\noindent{\bf 3.} 
+
+a) Prove by induction that the sum of four consecutive positive integers always leaves remainder~2 when divided by~4.
+
+b) Prove by induction that for all integers $n\geq0$, the number $11^n-3^n$ is always a multiple of~8.
+
+c) Prove that I'm wasting your time, by giving simpler proofs of both (a) and (b) which don't use induction.
+
+\medskip\noindent{\bf 4.} You might need a calculator to start you off on this one (unless you're good at mental maths). For which positive integers $n$ is $n!<3^n$? Do some experiments, formulate a hypothesis, and then prove it by induction.
+
+\medskip\noindent{\bf 5${}^*$.} When I was a student, a famous fast food franchise sold Chicken Nuggets in boxes of 6 and of 9, and also in a ``family pack'' containing~20. What is the largest number of Chicken Nuggets that it was impossible to buy? (for example it is impossible to buy exactly 8 Chicken Nuggets, because 9 or 20 would give you too many, and if you bought 6 then you would need to get hold of exactly two more, which was not possible unless you rooted through the bins, and that doesn't count as buying). 
+
+\medskip\noindent{\bf 6.} (From Terry Tao's blog, with minor adaptations) There is an island upon which a tribe resides. The tribe consists of 1000 people, and each of them has either blue or brown eyes. Yet, their religion forbids them to know their own eye colour, or even to discuss the topic; thus, each resident can (and does) see the eye colours of all other residents, but has no way of discovering his or her own (there are no reflective surfaces). A boat comes to the island every day at noon to deliver supplies, and if a tribesperson does discover his or her own eye colour, then their religion compels them to leave the island on the next available boat and never return; the island is a close-knit community, and within an hour everyone else on the island will hear about it if someone leaves in this way. All the tribespeople are highly logical and devout, and they all know that each other is also highly logical and devout (and they all know that they all know that each other is highly logical and devout, and so forth). For the purposes of this logic puzzle, ``highly logical'' means that any conclusion that can logically deduced from the information and observations available to an islander, will automatically be known to that islander.
+
+Of the 1000 islanders, it turns out that 100 of them have blue eyes and 900 of them have brown eyes, although the islanders are not initially aware of these statistics (each of them can of course only see 999 of the 1000 tribespeople, but each of them knows that their eye colour is either blue or brown).
+
+One day, a blue-eyed foreigner visits to the island and wins the complete trust of the tribe.
+
+One evening, he addresses the entire tribe to thank them for their hospitality.
+
+However, not knowing the customs, the foreigner makes the mistake of mentioning eye colour in his address, remarking ``how unusual it is to see another blue-eyed person like myself in this region of the world''.
+
+\medskip
+
+Prove that, within a year, all the islanders have left the island on the boat.
+
+\medskip
+
+And if you can, resolve the following paradox: each islander already knew that there were blue-eyed people on the island -- because each one can see at least 99 of them. So how can the foreigner's comments change things?
+
+\medskip
+
+Hints for Q6: (1) Imagine if there were only one blue-eyed islander. What would he realise the moment the visitor spoke? He would have to leave on the boat at noon the next day. (2) Now imagine there were only two blue-eyed islanders. Each of them will be watching the other one very closely at noon the next day. When noon passes, and nobody leaves, what do they both realise? (3) Now imagine there were three blue-eyed islanders\ldots.
+
+Figure out the fate of the blue-eyed islanders in general. Now figure out the fate of the brown-eyed ones!
+
+The resolution to the paradox is the phenomenon of ``common knowledge''. Look it up on Wikipedia (the use of the term in logic, not the common usage of the term). Here is an example. If I toss a coin into a box and put the lid on without checking to see if the coin is heads or tails, and if you're watching but you don't see either, then the coin either landed heads or tails, but neither of us know which. If later on I go out for a minute and you peek in the box, then you know. If later still you go out for a minute and I peek, then I know too. However I do not know that you know, and you do not know that I know. If you then say ``it's heads'', then even though you're saying something we both know, something must have changed, because I now know that you must have peeked when I was out the room. So telling a bunch of people something they all already know really can change things -- it really can give more information to people. What is happening in this question is that even know everyone knows that there is a blue-eyed person on the island, and in fact everyone knows that everyone knows that there is a blue-eyed person on the island, it might not be the case that everyone knows that everyone knows that everyone knows that\ldots that everyone knows that there is a blue-eyed person on the island, so it is not common knowledge. This is related to a problem in computer science where one can prove that TCP (the way the internet works) can't in theory guarantee state consistency between endpoints. Isn't life funny.
+\end{document}

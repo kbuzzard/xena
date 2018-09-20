@@ -1,0 +1,84 @@
+\documentclass[10pt]{article}
+\usepackage{amsfonts}
+\usepackage{a4wide}
+\usepackage{amsmath}
+\thispagestyle{empty}
+% for fancy 2 column lists with letters
+\usepackage{multicol}
+\usepackage[shortlabels]{enumitem}
+\newcommand{\R}{\mathbf{R}}
+\newcommand{\Q}{\mathbf{Q}}
+\newcommand{\Z}{\mathbf{Z}}
+\begin{document}
+
+
+\begin{flushright} KMB,\ 18/11/17\end{flushright}
+
+\noindent{\large \bf M1F Foundations of Analysis, Problem Sheet 6.}
+
+\medskip\noindent{\bf 1.} A \emph{regular polygon} is a 2-dimensional shape (so one 2-d face) with all edges of equal length and all internal angles between adjacent edges equal. Examples: an equilateral triangle, a square, a regular pentagon etc.
+
+A \emph{regular polyhedron} is a 3-dimensional shape, which is a convex polyhedron such that all of its faces are copies (all the same size) of one fixed regular polygon (e.g. they could be all squares, or all triangles), and \emph{furthermore} such that every vertex has the same number of faces meeting at it. Examples: the regular tetrahedron, or the cube (both of which have three faces meeting at each vertex).
+
+a) To help you understand the concept of a regular polyhedron, let me give you an example of a polyhedron made up of equilateral triangles which is \emph{not} regular. So take two regular tetrahedra and then glue a face of one onto a face of the other. The resulting polyhedron now has 6 faces. Count the number of vertices and the number of edges, and check that $V-E+F=2$ is true. Why is this polyhedron \emph{not} regular?
+
+b) Now say $X$ is a regular polyhedron, with $F$ faces each of which have $n$ sides (i.e., $n$ edges per face), $E$ edges, and $V$ vertices each of which is where $r$ faces meet (note we must have $r\geq3$ for our polyhedron to have non-zero volume!). By counting edges in three ways (looking at faces, edges and vertices), prove that $nF=2E=rV$.
+
+c) Let's contemplate the existence of a regular polyhedron made up of pentagons. With notation as above we then have $n=5$. Because the interior angle of a regular pentagon is $108$ degrees, if such a polyhedron existed it must have $r=3$ Using the formula from (b) (as $r=4$ gives us more than 360 degrees). Now use (b) and $V-E+F=2$ to deduce how many vertices, edges and faces such a shape must have.
+
+d) Does the calculation in (c) prove the existence of the dodecahedron?
+
+\medskip\noindent{\bf 2.} Say $G$ is a (finite) connected planar graph with $v$ vertices, $e$ edges and $f$ faces, and each face has at least three sides (this would be the case if, for example, all the edges of our graph were straight lines). 
+
+a) By counting faces, show $3f\leq 2e$. 
+
+b) Deduce that there must be a vertex in~$G$ with at most~5 edges coming from it. 
+
+c) Can you find an infinite connected planar graph with straight lines for edges and with each vertex having 6 edges coming from it?
+
+\medskip\noindent{\bf 3${}^*$.} For each of the following non-empty sets~$S$, figure out whether or not they are bounded above. For those that are bounded above, figure out what the least upper bound is. Full proofs required!
+
+a) $S=(-\infty,0)$
+
+b) $S=\Q$
+
+c) $S=\{x\in\R\,:\,(x+1)^2<x^2\}$
+
+d) $S=\{x\in\Q\,:\,1<x<2\}$
+
+\medskip\noindent{\bf 4.} Say $S\subset\R$, and $S$ has an upper bound $x\in\R$ with the property that $x\in S$. Prove that~$x$ is the least upper bound for~$S$.
+
+\medskip\noindent{\bf 5.} If $S$ is a set of real numbers, we say $S$ is \emph{bounded below} if there exists some $x\in\R$ with $x\leq s$ for all $s\in S$; such an~$x$ is called a \emph{lower bound} for~$S$; we say~$z\in\R$ is a \emph{greatest lower bound} (GLB) for~$S$ if $z$ is a lower bound for~$S$ and furthermore that if~$y\in\R$ is any lower bound then $z\geq y$.
+
+a) Prove that $S$ is bounded below if and only if $-S:=\{-s\,:\,s\in S\}$ is bounded above. Then prove that $x$ is a greatest lower bound for~$S$ if and only if $-x$ is a least upper bound for $-S$.
+
+b) Prove that if $x_1$ and $x_2$ are both greatest lower bounds for~$S$, then $x_1=x_2$.
+
+c) Assuming that any non-empty bounded-above set of reals has a LUB, prove that any non-empty bounded-below set of reals has a GLB.
+
+\medskip\noindent{\bf 6.} This question is quite fun.
+
+Say we have a sequence of real numbers $a_1$, $a_2$, $a_3,\ldots$, which is bounded above in the sense that there exists some real number~$B$ such that $a_i\leq B$ for all~$i$.
+
+Now let's define some sets $S_1$, $S_2$, $S_3,\ldots$ by
+$$S_n=\{a_n,a_{n+1},a_{n+2},\ldots\}.$$
+
+For example $S_3=\{a_3,a_4,a_5,\ldots\}$.
+
+a) Prove that for all $n\geq1$, $S_n$ is a non-empty set which is bounded above, and hence has a least upper bound $b_n$.
+
+b) Prove that $b_{n+1}\leq b_n$ and hence $b_1,b_2,b_3$ is a decreasing sequence.
+
+If the set $\{b_1,b_2,b_3,\ldots\}$ is bounded \emph{below}, then its greatest lower bound $\ell$ is called the \emph{limsup} of the sequence $(a_1,a_2,a_3,\ldots)$ (this is an abbreviation for Limit Superior).
+
+c) Find the limsup of the following sequences (they do exist).
+
+i) $1,1,1,1,1,\ldots$
+
+ii) $1,\frac{1}{2},\frac{1}{3},\frac{1}{4},\ldots$
+
+iii) $0,1,0,1,0,1,0,1,\ldots$
+
+d) If you like, then guess the definition of \emph{liminf} (Limit Inferior) and compute it for examples (i) to (iii) of (c) above. Which of these sequences converges? Can you tell just from looking at the limsup and liminf? 
+
+\end{document}
