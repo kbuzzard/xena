@@ -1,0 +1,4 @@
+cat tex/begin.tex PB$@/Q$@.tex tex/end.tex | pdflatex -output-directory=PB$@
+mv PB$@/texput.pdf PB$@/Q$@.pdf
+cat tex/begin.tex PB$@/S$@.tex tex/end.tex | pdflatex -output-directory=PB$@
+mv PB$@/texput.pdf PB$@/S$@.pdf
