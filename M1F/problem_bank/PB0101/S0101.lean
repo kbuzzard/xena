@@ -1,67 +1,44 @@
-import algebra.group_power
 /-
-M1F 2017-18 Sheet 1 Question 1, solution
+M1F Problem Bank PB0101, solution
 Author : Kevin Buzzard
-Note: this version of the solution uses integers instead of real numbers.
-This is because the real numbers are not currently in Lean's standard library
-and I want to make things as easy as possible at this point. This file should
-work with any version of lean -- whether you installed it yourself or are
-running the version on https://leanprover.github.io/live/latest/
-Lean does have real numbers -- it's just that you need to install
-another library to get them (the mathlib library).
-Notes for KMB : If I switch to real numbers, I should also switch to x^2
 -/
 
--- Here are some solutions to M1F sheet 1 question 1.
--- Let me stress that they are basically completely
--- unreadable unless you use Lean to read them.
--- If you use Lean, then by moving the cursor around
--- the proofs, or clicking on them, you will be able
--- to see, at each stage, what Xena
--- knows and what she is trying to prove.
--- This will give you a much better feeling for what
--- is going on.
+import xenalib.M1F.PB0101
 
--- Before we start, just let me define the power notation,
--- which is not in the core lean library (it is in another
--- library called mathlib which may not be installed on your machine).
--- Don't worry about this bit. I'm defining x^n by recursion on n, which
--- is sort of like induction but with definitions instead of proofs.
+-- part (a): this is false.
 
---@[reducible] definition pow : int -> nat -> int
---| _ 0 := (1:int)
---| x (nat.succ n) := x * (pow x n)
-
---notation x `^` n := pow x n
-
--- Now onto the question.
-
--- M1F Sheet 1 Q1 part (a): this is false.
-
-theorem m1f_sheet01_q01a_is_F : ¬ (∀ x : ℤ, x^2 - 3*x + 2 = 0 → x=1) := 
+theorem PB0101a_is_F : ¬ (∀ x : ℝ, x ^ 2 - 3 * x + 2 = 0 → x = 1) := 
 begin
---
+
 -- We're going to prove this by contradiction.
 -- Let's let H1 be our false hypothesis,
--- so H1 is "for all x, x^2-3x+2=0 implies x=1".
--- By the way, if you're using lean to read this file, you
--- can hover over or click on various lines to see much more
--- clearly what is going on.
---
+
 intro H1,
---
+
+-- Now H1 is "for all x, x^2-3x+2=0 implies x=1", and we need to get a contradiction.
+-- By the way, if you're using lean to read this file, you
+-- can hover over or click on various lines, or look at the tactic state,
+-- to see *much* more clearly what is going on.
+
 -- Now the problems will occur if we let x be 2, 
--- because x^2-3*2+2=0 but 2 isn't 1. So let's
+-- because if x=2 then x^2-3*2+2=0 but 2 isn't 1. So let's
 -- see what we can deduce from H1 if we set x=2.
---
-have H2 : (2:ℤ)^2-3*2+2=0 → (2:ℤ)=1, -- new hypothesis
-{ exact (H1 2) }, -- and there's its proof.
--- We used { ... } here to 'focus' on the
--- first of several goals.
--- 
+
+-- The way we do this is that we think of H1 as a function, which sends
+-- a real number x to the assertion that x ^ 2 - 3 * x + 2 = 0 → x = 1, and we
+-- evaluate this function at x = 2.
+
+have H2 := H1 2,
+
+-- Now H2 is the statement 2 ^ 2 - 3 * 2 + 2 = 0 → 2 = 1
+
 -- Hypothesis H2 now says that smething which is true,
 -- implies something which is false. So that's going to
--- be our contradiction. But Xena really
+-- be our contradiction. 
+
+revert H2,
+norm_num,
+--But Xena really
 -- needs to be talked through this. Let's first
 -- check that 2^2-3*2+2=0! Let's call this very
 -- easy hypothesis H3.
