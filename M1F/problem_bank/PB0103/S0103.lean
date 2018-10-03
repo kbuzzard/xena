@@ -1,35 +1,29 @@
 /-
-M1F 2017-18 Sheet 1 Question 2 to 4 solutions.
+M1F 2017-18 Sheet 1 Question 3
 Author : Kevin Buzzard
-This file should work with any version of lean -- whether you installed it yourself
-or are running the version on https://leanprover.github.io/live/latest/
 -/
--- We probably need the "law of the excluded middle" for this question -- every
--- proposition is either true or false! Don't even ask me to explain what the
--- other options are, but Lean does not come with this axiom by default (blame
--- the computer scientists) and mathematicians have to add it themselves.
--- It's easy to add though. "em" for excluded middle.
 
-axiom em (X : Prop) : X ∨ ¬ X
-
-
-variables P Q R S : Prop -- A "Prop" is a proposition, that is, a true/false statement.
+variables P Q R S : Prop
 
 -- Sheet 1 Q3. Prove one result and delete the other.
 
--- theorem m1f_sheet01_q03_is_T (HP : P) (HnQ : ¬ Q) (HnR : ¬ R) (HS : S) : (R → S) → (P → Q) :=
-
 theorem m1f_sheet01_q03_is_F (HP : P) (HnQ : ¬ Q) (HnR : ¬ R) (HS : S) : ¬ ((R → S) → (P → Q)) :=
 begin
-intro H,
-have HRS : R → S,
-  intro HR,
+  intro H,
+  have HRS : R → S,
+    intro HR,
+    contradiction,
+  have HPQ : P → Q,
+    exact H HRS,
+  have HQ : Q,
+    exact HPQ HP,
+  -- now we have Q and not Q
   contradiction,
-have HPQ : P → Q,
-  exact H HRS,
-have HQ : Q,
-  exact HPQ HP,
--- now we have Q and not Q
-contradiction,
 end
+
+-- here's a cool term mode proof. If anyone thinks it's all too easy
+-- they could try figuring out how this proof works.
+theorem m1f_sheet01_q03_is_F' (HP : P) (HnQ : ¬ Q) (HnR : ¬ R) (HS : S) : ¬ ((R → S) → (P → Q)) :=
+λ H, HnQ $ H (λ _, HS) HP
+
 
