@@ -1,26 +1,20 @@
 /-
-M1F 2017-18 Sheet 1 Question 1
+M1F 2017-18 Sheet 1 Question 4
 Author : Kevin Buzzard
-
-This file should work with any version of lean -- whether you installed it yourself
-or are running the version on https://leanprover.github.io/live/latest/
-
 -/
--- We probably need the "law of the excluded middle" for this question -- every
--- proposition is either true or false! Don't even ask me to explain what the
--- other options are, but Lean does not come with this axiom by default (blame
--- the computer scientists) and mathematicians have to add it themselves.
--- It's easy to add though. "em" for excluded middle.
 
-axiom em (X : Prop) : X ∨ ¬ X
+-- If you think that our assumptions imply P then try and prove 
 
+-- theorem m1f_sheet01_q04_part_1 : ∀ P Q R : Prop, (P → (Q ∨ R)) ∧ (¬ Q → (R ∨ ¬ P)) ∧ ((Q ∧ R) → ¬ P) → P := sorry
 
-variables P Q R S : Prop -- A "Prop" is a proposition, that is, a true/false statement.
+-- and if you think they don't imply P then try to prove
 
--- Sheet 1 Q4. **Edit the question** until it corresponds to what you think the
--- answer is, and then prove it.
--- For example if you think that the answer is that either P and Q are both true
--- or P,Q,R are all false, then change the end of the question (after the iff) to
--- ((P ∧ Q) ∨ (¬ P ∧ ¬ Q ∧ ¬ R))
+-- theorem m1f_sheet01_q04_part_1 : 
+-- ¬ (∀ P Q R : Prop, (P → (Q ∨ R)) ∧ (¬ Q → (R ∨ ¬ P)) ∧ ((Q ∧ R) → ¬ P) → P) := sorry
 
-theorem m1f_sheet01_q04 : (P → (Q ∨ R)) ∧ (¬ Q → (R ∨ ¬ P)) ∧ ((Q ∧ R) → ¬ P) ↔ ((P ∧ Q ∧ R) ∨ (P ∧ ¬ Q ∧ ¬ R)) := sorry
+-- Similarly for ¬ P, Q, ¬ Q, R and ¬ R
+
+-- (delete the one which you think is false and prove the other one)
+
+theorem m1f_sheet01_q04_part_1 : ∀ P Q R : Prop, (P → (Q ∨ R)) ∧ (¬ Q → (R ∨ ¬ P)) ∧ ((Q ∧ R) → ¬ P) → P := sorry
+theorem m1f_sheet01_q04_part_1' : ¬ (∀ P Q R : Prop, (P → (Q ∨ R)) ∧ (¬ Q → (R ∨ ¬ P)) ∧ ((Q ∧ R) → ¬ P) → P) := sorry
