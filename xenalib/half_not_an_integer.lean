@@ -1,8 +1,12 @@
+-- wWARNING : OLD INEFFICIENT CODE
+#exit 
+-- this wsas written presumably in Oct 2017 by KB when he knew nothing
+
 import analysis.real init.classical tactic.norm_num
 
 namespace M1F
 
-def floor_set (x : ℝ) : set ℝ := { y : ℝ | y ≤ x ∧  ∃ n : ℤ, y = ↑n }
+def floor_set (x : ℝ) : set ℝ := { y : ℝ | y ≤ x ∧ ∃ n : ℤ, y = ↑n }
 
 lemma floor_set_nonempty (x : ℝ) : ∃ s : ℝ, s ∈ floor_set x :=
 let ⟨m,Hm⟩ := exists_lt_nat (-x) in 

@@ -1,0 +1,69 @@
+\documentclass[10pt]{article}
+\usepackage{amsfonts}
+\usepackage{a4wide}
+\usepackage{amsmath}
+\thispagestyle{empty}
+% for fancy 2 column lists with letters
+\usepackage{multicol}
+\usepackage[shortlabels]{enumitem}
+\newcommand{\R}{\mathbf{R}}
+\newcommand{\Z}{\mathbf{Z}}
+\begin{document}
+
+
+\begin{flushright} KMB,\ 31/10/17\end{flushright}
+
+\noindent{\large \bf M1F Foundations of Analysis, Problem Sheet 4.}
+
+\medskip
+\noindent{\bf 1.} I will remind you, before we start on this question, that you're supposed to be discussing the starred parts of the sheet with your personal tutor each week.
+
+a) Let $p=a+ib$ be a complex number. Draw a picture to show that $\overline{p}$ equals the reflection of $p$ in the real axis.
+
+b) By thinking of complex conjugation as reflection, and by thinking of addition of complex numbers as addition of vectors, draw a little picture to convince yourself that for $p$ and $q$ complex numbers, the statement
+$$\overline{p+q}=\overline{p}+\overline{q}$$
+is obvious.
+
+c) By using the picture you drew in part (a), convince yourself that $\overline{re^{i\theta}}=re^{-i\theta}$. 
+
+d) We know from de Moivre that to multiply by $re^{i\theta}$ we first scale by $r$ and then rotate by $\theta$. Convince yourself, thinking geometrically, that
+$$\overline{pq}=\overline{p}\,\overline{q}$$
+is obvious.
+
+e${}^*$) Do you think that your answers to (b) and (d) are rigorous mathematical proofs? Do you think that your answers are even mathematics? If not, what do you think they are?
+
+\medskip
+\noindent{\bf 2.} Recall that we showed in lectures that $\cos(3\theta)=4c^3-3c$, where $c=\cos(\theta)$. Here's how we can use this fact to solve a cubic equation! Rather than getting bogged down with $Ax^3+Bx^2+Cx+D=0$, let me just use numbers; the technique will work in general (kind of\ldots).
+
+a) Pull out your calculator -- we're going to find the roots of $3x^3 - 18x^2 + 27x - 4=0$ using it. Make sure the cosine button is working (and the inverse cosine button).
+
+b) First we do a linear change of variables to kill the $x^2$ term. So set $y=x-2$ (the point being that then $3y^3=3x^3 - 18x^2 + \cdots$) and rewrite the cubic equation as a cubic equation in~$y$ instead (don't forget the $=0$ bit, that's an important part of the equation).
+
+c) Now we want to scale $y$ to make that cubic equation look like $4c^3-3c+\cdots=0$, and a bit of playing around should convince you that one way of doing this is by setting $c=y/2$ and then dividing the entire equation by 6.
+
+Spoiler: if you've got it all right so far, you should have
+$$4c^3 - 3c + 1/3=0.$$
+
+d) Now substitute $c=\cos(\theta)$ and deduce that we want to solve $\cos(3\theta)=-1/3$. Solve this for $\theta$ using your calculator and hence work out $c$, $y$ and then $x$.
+
+e) Did it work? It did for me, I got $x=3.6079128829148322904316053206617018144\ldots$ which does seem to be a root.
+
+f) Aren't cubics supposed to have three roots? Can you get all three using this method?
+
+g) Can you solve all quartics this way?
+
+\medskip\noindent{\bf 3.} What is $\binom{100}{0}-\binom{100}{2}+\binom{100}{4}-\binom{100}{6}+\cdots+\binom{100}{100}$? Hint: do you remember me running into
+a question like this in lectures? [Whenever I was doing problem sheets like this, I would sometimes just mindlessly page through the notes I'd been taking for the course, looking for inspiration\ldots]
+
+\medskip\noindent{\bf 4.} 
+
+(a) By considering $(1+i)(\sqrt{3}-i)$ or otherwise, prove that $\cos(\pi/12)=\frac{\sqrt{6}+\sqrt{2}}{4}$. 
+
+(b) Deduce that $\cos(\pi/12)$ is irrational. 
+
+NB for those of you who never got the hang of radians, $\pi/12$ is 15 degrees and I'm trying to get you to use the amazing insight that $45-30=15$. But honestly, don't be like me, get the hang of radians.
+
+\medskip\noindent{\bf 5.} (a) Draw a picture of the ten 10th roots of $i$ in the complex plane. Which one is closest to $i$?
+
+(b) Let~$z$ be a non-zero complex number. Prove that the three cube roots of~$z$ in the complex plane are at the vertices of an equilateral triangle.
+\end{document}

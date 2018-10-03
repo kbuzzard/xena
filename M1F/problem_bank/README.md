@@ -1,14 +1,8 @@
-# M1F Problem Bank.
+M1F Problem Bank
+----------------
 
-M1F is a course given to first year undergraduates at Imperial College London.
-This problem bank is a collection of M1F problems from old problem sheets.
-Our aim is questions and solutions in TeX, pdf and lean format.
+This is a collection of M1F questions, many of which are formalised in Lean.
 
-# What is Lean format?
+Many thanks to Elliott Macneil for his help with all this.
 
-The lean files are the questions and solutions to the various problems, in
- format which is readable by the computer proof verification software "Lean". 
-Lean is a growing piece of software and sometimes changes in Lean mean
-that stuff which used to compile now no longer does. All these files
-should compile with "Xena's Standard Lean V1", which
-is Lean and Mathlib on Christmas Day 2017.
+Kevin Buzzard, September 2018.

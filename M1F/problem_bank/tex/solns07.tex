@@ -1,0 +1,126 @@
+\documentclass[10pt]{article}
+\usepackage{amsfonts}
+\usepackage{a4wide}
+\usepackage{amsmath}
+\thispagestyle{empty}
+% for fancy 2 column lists with letters
+\usepackage{multicol}
+\usepackage[shortlabels]{enumitem}
+\newcommand{\R}{\mathbf{R}}
+\newcommand{\Q}{\mathbf{Q}}
+\newcommand{\Z}{\mathbf{Z}}
+\begin{document}
+
+
+\begin{flushright} KMB,\ 24/11/17\end{flushright}
+
+\noindent{\large \bf M1F Foundations of Analysis, Problem Sheet 7 solutions.}
+
+\medskip\noindent{\bf 1.} We know $T\subseteq S$ is non-empty. First let's prove that~$T$ is bounded above. We know that $x$ is a least upper bound for~$S$, and this means that for all $s\in S$ we have $s\leq x$. Now say $t\in T$. Then $t\in S$ (as $T\subseteq S$) and hence $t\leq x$. But $t\in T$ was arbitrary, and hence $x$ is an upper bound for~$T$. 
+
+Now $T$ is non-empty and bounded, and hence has a least upper bound~$y$. Moreover, we know that $x$ is an upper bound for~$T$, so by definition of least upper bound we have $y\leq x$, and this was what we were asked to prove.
+
+\medskip\noindent{\bf 2.} 
+
+(a) We have $40/7=5+5/7$, so $4/7=0.5???\ldots$.
+
+Now $10\times 5/7=50/7=7+1/7$, so $4/7=0.57????\ldots$.
+
+Next $10\times 1/7=10/7=1+3/7$, so $4/7=0.571???\ldots$.
+
+Now let's stop a bit and think about where this is going.
+
+The error terms so far have been $5/7$, $1/7$, $3/7$. If you think about it, every number that shows up in this entire calculation (all the error terms and so on) are all equal to a whole number times $1/7$, so in particular each error term will be of the form $n/7$ for some $n$, and because the error terms are all between~0 and~1 (indeed are all less than~1) we must have $0\leq n<7$. So there are only finitely many possibilities for~$n$ and eventually we must repeat.
+
+Let's keep it going to see it happening.
+
+We have $10\times 3/7=30/7=4+2/7$, so $4/7=0.5714???\ldots$.
+
+Then $20/7=2+6/7$, so $4/7=0.57142???\ldots$.
+
+Then $60/7=8+4/7$, so $4/7=0.571428???\ldots$.
+
+Aah, but now we're back to $4/7$, so the next calculation is $40/7=5+5/7$ and we've done that calculation before, showing that the decimal expansion is $0.571428571428\ldots$.
+
+(b) Write $q=m/d$. WLOG $q>0$ (this is shorthand for ``if $q$ is negative then its deimal expansion is just a minus sign followed by the decimal expansion of something positive, so we may as well apply everything to $-q$''). The first step in our algorithm is to write $q=n+e$ with $n$ a whole number, and $0\leq e<1$ an error term. Clearly in this case we have $e=r/d$ with $0\leq r<d$ an integer.
+
+Now to work out the first digit after the decimal point we write $10r/d$ as a whole number plus an error term $e_1$ with $0\leq e_1<1$, and again we must have $e_1=r_1/d$ with $0\leq r_1<d$ an integer.
+
+If you like, you could now formally prove by induction that all the error terms $e_n$ are of the form $r_n/d$ with $0\leq r_n<d$ an integer.
+
+In particular, there are only finitely many choices for each $r_i$, so eventually we must have one we've had before. And then we get two error terms which are the same, and the decimal expansion starts recurring.
+
+(c) If $x$ only has finitely many non-zero digits after the decimal point, then choosing~$N$ such that all the digits after the $N$th are zero we see that $10^Nx$ has all zeros after the decimal point, so it's an integer $n$. Hence $x=n/10^N$.
+
+(d) Say the period has length~$p$. Then $x$ and $10^px$ are both of the form ``number with a finite decimal expansion'' plus ``$0.0000\cdots000(thing)(thing)(thing)(thing)\ldots$'' where ``thing'' is a finite period occurring over and over. Hence $10^px-x$ has a finite decimal expansion, and is hence a rational number~$s$; hence $x=s/(10^p-1)$ is also rational.
+
+(e) With notation as in the previous part, $10^px-x$ is a rational number of the form $t/10^N$ and hence $x$ must be of the form $t/(10^N(10^p-1))$. Applying this to $x=1/d$ we see that $1/d=t/(10^N(10^p-1))$ and clearing denominators we deduce that $d$ divides $10^N(10^p-1)$.
+
+For~35 use the fact that $4/7$ has period of length~6, so we suspect that~7 divides $10^6-1$ which indeed it does (indeed $999999=7\times142857$), and hence~35 divides $9999990$ (the 7 divides 999999, and the 5 divides~10).
+
+\medskip\noindent{\bf 3.} If~$x$ were rational then its decimal expansion would ultimately be periodic. Let~$N$ be the length of the period. Now what can the digits in this period be? If we look at the decimal expansion of~$x$ then we see that eventually it contains strings of zeros of length~$N$ or more. So let's look way down the decimal expansion to a point where~$x$ has started recurring, and all the strings of zeros have length~$N$ or more. This means that the sequence of numbers which is repeating must all be zero, but this means that~$x$ only has finitely many~1's in its decimal expansion, a contradiction.
+
+\medskip\noindent{\bf 4.} It's easy to check that $100+x+100x=10000x$ (this is equivalent to~$100=9899x$). Now write the decimal expansion of~$x$ thus:
+
+$$x=0.a_1b_1a_2b_2a_3b_3a_4b_4\cdots$$
+with the $a_i$ and $b_i$ denoting digits.
+
+Our equation becomes
+\begin{align*}
+         100&.00000000\\
+          +0&.a_1b_1a_2b_2a_3b_3\cdots\\
+      +a_1b_1&.a_2b_2a_3b_3a_4b_4\cdots\\
+=a_1b_1a_2b_2&.a_3b_3a_4b_4a_5b_5\cdots
+\end{align*}
+
+We also know that $a_1b_1=01$ and $a_2b_2=a_1b_1=01$, so the stuff before the decimal expansion works out. After the decimal expansion we see $a_3b_3=a_1b_1+a_2b_2$, then $a_4b_4=a_2b_2+a_3b_3$ and so on -- so you can see why it's happening. Unfortunately it won't happen forever, because carries will appear soon and really mess things up.
+
+\medskip\noindent{\bf 5.}
+\begin{align*}
+10001&=7261+2740\\
+7261&=2\times2740+1781\\
+2740&=1\times 1781+959\\
+1781&=1\times 959+822\\
+959&=1\times 822+137\\
+822&=6\times137+0
+\end{align*}
+
+The last non-zero remainder was 137, so this must be the highest common factor.
+
+\medskip\noindent{\bf 6.} 
+
+(a)
+\begin{align*}
+46&=2.18+10\\
+18&=1.10+8\\
+10&=1.8+2\\
+8&=4.2+0
+\end{align*}
+and the last non-zero remainder was~2, so this is the hcf.
+
+(b) Writing each remainder in the form $46\lambda+18\mu$, we get
+\begin{align*}
+10&=46-2\times 18\\
+8&=18-10=18+(2\times18-46)=3\times18-46\\
+2&=10-8=(46-2\times 18)+(46-3\times 18)=2\times46-5\times18.
+\end{align*}
+So we can set $\lambda=2$ and $\mu=-5$. There are plenty of other solutions though, as we'll see in (c).
+
+(c) We know $\lambda=2$ and $\mu=-5$ works. Now note that if we increase $\lambda$ by adding $18z$ and decrease $\mu$ by subtracting $46z$, then $46\lambda+18\mu$ changes by $46\times 18z-18\times 46z=0$. Hence setting $z=10^6$ we see that $\lambda=18\times 10^6+2=18000002$ and $\mu=-46\times 10^6-5=-46000005$ and this should work.
+
+(d) We know that $2\times 46-5\times 18=2$. Now multiply both sides by 2 million and get $\rho=4000000$ and $\sigma=-10000000$. That should work.
+
+\medskip\noindent{\bf 7.} 
+
+If you think about the algorithm you learnt at school for multiplying positive integers together, you will see that an easy consequence is that if $a$ and $b$ end in~1 then so does~$ab$.
+
+As for the prims, here's a lemma.
+
+{\bf Lemma.} If $p$ is a prime number that ends in~3, and $q$ is a prime number that ends in~7, then $s:=pq$ is a prim.
+
+{\it Proof.} Certainly $s>1$. Now if $s$ factors into two smaller elements of~$S$ then this factorization must also be a factorization of~$s$ in the usual ring of integers. Now by uniqueness of factorization, the only way to factor~$s$ in the usual positive integers is $s=1\times s=p\times q$ (up to order), and $p$ and $q$ are not in~$S$. Hence~$s$ is prim.$\square$
+
+As a consequence, $a=3\times 7$, $b=3\times 17$, $c=13\times 7$ and $d=13\times 17$ (whatever they are) are all prim numbers, and so if $s=3\times 7\times 13\times 17$ then~$s=ad=bc$ has two different factorizations into prims.
+
+For the two or three prims question, how about this: set $a=3\times 13\times 19$. Then $a$ is prim because we can list all the factors of~$a$ (1,3,13,3.13,3.19,13.19,3.13.19) and note that none of them end in~1 apart from~1 and~$a$. Similarly if $b=7\times 17\times 29$ then $b$ is prim. However $ab=(3\times 7)(13\times 17)(19\times 29)$ and if you really have got this far into the question and have actually thought about it (rather than just naively reading the answers without thinking, which will teach you far far less), you should easily be able to check that all these three bracketed factors are prim elements of~$S$.
+\end{document}

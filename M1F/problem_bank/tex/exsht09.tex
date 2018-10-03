@@ -1,0 +1,109 @@
+\documentclass[10pt]{article}
+\usepackage{amsfonts}
+\usepackage{a4wide}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\thispagestyle{empty}
+% for fancy 2 column lists with letters
+\usepackage{multicol}
+\usepackage[shortlabels]{enumitem}
+\newcommand{\R}{\mathbf{R}}
+\DeclareMathOperator{\cl}{cl}
+\newcommand{\Q}{\mathbf{Q}}
+\newcommand{\Z}{\mathbf{Z}}
+\input xy \xyoption{all}
+\begin{document}
+
+
+\begin{flushright} KMB,\ 7/12/17\end{flushright}
+
+\noindent{\large \bf M1F Foundations of Analysis, Problem Sheet 9.}
+
+\medskip\noindent{\bf 1${}^*$} This important question makes sure that you have definitely got the hang of equivalence classes. Try and get through as much of it as you can. Most of it is only very mild extensions of stuff I proved in lectures, so go back to your notes if you're not sure, and ask your tutor if you need help.
+
+Let~$S$ be a set, and let~$\sim$ be an equivalence relation on~$S$. In lectures I talked about the \emph{equivalence class} $\cl(s)$ of an element $s\in S$. If I just talk about an \emph{equivalence class}, I mean a subset of~$S$ which is equal to $\cl(s)$ for some $s\in S$.
+
+(i) Let~$S$ be the set of all integers, and define an equivalence relation $\sim$ on~$S$ by $a\sim b$ if and only if $a\equiv b$~mod~2. Prove that there are two equivalence classes, namely the subset of all even integers, and the subset of all odd integers.
+
+(ii) Staying with the example in (i), is it possible to have two distinct elements $a,b\in S$ with $a\not=b$ but $\cl(a)=\cl(b)$?
+
+(iii) Staying with the example in (i), is it possible to have two equivalence classes $X$ and $Y$ (subsets of~$S$) with $X\not=Y$ but $X\cap Y\not=\emptyset$?
+
+(iv) Now let's go to the general case. Let~$S$ be any set, and let~$\sim$ be an equivalence relation on~$S$. Prove that if $a,b\in S$ then $\cl(a)=\cl(b)$ if and only if $a\sim b$.
+
+(v) Now prove that if $a,b\in S$ then the following are equivalent:
+
+\ (a) $\cl(a)\cap\cl(b)\not=\emptyset$;
+
+\ (b) $a\sim b$;
+
+\ (c) $\cl(a)=\cl(b)$.
+
+Note that to prove that these statements are equivalent, it would be enough to show that (a) implies (b), that (b) implies (c) and that (c) implies (a).
+
+\medskip\noindent{\bf 2.} An equivalence relation is a binary relation that satisfies three axioms -- the relation has to be reflexive, symmetric and transitive. So to check that a given binary relation is an equivalence relation we have to check that each of these three things are true. 
+
+It seems reasonable to wonder whether we really need to check all three of them though -- for example, perhaps it is the case that any binary relation which is reflexive and transitive is maybe automatically symmetric? If this is true then we wouldn't have to bother checking symmetry, we could just check the other two and we could deduce symmetry. 
+
+(i) In this question I will explain how to prove that this does \emph{not} happen. But before I go on to do this, why not stop reading this question and spend some time thinking about how one could \emph{prove that it is not possible} to show that if a binary relation is reflexive and transitive, then it is automatically symmetric. 
+
+(ii) Let~$S$ be the real numbers and define a binary relation on~$S$ by $a\sim b$ iff $a\leq b$. Prove that~$\sim$ is reflexive and transitive (assuming any standard facts about inequalities that you might need). Prove that $\sim$ is not symmetric. Deduce that the two axioms of being reflexive and transitive do not imply the axiom of being symmetric (this is the answer to part (i)).
+
+This leads us to two more natural questions -- does reflexive and symmetric imply transitive, and does symmetric and transitive imply reflexive? 
+
+(iii) Let~$S$ be the set of real numbers and define $x\sim y$ iff $|y-x|\leq 1$. Prove that~$\sim$ is reflexive and symmetric, but not transitive.
+
+(iv) Let~$S$ be the set of real numbers, and define $x\sim y$ by saying that $x\sim y$ is never true, whatever the values of~$x$ and~$y$ (so the corresponding subset of~$S$ is the empty set). Prove that~$\sim$ is symmetric and transitive, but not reflexive.
+
+\medskip\noindent{\bf 3.} Let~$S$ be a set, and say~$\sim$ is a binary relation on~$S$ which is symmetric and transitive. For $s\in S$, choose~$t\in S$ such that $s\sim t$ and then note that by symmetry we have $t\sim s$, and then by transitivity we have $s\sim t$ and $t\sim s$ so $s\sim s$. Hence~$\sim$ is reflexive, and thus symmetric and transitive imply reflexive. This contradicts part (iv) of the previous question! Where is the mistake?
+
+\medskip\noindent{\bf 4.} (longer and a little harder.) Let $X$ and~$Y$ be sets, and let $f:X\to Y$ be a function. Let's completely take this function apart.
+
+(i) Define a binary relation on~$X$ by $a\sim b$ if and only if $f(a)=f(b)$. Check that~$\sim$ is an equivalence relation.
+
+(ii) Now say $x\in X$ and $f(x)=y$. Check that the equivalence class $\cl(x)$ of~$x$ is $f^{-1}(y)$, which means $\{z\in X\,:\,f(z)=y\}$.
+
+(iii) Let~$Z$ be the set of equivalence classes for this equivalence relation (so~$Z$ is a set of sets -- each element of~$Z$ is a certain subset of~$X$). Let's define a map $g:Z\to Y$ in the following way: if $W\in Z$ then by definition~$W$ is non-empty (as $W=\cl(x)$ for some $x$ and hence $x\in W$); choose $w\in W$ and define $g(W)=f(w)$. This definition is a bit dodgy because we chose an element of~$W$ and our definition seemed to depend on that choice. Prove that actually $g$ is well-defined, in the sense that whichever element of~$W$ we chose, our definition of~$g(W)$ will not depend on this choice. In particular $g$ is a well-defined function.
+
+(iv) Prove that~$g$ is injective (i.e., one-to-one).
+
+(v) Define $h:X\to Z$ by $h(x)=\cl(x)$. Prove that~$h$ is surjective.
+
+(vi) Prove that $f=g\circ h$. In particular, this gives another proof that an arbitrary function is a surjection followed by an injection.
+
+(vii) Let~$J$ be the image of~$f$, so~$J$ is a subset of~$Y$. Write down a natural bijection~$i$ from~$J$ to $Z$.
+
+(viii) Let $\tilde{h}$ denote the map $X\to J$ induced by~$f$ (by which I mean $\tilde{h}(x)=f(x)\in J$) and let $\tilde{g}$ denote the inclusion $J\to Y$. Prove that $h=i\circ\tilde{h}$ and $\tilde{g}=g\circ i$. You just proved that the following diagram commutes:
+
+\xymatrix{
+&X\ar[dl]_{\tilde{h}}\ar[dr]^h\\
+J\ar[rr]^i\ar[rd]^{\tilde{g}}&&Z\ar[dl]_g\\
+&Y}
+
+\medskip\noindent{\bf 5.} Say $\sim$ is an equivalence relation on~$\Z$ such that for all $n\in\Z$ we have $n\sim n+5$ and $n\sim n+8$. Prove that $x\sim y$ for all $x,y\in\Z$.
+
+\medskip\noindent{\bf 6.} For each of the following functions, decide whether or not they are injective, surjective, bijective. Proofs required!
+
+(i) $f:\R\to\R$, $f(x)=1/x$ if $x\not=0$ and $f(0)=0$.
+
+(ii) $f:\Z\to\Z$, $f(n)=2n+1$.
+
+(iii) $f:\R\to\R$, $f(x)=x^3$. [you can assume that every positive real has a unique positive real cube root, even though you haven't really seen a formal proof of this yet.]
+
+
+(iv) $f:\R\to\R$ defined by $f(x)=x^3$ if the Riemann hypothesis is true, and $f(x)=-x$ if not. [NB the \href{https://en.wikipedia.org/wiki/Riemann_hypothesis}{Riemann Hypothesis} is a hard unsolved problem in mathematics; nobody currently knows if it is true or false.]
+
+(v) $f:\Z\to\Z$, $f(n)=n^3-2n^2+2n-1$.
+
+\medskip\noindent{\bf 7.} For each of the following ``functions'', explain why I just lost a mark.
+
+(i) $f:\R\to\R$, $f(x)=1/x$.
+
+(ii) $f:\R\to\R$, $f(x)=\sqrt{x}$. 
+
+(iii) $f:\Z\to\Z$, $f(n)=(n+1)^2/2$.
+
+(iv) $f:\R\to\R$, $f(x)$ is a solution to $y^3-y=x$.
+
+(v) $f:\R\backslash\{1\}\to\R$, $f(x)=1+x+x^2+x^3+\cdots$.
+\end{document}

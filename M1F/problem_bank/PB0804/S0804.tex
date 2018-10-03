@@ -1,0 +1,29 @@
+\documentclass[10pt]{article}
+\usepackage{amsfonts}
+\usepackage{a4wide}
+\usepackage{amsmath}
+\thispagestyle{empty}
+% for fancy 2 column lists with letters
+\usepackage{multicol}
+\usepackage[shortlabels]{enumitem}
+\newcommand{\R}{\mathbf{R}}
+\newcommand{\Q}{\mathbf{Q}}
+\newcommand{\Z}{\mathbf{Z}}
+\begin{document}
+
+\medskip\noindent{\bf S0804.} 
+
+(i) We have $a\leq a$ for all $a$ so $\sim$ is reflexive. We have $1\leq 2$ but $2\not\leq 1$, so $\sim$ is not symmetric. If $a\leq b$ and $b\leq c$ then $a\leq c$, so $\sim$ is transitive.
+
+(ii) $a-a=0=0^2$, so $\sim$ is reflexive. We have $2\sim 1$ as $2-1=1^2$, but $1\not\sim 2$ as $-1$ is not a square, so the relation is not symmetric. Finally we have $3\sim 2$ and $2\sim 1$ but $3\not\sim 1$ as $2$ is not a square, so $\sim$ is not transitive either.
+
+(iii) $2\not=2^2$ so $2\not\sim 2$, and $\sim$ is not reflexive. We have $4\sim 2$ but $2\not\sim 4$ as $2\not=4^2$, so the relationship is not symmetric. We have $4\sim 2$ and $16\sim 4$ but $16\not\sim 2$ so the relation is not transitive.
+
+(iv) We have $1\not\sim 1$ so $\sim$ is not reflexive. If $a\sim b$ then $a+b=0$, so $b+a=0$, so $b\sim a$, hence $\sim$ is symmetric. Finally we have $1\sim-1$ and $-1\sim 1$ but $1\not\sim 1$ so $\sim$ is not transitive.
+
+(v) We have $a-a=0$ is an integer, so $\sim$ is reflexive. If $a-b$ is an integer then so is $b-a$, so $\sim$ is symmetric. Finally if $a-b$ and $b-c$ are integers, then their sum is $a-c$ which is also an integer. So $a\sim b$ and $b\sim c$ implies $a\sim c$, and in particular $\sim$ is also transitive. So in fact this relation is an equivalence relation.
+
+(vi) $2\not\sim 2$ so $\sim$ is not reflexive. We know $1\sim 3$ but $3\not\sim 1$ so $\sim$ is not symmetric. It is however impossible to find $a,b,c\in S$ with $a\sim b$ and $b\sim c$ (because $b$ would have to be 1 and 3) so the statement ``$a\sim b$ and $b\sim c$ implies $a\sim c$'' is true, as if $P$ is false then ``$P$ implies $Q$'' is always true whatever the truth value of~$Q$. So this relation is transitive.
+
+(vii) This relation is reflexive, symmetric and transitive, because it is impossible to find any counterexamples to these statements as~$S$ is empty (for example for $\sim$ not to be reflexive we would have to find $a\in S$ with $a\not\sim a$, but we can't find any $a\in S$ at all, so $\sim$ is reflexive etc etc).
+\end{document}

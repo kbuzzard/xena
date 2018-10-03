@@ -1,0 +1,85 @@
+\documentclass[10pt]{article}
+\usepackage{amsfonts}
+\usepackage{a4wide}
+\usepackage{amsmath}
+\thispagestyle{empty}
+% for fancy 2 column lists with letters
+\usepackage{multicol}
+\usepackage[shortlabels]{enumitem}
+\newcommand{\R}{\mathbf{R}}
+\newcommand{\Z}{\mathbf{Z}}
+\begin{document}
+
+
+\begin{flushright} KMB,\ 8/11/17\end{flushright}
+
+\noindent{\large \bf M1F Foundations of Analysis, Problem Sheet 5 Solutions.}
+
+\medskip\noindent{\bf 1.} 
+
+a) We first check that $F_3=1+1=2$ is even, and hence that $P(1)$ is true.
+
+For the inductive step, we note that if $P(d)$ is true, then $F_{3d-2},F_{3d-1},F_{3d}$ are odd, odd, even, and now continuing the pattern, the next three terms are odd+even=odd, even+odd=odd, and then odd+odd=even, hence the next three are odd, odd, even as well. Slightly more formally, $F_{3(d+1)-2}=F_{3d+1}=F_{3d-1}+F_{3d}$ is odd, $F_{3(d+1)-1}=F_{3d+2}=F_{3d+1}+F_{3d}$ is odd, and $F_{3(d+1)}=F_{3d+2}+F_{3d=1}$ is even. Hence $P(d+1)$ is true, if $P(d)$ is. This means that $P(n)$ is true for all $n\geq1$ by the principle of mathematical induction.
+
+b) $2+0+1+7=10$ leaves remainder~1 when divided by~3, so~2017 has remainder~1 when divided by~3, so $F_{2017}$ is odd.
+
+\medskip\noindent{\bf 2.} Let $P(n)$ be the statement ``$4^n>3^n+2^n$''. Now $P(1)$ is false, but we don't care. And $P(2)$ is true, because it says ``$16>9+4$'' which is true.
+
+Now let's prove $P(n)$ implies $P(n+1)$ for all $n\geq2$; then our slightly modified principle of mathematical induction will tell us that $P(n)$ is true for all $n\geq2$. And this works, because if $P(n)$ is true, then $4^n>3^n+2^n$, and multiplying both sides by 4 (which is positive) we see $4^{n+1}>4.3^n+4.2^n>3.3^n+2.2^n=3^{n+1}+2^{n+1}$, meaning $P(n+1)$ is true.
+
+Note that $P(n)$ is the true-false statement ``$4^n>3^n+2^n$'', it is not the number $4^n$ or the number $3^n+2^n$, so hopefully nobody is writing anything like ``$P(n)>3^n+2^n$'' in their solutions.
+
+\medskip\noindent{\bf 3.} 
+
+a) For $n\in\Z_{\geq1}$, let $f(n)$ be the number $n+(n+1)+(n+2)+(n+3)$, and let $P(n)$ be the statement that $f(n)$ has remainder~2 when divided by~4. Then $P(1)$ is true, because $f(1)=1+2+3+4=10=2\times4+2$. Moreover, $P(n)$ implies $P(n+1)$, because $f(n+1)=(n+1)+(n+2)+(n+3)+(n+4)=[n+(n+1)+(n+2)+(n+3)]+4=f(n)+4$, hence the remainders when you divide $f(n+1)$ and $f(n)$ by 4 are the same. We're done, by induction.
+
+b) Let $P(n)$ for $n\in\Z_{\geq0}$ be the statement that $11^n-3^n$ is a multiple of~8. Then $P(0)$ is true, because 0 is a multiple of~8. And if $d\geq0$ and $P(d)$ is true, then $11^d-3^d$ is a multiple of 8, and so multiplying by~11 we deduce $11^{d+1}-11.3^d$ is also a multiple of~8. But clearly $8.3^d$ is a multiple of~8 too, and the sum of two multiples of~8 is a multiple of~8, hence
+\begin{align*}
+&\phantom{=}11^{d+1}-11.3^d+8.3^d\\
+&=11^{d+1}-3.3^d\\
+&=11^{d+1}-3^{d+1}
+\end{align*}
+is a multiple of~8. We have shown that $P(d)$ implies $P(d+1)$, so $P(n)$ is true for all $n\geq0$ by induction.
+
+c) For the first one, observe $n+(n+1)+(n+2)+(n+3)=4n+6=4(n+1)+2$, which is hence~2 mod~4. For the second observe that for $n=0$ we can check directly, and for $n\geq1$ we have $11^n-3^n=(11-3)(11^{n-1}+3.11^{n-2}+3^2.11^{n-3}+\cdots+3^{n-2}.11+3^{n-1})$ which is clearly a multiple of~$11-3=8$.
+
+\medskip\noindent{\bf 4.} We see $1!=1<3^1=3$, $2!=2<3^2=9$, $3!=6<3^3=27$, $4!=24<3^4=81$, $5!=120>3^5=243$, and $6!=720<3^6=729$, but $7!=5040>3^7=2187$, so the inequality $n!<3^n$ is true for $n\in\{1,2,3,4,5,6\}$ and false for $n=7$.
+
+Let us now prove that it is false for all $n\geq7$ by induction. For $n\geq7$ define $P(n)$ to be the statement that $n!\geq 3^n$. Then $P(7)$ is true, and for $d\geq7$ we have that $P(d)$ implies $P(d+1)$, because if $P(d)$ is true then $d!\geq 3^d$, so $(d+1)!\geq d.d!\geq 3.d!\geq 3.3^d=3^{d+1}$. 
+
+\medskip\noindent{\bf 5${}^*$.} It's impossible to buy~43 chicken nuggets. Let's prove this by contradiction. Let say we've just managed to buy~43 chicken nuggets. We can't just have boxes of 6 or 9, because both 6 and 9 are multiples of~3, and~43 is not. So we must have bought at least one pack of~20, and somehow bought another~23 as well. But again~23 is not a multiple of~3, so we couldn't have just used boxes of~6 or~9 and so we must have bought a second box of~20. These two boxes make~40 so far, so now we need to buy three more, but we clearly cannot buy~3, because the smallest amount we can buy is~6.
+
+However it is possible to buy any number $m\geq44$ of nuggets. This is easy to prove by induction, once you have done by far the hardest bit, which is figuring out exactly what to prove.
+
+Let me start by showing that we can buy any number of nuggets between~44 and~53:
+
+\begin{align*}
+44&=20+4.6\\
+45&=9+6.6\\
+46&=20+20+6\\
+47&=20+3.9\\
+48&=8.6\\
+49&=20+20+9\\
+50&=20+5.6\\
+51&=9+7.6\\
+52&=20+20+6+6\\
+53&=20+9+4.6
+\end{align*}
+Now for $n\in\Z$, $n\geq8$, let $P(n)$ denote the statement ``it is possible to buy any of the following numbers of chicken nuggets: $6n, 6n+1, 6n+2, 6n+3, 6n+4, 6n+5$''. If we can prove $P(n)$ for all $n\geq8$ then we are home and dry, because for any number $m\geq48$ we can write $m=6q+r$ with $q$ the quotient, at least~8, and~$r$ the remainder with $0\leq r\leq 5$, and then $P(q)$ says we can do it.
+
+Now $P(8)$ is true, because we just checked it explicitly, and clearly $P(d)$ implies $P(d+1)$ because if I can buy $6d+r$ ($0\leq r\leq 5$) then I can buy $6(d+1)+r$ by just buying another box of~6 chicken nuggets.
+
+So we can buy any number $m\geq48$, and also anything between 44 and~47, but not~43, so we are done: the answer is~43.
+
+\medskip\noindent{\bf 6.} For $n\geq1$, let $P(n)$ be the statement that if there are $n$ blue-eyed islanders, then each of them will leave the island on the $n$th boat after the visitor's revelation (and nobody will leave beforehand).
+
+Clearly $P(1)$ is true; the only blue-eyed islander will know that they have blue eyes after the visitor's comments.
+
+Moreover $P(d)$ implies $P(d+1)$; if $P(d)$ is true, and there are $d+1$ islanders with blue eyes, then each of these $d+1$ islanders knows that there are either $d$ or $d+1$ islanders with blue eyes, and after $d$ days, when nobody leaves, each of the blue-eyed islanders will realise that the other blue-eyed islanders can't see $d-1$ blue eyes (or else they would have already left), so their own eyes must be blue, and they will leave on day $d+1$.
+
+Hence $P(n)$ is true for all $n$ by induction.
+
+All islanders, with either blue or brown eyes, know this. Hence after 100 days when all the blue-eyed islanders leave, all the remaining islanders know that they must have brown eyes, so they all leave on day 101.
+
+As for the paradox, I resolve it in the hints: everyone knows there are blue-eyed islanders, and everyone knows that everyone knows there are blue-eyed islanders, etc, etc, but this doesn't go on forever. Take the case of two blue-eyed islanders, for example. Then everyone knows that there are blue-eyed islanders, but one blue-eyed islander does not know for sure that the other blue-eyed islander knows this. Now take the case of three: everyone knows that there are blue-eyed islanders, and everyone knows that everyone knows that there are blue-eyed islanders, but a blue-eyed islander cannot rule out the possibility that there are only two blue-eyed islanders, and we just analysed this case -- so in particular, if there are three blue-eyed islanders, then the blue-eyed islanders do not know for sure that everyone knows that everyone knows that there are blue-eyed islanders. This is what changes when the visitor speaks -- after that, everyone knows there is a blue-eyed islander, and everyone knows that everyone knows, and everyone knows that everyone knows that everyone knows, and so on for as many iterations as you like.
+\end{document}

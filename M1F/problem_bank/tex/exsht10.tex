@@ -1,0 +1,75 @@
+\documentclass[10pt]{article}
+\usepackage{amsfonts}
+\usepackage{a4wide}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\thispagestyle{empty}
+% for fancy 2 column lists with letters
+\usepackage{multicol}
+\usepackage[shortlabels]{enumitem}
+\newcommand{\R}{\mathbf{R}}
+\DeclareMathOperator{\cl}{cl}
+\newcommand{\Q}{\mathbf{Q}}
+\newcommand{\Z}{\mathbf{Z}}
+\input xy \xyoption{all}
+\begin{document}
+\begin{flushright} KMB,\ 14/12/17\end{flushright}
+
+\noindent{\large \bf M1F Foundations of Analysis, Problem Sheet 10.}
+
+\medskip\noindent{\bf 1.} (One-sided inverses.)
+
+(i) Say $f:X\to Y$ is a function and there exists a function $g:Y\to X$ such that $f\circ g$ is the identity function $Y\to Y$. Prove that~$f$ is surjective. 
+
+(ii) Say $f:X\to Y$ is a function and there exists a function $g:Y\to X$ such that $g\circ f$ is the identity function $X\to X$. Prove that~$f$ is injective.
+
+\medskip\noindent{\bf 2.} This relatively straightforward (if you've understood the idea correctly) question makes sure that you understand the composition of functions, and how it differs from other things like multiplication of functions.
+
+Say $f$ and $g$ are functions from $\R$ to $\R$ defined by $f(x)=x^2+3$ and $g(x)=2x$. Write down explicit formulae for the following functions:
+
+(i) $f\circ g$
+
+(ii) $g\circ f$
+
+(iii) $x\mapsto f(x)g(x)$
+
+(iv) $x\mapsto f(x)+g(x)$
+
+(v) $x\mapsto f(g(x))$.
+
+\medskip\noindent{\bf 3.} Prove that $\circ$ is associative. In other words, prove that if $h:A\to B$ and $g:B\to C$ and $f:C\to D$ then $(f\circ g)\circ h=f\circ(g\circ h)$ (NB these are both functions $A\to D$). This is a great example of a question that is dead easy once you actually figure out what it's asking.
+
+\medskip\noindent{\bf 4.} Say $S$ is a set of size $n$, $T$ is a set of size $m$, and $f:S\to T$ is a function.
+
+(i) Prove that if $f$ is injective then $n\leq m$.
+
+(ii) Prove that if $f$ is surjective then $n\geq m$.
+
+(iii) Prove that if $f$ is bijective then $n=m$.
+
+\medskip\noindent{\bf 5.} 
+(i) Prove that if $X$ is a countably infinite set, and $Y\subseteq X$ is an infinite subset, then $Y$ is countably infinite.
+
+(ii) Prove that if $A$ and $B$ are countably infinite sets, then so is $A\cup B$.
+
+(iii) Prove that if $A$ and $B$ are countably infinite sets, then so is $A\times B$ (hint: mimic the proof of countability of $\Q$).
+
+(iv) Are there countably many irrational numbers? Countably many complex numbers? What about $\Q(i)=\{a+bi\,:\,a,b\in\Q\}$?
+
+\medskip\noindent{\bf 6.} (i) Prove that if $1\leq r\leq n$ then $\binom{n+1}{r}=\binom{n}{r}+\binom{n}{r-1}$.
+
+(ii) Prove the binomial theorem $(x+y)^n=\sum_i \binom{n}{i}x^{n-i}y^i$ by induction on~$n$.
+
+\medskip\noindent{\bf 7.} (i) Prove that if $p$ is prime and $0<i<p$ is an integer then $p\nmid i!(p-i)!$. Deduce that $p\mid \binom{p}{i}$.
+
+(ii) Give another proof of Fermat's Little theorem, in the form $\forall a\in\Z_{\geq0}$, $a^p\equiv a$~mod~$p$, this time by induction on~$a$. 
+
+\medskip\noindent{\bf 8.} How many anagrams of ``EMMAMCCOY'' are there? (NB you should include any permutation of the letters, including those that don't form words. Feel free to use a calculator).
+
+\medskip\noindent{\bf 9.} (i) Find the coefficient of $x^{19}$ in $(1+x)^{21}$.
+
+(ii) Find the coefficient of $x$ in $(x^3+1/x)^7$.
+
+(iii) Find the coefficient of $x^6$ in $(1+3x+x^2)^5$.
+\end{document}

@@ -1,0 +1,86 @@
+\documentclass[10pt]{article}
+\usepackage{amsfonts}
+\usepackage{a4wide}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\thispagestyle{empty}
+% for fancy 2 column lists with letters
+\usepackage{multicol}
+\usepackage[shortlabels]{enumitem}
+\newcommand{\R}{\mathbf{R}}
+\newcommand{\C}{\mathbf{C}}
+\DeclareMathOperator{\cl}{cl}
+\newcommand{\N}{\mathbf{N}}
+\newcommand{\Q}{\mathbf{Q}}
+\newcommand{\Z}{\mathbf{Z}}
+\input xy \xyoption{all}
+\begin{document}
+\begin{flushright} KMB,\ 12/12/16\end{flushright}
+
+\noindent{\large \bf M1F Foundations of Analysis, Problem Sheet 10.}
+
+\medskip\noindent{\bf 1${}^*$.} Did you manage this one?
+
+\medskip\noindent{\bf 3.} 
+
+(i) Choose $y\in Y$ and set $x=g(y)$. We are given $f\circ g$ is the identity function, and this implies $(f\circ g)(y)=y$, so $f(g(y))=y$ so $f(x)=y$. Hence~$y$ is in the image of~$f$. But $y\in Y$ was arbitrary, hence $f$ is surjective.
+
+(ii) Say $x_1,x_2\in X$ and $f(x_1)=f(x_2)$. Applying $g$ we deduce that $g(f(x_1))=g(f(x_2))$. But $g\circ f$ is the identity function $X\to X$, so $(g\circ f)(x)=x$ for all $x\in X$. In particular $x_1=g(f(x_1))=g(f(x_2))=x_2$, and hence~$f$ is injective.
+
+\medskip\noindent{\bf 4${}^*.$} 
+
+(i) $(f\circ g)(x)=f(g(x))=f(2x)=(2x)^2+3=4x^2+3$.
+
+(ii) $(g\circ f)(x)=g(f(x))=g(x^2+3)=2x^2+6$.
+
+(iii) The function sends $x$ to $f(x)g(x)=(x^2+3)(2x)=2x^3+6x$.
+
+(iv) The function sends $x$ to $f(x)+g(x)=x^2+3+2x=x^2+2x+3$.
+
+(v) $x\mapsto f(g(x))$ is the same function as $x\mapsto (f\circ g)(x)$ so the answer is the same as (i).
+
+\medskip\noindent{\bf 5.} Say $A=\{x_1,x_2,\ldots,x_a\}$. To define a function $A\to B$ all we have to do is to say exactly where each element of $A$ gets sent, and each element must be sent to an element of~$B$, so there are $b$ choices for where to send each $x_i$. The total number of ways we can do this is hence $b\times b\times\cdots\times b$, one ``$b$'' for each element of $A$. But there are $a$ elements of~$A$, so the total number of functions is $b^a$.
+
+This argument seems to be evidence to support the convention that $0^0=1$, because there is exactly one function from the empty set to itself, namely the empty function (corresponding to the empty subset of $\emptyset\times\emptyset$). But in general $0^0$ is undefined, by convention, and what is definitely clear is that there is no way to define it in such a way to make it a continuous function of each variable, because $0^r$ is probably most sensibly defined to be zero if $r>0$. In fact, in practice, people only talk about $x^y$ in the following situations:
+
+(i) If $x\in\R_{>0}$ and $y\in\C$ then $x^y$ can be defined as $e^{y\log(x)}$ and this satisfies all the nice properties that you want.
+
+(ii) If $x\in\C$ with $x\not=0$ and $y\in\Z_{\geq0}$ then $x^y$ can be defined in the usual way: if $y>0$ then it's the product of $y$ copies of~$x$ (or do it by induction if you want to be a formalist), if $y=0$ then it's 1 and if $y<0$ then it's $1/x^{-y}$. Again all the standard rules for powers work here.
+
+(iii) If $x,y\in\C$ then choose a branch of logarithm on the complexes and again define $x^y$ as $e^{y\log(x)}$. The problem with this definition is that it is not continuous where you made the cut for log, and does not satisfy the usual rules for powers like $(x_1)^y(x_2)^y=(x_1x_2)^y$, because once you make a branch cut to define log it's not true that $\log(x_1)+\log(x_2)=\log(x_1x_2)$. Note that this problem does not occur if we just restrict to $x_1,x_2$ positive reals.
+
+\medskip\noindent{\bf 6.}
+
+(i) We know that if $y\in Y$ then the set $\{x\in X\,:\,f(x)=y\}$ is non-empty, so we just choose a random element of it once and for all, and define $g(y)$ to be this element. Can we build such a function this way? Sure (although (formalist hat on) to guarantee that the resulting subset of $X\times Y$ is actually a set(!) we need to invoke the axiom of choice (moral: invoke the axiom of choice) (formalist hat off)). This definition of~$g$ is not at all ``natural'' though, in the sense that if we had an explicit function $f$ and you chose a function $g$ as above and called it $g_1$, and your friend chose another example and called it $g_2$, then in general the chances that you and your friend had chosen the same function would be very small.
+
+(ii) Funnily enough such a function does not exist, because $X$ could be the empty set and $Y$ could be a non-empty set; then the empty function $f:X\to Y$ is injective and there are no functions $Y\to X$ at all. However if $X$ is non-empty then it's OK; choose $x_0\in X$, and define $g:Y\to X$ by $g(y)=x$ if $y$ is in the image of $f$ and $f(x)=y$ (such an $x$ is unique) and $g(y)=x_0$ otherwise.
+
+
+(iii) The argument is easiest to explain if $X\cap Y$ is empty. Then we can define $Z$ to be the union of $X$ and $Y$. Now $X$ is a subset of~$Z$ so there's a natural injection $g:X\to Z$. Furthermore we can define $h:Z\to Y$ by $h(z)=f(z)$ if $z\in X$ and $h(z)=z$ if $z\in Y$. Then $h$ is clearly surjective because if $y\in Y$ then $y\in Z$ and $h(y)=y$. Furthermore it is easy to check that $f=h\circ g$.
+
+If $X\cap Y$ is not empty then we replace $Y$ by any set $Y'$ for which there is a bijection $i:Y'\to Y$ and such that $Y'\cap X$ is empty. Such a set $Y'$ does exist but one would have to carefully read the axioms of mathematics to verify this (as far as I know -- is there a simple trick? I want to define $Y'=\{X\}\times Y$ but to check that this is definitely disjoint from~$X$ I would have to explicitly explain how to define ordered pairs in set theory and then invoke the axiom of foundation. This situation can't be completely trivial because if there existed a set of all sets and $X$ were this set then it would not be true!). Once you're satisfied that~$Y'$ exists then we can let $Z$ be $X\cup Y'$ and define $h$ by $h(x)=f(x)$ and $h(y')=i(y')$ and the same proof works.
+
+The reason that this all feels a bit weird is that this construction is not at all natural. For example $Y'$ can actually be replaced by any set disjoint from~$X$ and equipped with a surjection to~$Y$, so again the construction is not natural, although the example I give is probably ``universal'' in some sense which you will learn about much later on if you do some of the algebra courses in your third year.
+
+\medskip\noindent{\bf 7.} To check that $(f\circ g)\circ h=f\circ(g\circ h)$ we first observe that all the instances of $\circ$ actually make sense (for example $f:C\to D$ and $g:B\to C$, so $(f\circ g)$ is a well-defined function $B\to D$ etc) and as an outcome of this we see that $(f\circ g)\circ h$ and $f\circ (g\circ h)$ are both functions $A\to D$ and in particular it makes sense to ask if they are equal.
+
+Now what does it \emph{mean} for two functions $A\to D$ to be equal? It means that for all $a\in A$, the values of the two functions coincide at $a$. In other words, in our case it means that $((f\circ g)\circ h)(a)=(f\circ(g\circ h))(a)$, so this is what we need to check. However, by continually appealing to the definition of $\circ$, we see that
+\begin{align*}
+&\phantom{=}((f\circ g)\circ h)(a)\\
+&=(f\circ g)(h(a))\\
+&=f(g(h(a)))
+\end{align*}
+and
+\begin{align*}
+&\phantom{=}(f\circ (g\circ h)(a)\\
+&=f((g\circ h)(a))\\
+&=f(g(h(a)))
+\end{align*}
+so both $((f\circ g)\circ h)(a)$ and $(f\circ(g\circ h))(a)$ equal $f(g(h(a)))$, which, let's face it, are the only possible thing that they could have equalled, because there is no other conceivable way of defining an element of $D$ given an element of $A$.
+
+\medskip\noindent{\bf 8.} 
+
+(i) Let's count $X$: in other words let's write $X=\{x_1,x_2,x_3,\ldots\}$. Then~$Y$ is a subset of~$X$, so $Y$ looks like $\{x_3,x_{10},x_{12345},\ldots\}$ and what we need to do is to come up with a bijection between this and $\N$. But it's clear how to do such a thing -- for the $Y$ above we would set $f(1)=x_3$, $f(2)=x_{10}$ and so on, and in general $Y$ must have the form $\{x_s\,:\,s\in S\}$ where~$S$ is an infinite subset of $\N$, and so we can write $S=\{s_1,s_2,s_3,\ldots\}$ and then define our bijection $\N\to Y$ by sending $n$ to $x_{s_n}$.
+
+(ii) If $X$ and $Y$ are countable then $X\cup Y$ is countable (c.f., counting~$\Z$). The reals are not countable (part (i)) but the rationals are, so if the irrationals were also countable then then the reals would be too, a contradiction.  Thus the irrationals must be uncountable. The complexes are clearly uncountable because they contain the reals which are uncountable so again we're done by (i). Finally $\Q(i)$ is countable, because as a set it clearly bijects with $\Q\times\Q$, and the product of two countable sets is countable,
+\end{document}

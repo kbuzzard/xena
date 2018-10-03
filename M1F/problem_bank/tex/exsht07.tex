@@ -1,0 +1,59 @@
+\documentclass[10pt]{article}
+\usepackage{amsfonts}
+\usepackage{a4wide}
+\usepackage{amsmath}
+\thispagestyle{empty}
+% for fancy 2 column lists with letters
+\usepackage{multicol}
+\usepackage[shortlabels]{enumitem}
+\newcommand{\R}{\mathbf{R}}
+\newcommand{\Q}{\mathbf{Q}}
+\newcommand{\Z}{\mathbf{Z}}
+\begin{document}
+
+
+\begin{flushright} KMB,\ 24/11/17\end{flushright}
+
+\noindent{\large \bf M1F Foundations of Analysis, Problem Sheet 7.}
+
+\medskip\noindent{\bf 1.} Let~$S$ be a non-empty set of reals which is bounded above, and let~$x$ be its least upper bound (you can assume that a non-empty bounded-above set of reals has a least upper bound in this question). Write down a careful proof that if $T\subseteq S$ is a non-empty subset of~$S$, then $T$ also has a least upper bound, and this least upper bound is at most~$x$.
+
+\medskip\noindent{\bf 2.} Here's a proof that a real number is rational if and only if it has decimal expansion which is ultimately periodic.
+
+(a) Use the algorithm given in lectures to compute the decimal expansion of $4/7$ (so your argument should go something like this: ``$0<4/7<1$ so it's $0.$something, and now multiply by 10 and get $40/7=5+5/7$ so it's $0.5$something, and then multiply the error term $5/7$ by 10 etc etc''. Once you have got the expansion to about three or four decimal places, stop and think about what must happen later on -- what are all the possibilities for the remainder?
+
+(b) Now \emph{prove} that if $q$ is a rational number, then its decimal expansion must ultimately be periodic (this means that after a while, it must start repeating: for example $61/495=0.123232323232323\cdots$). Hint: if we ever get to an error term that we've had before, we're going to repeat, and then consider the denominators of the error terms.
+
+(c) Now say $x$ is a real number, and its decimal expansion is finite (i.e., all the digits in the decimal expansion are zero after some point). Prove that $x$ is rational (hint: multiply by a big power of~10 and you may assume that this does the standard thing to decimal expansions that you learnt at school).
+
+(d) Now say $x$ is a real number, and its decimal expansion is ultimately periodic. By considering $10^px-x$, where $p$ is the length of the period, show that~$x$ is rational.
+
+(e) A weird consequence of this argument is that if $d$ is a positive integer, then $d$ divides a number of the form $9999\cdots9990000\cdots000$ (or more formally, of the form $10^a-10^b$). Prove this! Can you find such a number which is a multiple of 35? Feel free to use a calculator.
+
+\medskip\noindent{\bf 3.} Set $x=0.1010010001000010000010000001\cdots$, where there are an increasing number of zeros (1,2,3,4,\ldots) between each 1 in the decimal expansion. Prove that~$x$ is irrational.
+
+\medskip\noindent{\bf 4.} Here is a cool decimal expansion. Recall that the Fibonacci sequence starts with the terms 1,1 and then each term after that is the sum of the two previous terms, so it goes $1,1,2,3,5,8,13,21,\ldots$. Now get out your calculator/computer/phone and work out the decimal expansion of $x=100/9899$ (if you have an Android phone and you install paridroid you'll be able to work it out to thousands of decimal places; probably there are iphone apps which will do the same). You'll see that it's $0.0101020305081321\cdots$. Note how the Fibonacci sequence lives in this decimal expansion! Can you explain why? Do you think the pattern continues forever? Hint: check $100+x+100x=10000x$ and then think about decimal expansions\ldots.
+
+\medskip\noindent{\bf 5.} Grab your calculator and work out the highest common factor of 7261 and 10001. If you like, you could try the method that many of you learnt at school (factor everything) -- good luck with this (even with a calculator). Alternatively you might want to try Euclid's algorithm (and then consider writing a letter to your old maths teacher telling them that they're teaching a syllabus which is 2000 years out of date\ldots).
+
+\medskip\noindent{\bf 6.} 
+
+(a) Set $a=46$ and $b=18$; now find the highest common factor~$d$ of $a$ and~$b$. You could use the ``factor everything'' method that many of you learnt at school but you'll then be in trouble in part (b).
+
+(b) Now find integers $\lambda$ and $\mu$ such that $46\lambda+18\mu=d$.
+
+(c) Now find another solution in integers to $46\lambda+18\mu=d$, this time with $\lambda>10^6$.
+
+(d) Now find a solution in integers $\rho,\sigma$ to $\rho a+\sigma b=4000000$.
+Note: $\rho$ is called ``rho'' and pronounced ``row''; it's nothing to do with $p$.
+
+\medskip\noindent{\bf 7.} In the lectures I proved that every positive integer is uniquely the product of prime numbers. Here is a number system where that isn't true.
+
+Let~$S$ be the set of positive integers which end in~1, and let's pretend that these are the only positive integers which exist. First convince yourself that if $a$ and $b$ are in~$S$, then so is $a\times b$, so this is a perfectly good system for multiplying, primes, and factoring.
+
+Let's call an element of~$S$ a ``prim number'' if it is bigger than~1 and can't be factored into smaller elements of~$S$. So, for example, 11 and 21 and 31 and 41 and 51 are all prim numbers, because the smallest number greater than~1 in our system is~11, so the smallest non-prim number is~$11^2=121$.
+
+Find an element of~$S$ which is the product of prims in more than one way (even if you count changing the order of the factors as being the same factorization). Hint: think about primes as well as prims. We see $21$ is prim because~3 and~7 are not in our system -- can we do a similar trick with $13\times17$, or $13\times7$\ldots? Can you see where this is going?
+
+Bonus question: can you find an element of~$S$ which is equal to the product of two prims, and also the product of three prims?
+\end{document}

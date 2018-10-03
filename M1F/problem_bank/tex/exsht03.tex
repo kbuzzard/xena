@@ -1,0 +1,66 @@
+\documentclass[10pt]{article}
+\usepackage{amsfonts}
+\usepackage{a4wide}
+\usepackage{amsmath}
+\thispagestyle{empty}
+% for fancy 2 column lists with letters
+\usepackage{multicol}
+\usepackage[shortlabels]{enumitem}
+\newcommand{\R}{\mathbf{R}}
+\newcommand{\Z}{\mathbf{Z}}
+\begin{document}
+
+
+\begin{flushright} KMB,\ 24/10/17\end{flushright}
+
+\noindent{\large \bf M1F Foundations of Analysis, Problem Sheet 3.}
+
+\medskip
+\noindent{\bf 1.} Using only the 4 standard inequality facts (A1) to (A4), write down a proof that if $0<x$ and $0<y$ then $0<x+y$. Hint: you'll only need to use two of them. 
+
+\medskip
+\noindent{\bf 2$\dag$.} This question is a little harder and longer than the others, and so I've put a dagger by it. This question continues the development of the basic facts about inequalities for real numbers.
+
+We say that a real number $x$ is \emph{positive} if $x>0$ and \emph{negative} if $x<0$. Recall that (A3) says that every real number is exactly one of: positive, negative, or zero, and (A4) says that the product of two positive numbers is positive. 
+
+a) We proved in lectures that if $x>y$ and $c>0$ then $cx>cy$. Deduce from this that the product of a positive number and a negative number is negative.
+
+b) We showed on the handout (Q2) that if $x<0$ then $-x>0$. For this part you may assume that $-x$ is the product of $-1$ and $x$, that the square of $-1$ is $+1$, and that the product of a bunch of numbers is independent of the order that you multiply them together. Using only these facts, deduce that the product of two negative real numbers is positive.
+
+c) Deduce if $x$ and $y$ are real numbers, and $xy=0$, then either $x=0$ or $y=0$. Hint: rule out all other possibilities using the previous parts.
+
+d) For this part you may assume that if $x>0$ is a real number, then there is a unique positive real number $y>0$ such that $y^2=x$. Prove that there are exactly two real numbers~$z$ such that $z^2=x$, and figure out what they are. Hint: use (c).
+
+\medskip
+\noindent{\bf 3.} In this question you may \emph{assume} that if $x>0$ is real and $n>0$ is an integer, then there's a unique positive real $y$, called \emph{the $n$th root of $x$}, such that $y^n=x$. You can also assume all standard results about powers such as $\left(a^b\right)^c=a^{bc}$ and so on.
+
+a) Which is bigger, the three trillionth root of~3 or the two trillionth root of~2? Remark: a trillion is $10^{12}$. Hint: if $0<x<y$ then $0<x^n<y^n$ for $n\geq1$ (you can assume this, or you can prove it by induction if you know about induction).
+
+b) Which is bigger, $100^{10000}$ or $10000^{100}$?
+
+c) What's the square root of $2^{22}$? What's the square root of $2^{2^{22}}$?
+
+\medskip
+\noindent{\bf 4${}^*$.} Find the set of non-zero real numbers~$x$ such that $3x+\frac{1}{x}<4$. Hint: \emph{be careful.} It is \emph{not} true that if $a<b$ then $xa<xb$: this is only true for $x>0$.
+
+\medskip
+\noindent{\bf 5.} Let's define the \emph{absolute value} $|x|$ of a real number~$x$ by $|x|=x$ if $x\geq0$ and $|x|=-x$ if $x<0$.
+
+a) Prove that if $t$ is a positive real number then $|x|<t$ if and only if $-t<x<t$.
+
+b) Find all real numbers~$x$ such that $|x+1|<3$.
+
+c) Find all real numbers~$x$ such that $|x-2|<|x-4|$.
+
+\medskip\noindent{\bf 6.} Say $p=a+ib$ and $q=c+id$ and $r=e+if$ are complex numbers.
+
+a) Prove from first principles that $(p+q)+r=p+(q+r)$. You may assume that the analogous fact holds for real numbers -- what I'm asking is how to deduce this fact for complex numbers. 
+
+This fact (``it doesn't matter which $+$ you do first when you add three things up''), has a proper fancy name, which is ``associativity of addition''.
+
+b) Prove from first principles that $pq=qp$ (again you may assume that the analogous fact (``it doesn't matter which order you multiply numbers together'') is is true for real numbers, and again it has a fancy name, namely ``commutativity of multiplication'').
+
+c) Recall that the \emph{complex conjugate} of $z=x+iy$ is the complex number $\overline{z}=x-iy$. Prove from first principles that $\overline{p}\,\overline{q}=\overline{pq}$.
+
+\medskip\noindent{\bf 7.} Prove from first principles that if $z=x+iy$ and $z^2=-1$ then $z=i$ or $z=-i$. Hint: Q2(c) and Q2(d) will be helpful. 
+\end{document}

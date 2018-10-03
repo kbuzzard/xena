@@ -155,20 +155,6 @@ inductive ring_expr : Type
 | const : znum → ring_expr
 | X : ring_expr
 
--- Now a "reflection" of this abstract type which the VM can play with.
-meta def reflect_expr (X : expr) : expr → option ring_expr
-| `(%%e₁ + %%e₂) := do
-  p₁ ← reflect_expr e₁,
-  p₂ ← reflect_expr e₂,
-  return (ring_expr.add p₁ p₂)
-| `(%%e₁ * %%e₂) := do
-  p₁ ← reflect_expr e₁,
-  p₂ ← reflect_expr e₂,
-  return (ring_expr.mul p₁ p₂)
-| e := if e = X then return ring_expr.X else
-  do n ← expr.to_int e,
-     return (ring_expr.const (znum.of_int' n))
-
 -- turning the abstract poly into a concrete list of coefficients.
 def to_poly : ring_expr → poly
 | (ring_expr.add e₁ e₂) := (to_poly e₁).add (to_poly e₂)
@@ -192,6 +178,21 @@ by induction e; simp [to_poly, ring_expr.eval, *]
 theorem main_thm {α} [comm_ring α] (X : α) (e₁ e₂) {x₁ x₂}
   (H : poly.is_eq (to_poly e₁) (to_poly e₂)) (R1 : e₁.eval X = x₁) (R2 : e₂.eval X = x₂) : x₁ = x₂ :=
 by rw [← R1, ← R2, ← to_poly_eval,poly.eval_is_eq X H, to_poly_eval]
+
+
+-- Now a "reflection" of this abstract type which the VM can play with.
+meta def reflect_expr (X : expr) : expr → option ring_expr
+| `(%%e₁ + %%e₂) := do
+  p₁ ← reflect_expr e₁,
+  p₂ ← reflect_expr e₂,
+  return (ring_expr.add p₁ p₂)
+| `(%%e₁ * %%e₂) := do
+  p₁ ← reflect_expr e₁,
+  p₂ ← reflect_expr e₂,
+  return (ring_expr.mul p₁ p₂)
+| e := if e = X then return ring_expr.X else
+  do n ← expr.to_int e,
+     return (ring_expr.const (znum.of_int' n))
 
 -- Now here's the tactic! It takes as input the unknown but concrete variable x
 -- and an expression f(x)=g(x),
