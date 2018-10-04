@@ -1,0 +1,85 @@
+Hello. My name is Kevin Buzzard and today I'm going to explain to you the way computer scientists think about mathematics.
+
+Mathematicians are mostly interested in *doing* mathematics. But over the last century some philosophers and computer scientists have been thinking about what mathematics really *is*. They have been thinking about how to build mathematics from scratch. They know that the traditional way that mathematicians have been doing mathematics, using something called "set theory", is fine. But computer scientists are now beginning to suggest that there are other ways of doing mathematics, and some of them might be better than set theory. What do I mean by "better"? I will explain this later. But first, I am going to tell you a little bit about Dependent Type Theory, a different way to build mathematics.
+
+Dependent type theory starts with a Universe, called Type.
+
+[small hand-drawn cloud bubble appears, with the word Type written in the middle of it, in a font that looks "computery"]
+
+This universe is where the standard mathematical objects such as the real numbers, the rationals and the integers, all live. These well-known collections of numbers are known as *types* in dependent type theory. There are plenty more types too -- for example groups, and rings, and various other things which you learn about in maths degrees -- they are all types.
+
+[Examples of types appear under the cloud (with the correct maths notation).]
+
+But what about numbers themselves, or elements of groups? These things are not types -- these things are called *terms*. Not everything is a type in type theory. But everything *has* a type. For example, the type of pi is the real numbers...
+
+[pi : R appears somewhere, with proper maths fonts etc]
+
+...and the real numbers have type Type.
+
+[R : Type appears somewhere]
+
+But mathematics is not just about defining types such as groups or the real numbers -- mathematics is also about proving theorems. For example, if we use the convention that the natural numbers start at zero
+
+[N = {0,1,2,3,....} ]
+
+...then Fermat's Last Theorem can be expressed as saying that if x y z and n are natural numbers with n greater than two, and if x to the power n plus y to the power n equals z to the power n..
+
+[forall x y z n : nat, n > 2 and x ^ n + y ^ n = z ^ n -> x * y * z = 0]
+
+..then at least one of x, y, and z is equal to zero. In traditional mathematics, this theorem itself is certainly not a set, it is something else. It is a statement about how certain numbers behave, and it needs a proof, which is not a set either. Theorems and proofs can work *with* sets, but they are not sets themselves.
+
+[pause]
+
+In dependent type theory, the universe Type is not the only universe. There is another equally important universe, called Prop.
+
+[second cloud appears, to the right of Type, with Prop in]
+
+In type theory, this universe is where the theorems and conjectures of mathematics live. A general true/false mathematical statement, otherwise known as a proposition, has type Prop. Examples of propositions include the obviously true statement that 2 + 2 = 4, the obviously false statement that 2 + 2 = 5, the deep mathematical truth that is Fermat's Last Theorem, and the unsolved problem called the Riemann Hypothesis.
+
+How do we complete the picture? [indicate missing 6th area]. Can there be a term, whose type is is the proposition that 2 + 2 = 4? Yes there can! This is where proofs live.
+
+[ P : Prop appears in the type level, and H : P appears in the term level] 
+
+2 + 2 = 4 is a proposition, which is a special kind of type in dependent type theory, and a proof that 2 + 2 = 4 is a term of that type. In general, if P is a proposition which we can prove, and H is a proof of P, then H has type P...
+
+[H : P]
+
+...and P has type Prop.
+
+[P : Prop]
+
+Dependent type theory has the advantage that we can talk both about data types such as the real numbers, and true/false statements such as Fermat's Last Theorem, using the same language -- it unifies the two ideas.
+
+[pause]
+
+Traditionally in mathematics, the real numbers are thought of as a set, and a term like pi whose type is the real numbers is thought of as an element of that set.
+
+[pi : R morphs into pi \in R when the word element is said]
+
+And of course, as well as sets, mathematicians consider functions between sets. For example the squaring function is a map from the reals to the reals.
+
+[f : R \to R
+ f(x)=x^2]
+
+Now what happens if we extend this way of thinking to propositions? Remember, if P is a proposition -- a true/false statement -- then a term of type P is a proof of P.
+
+[H : P]
+
+If we think of P as a set, then the elements of P are its proofs.
+
+[H : P morphs into H \in P]
+
+If we think of propositions in this way, then what would a map between two propositions look like? 
+
+[P -> Q]
+
+Such a function would take as input a proof of P, and spit out a proof of Q. Take a moment to think about this. What does a mathematician write when they have a method of deducing a proof of Q from a proof of P?
+
+[pause, then P -> Q slowly morphs into P implies Q]
+
+If you have a method of deducing Q from P, then what you have is a proof that P implies Q. In dependent type theory, implication is a function. Dependent type theory unifies the concept of a function and the concept of implication. Functions are at the heart of dependent type theory.
+
+OK so this is all very cute, but why is this way of doing things *better*? Well over the last few decades, computer scientists have been developing functional programming languages such as Haskell. These languages run very quickly on modern machines because they can use multiple processor cores easily. The exciting development is that there are now programming languages which are powerful enough to understand all of modern pure mathematics! One of these languages is called Lean and part of the development of its mathematics library is happening here at Imperial College. But the really amazing thing is that this development is not being done by researchers and professors -- it is the *undergraduates* who are leading the project! We are digitising the undergraduate mathematics curriculum and, just like mp3s changed the way we listened to music, I hope that one day this project will change the way we do mathematics.
+
+Find out more at xenaproject.wordpress.com.
+
