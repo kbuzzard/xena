@@ -1,0 +1,1 @@
+##rm test.lean; for i in PB000*; do cat $i/Q*.lean >> test.lean; echo "" >> test.lean; done
