@@ -1,12 +1,19 @@
 import data.set.basic tactic.interactive 
 import data.list.basic 
+import data.fintype
 
+@[derive decidable_eq]
 inductive square
 | vampire : square
 | ghost : square
-| zombie : square 
+| zombie : square
 
 namespace square
+
+instance : fintype square := {
+  elems := {vampire,ghost,zombie},
+  complete := λ x,by cases x;exact dec_trivial
+}
 
 definition nomirror : square → ℕ
 | vampire := 1
@@ -22,19 +29,9 @@ end square
 
 open square 
 
-instance XXX : decidable_eq square
-| vampire vampire := is_true rfl 
-| vampire ghost := is_false (λ h,square.no_confusion h) 
-| vampire zombie := is_false (λ h,square.no_confusion h) 
-| ghost vampire := is_false (λ h,square.no_confusion h) 
-| ghost ghost := is_true rfl 
-| ghost zombie := is_false (λ h,square.no_confusion h) 
-| zombie vampire := is_false (λ h,square.no_confusion h) 
-| zombie ghost := is_false (λ h,square.no_confusion h) 
-| zombie zombie := is_true rfl 
-
 variables a₁ a₂ a₃ a₄ a₅ a₆ a₇ a₈ a₉ : square 
 
+/- the 16 equations -/
 definition e₁ := a₁.nomirror + a₃.nomirror + a₆.nomirror + a₈.nomirror = 3
 definition e₂ := a₁.mirror = 0
 definition e₃ := a₂.nomirror + a₄.nomirror + a₄.mirror + a₅.mirror = 2
@@ -164,21 +161,48 @@ begin
   exact ⟨H1,H2m,H4z,H5g,H6v,H8g,H9g⟩
 end 
 
+-- I want to finish the job now doing some slicker version of this case by case analysis
 lemma square_7_not_zombie (Hsolved : is_solved a₁ a₂ a₃ a₄ a₅ a₆ a₇ a₈ a₉) : ¬ a₇ = zombie :=
 begin
-  have H := what_i_know a₁ a₂ a₃ a₄ a₅ a₆ a₇ a₈ a₉ Hsolved,
+--  have H := what_i_know a₁ a₂ a₃ a₄ a₅ a₆ a₇ a₈ a₉ Hsolved,
   rcases (what_i_know a₁ a₂ a₃ a₄ a₅ a₆ a₇ a₈ a₉ Hsolved) with ⟨H1,H2m,H4z,H5g,H6v,H8g,H9g⟩,
   rcases Hsolved with ⟨h₁,h₂,h₃,h₄,h₅,h₆,h₇,h₈,h₉,h₁₀,h₁₁,h₁₂,h₁₃,h₁₄,h₁₅,h₁₆,HV,HG,HZ⟩,
-  rw H1 at *,clear H1,
-  rw H2m at *,clear H2m,
-  rw H5g at *,clear H5g,
+  cases a₁;cases H1,
+--  rw H2m at *,clear H2m,
+--  rw H5g at *,clear H5g,
+
+  cases h₂, cases h₁₆,cases h₄,cases h₅,cases h₈,cases h₉,
+  -- h₆ h₁₁ h₁₃ also useless
+  unfold e₆ at h₆,rw [H5g,H2m,add_assoc 1,add_comm (nomirror a₄),H4z] at h₆,
+  clear h₆,
+  unfold e₁₁ at h₁₁,rw [H9g,H6v] at h₁₁,
+  clear h₁₁,
+  unfold e₁₃ at h₁₃,rw [H8g,H9g] at h₁₃,
+  clear h₁₃,
 
   intro H7,
-  rw H7 at h₁₅,
-  rw H7 at h₇,
-  cases a₂;cases a₃;cases a₅;cases h₇;cases h₁₅,
-  simp at HV,
-end 
+  cases a₇;cases H7,
+  cases a₂;cases H2m;cases a₃;cases a₅;cases h₇;cases h₁₅,
+end
+
+lemma square_3_ghost (Hsolved : is_solved a₁ a₂ a₃ a₄ a₅ a₆ a₇ a₈ a₉) : a₃ = ghost :=
+begin
+--  have H := what_i_know a₁ a₂ a₃ a₄ a₅ a₆ a₇ a₈ a₉ Hsolved,
+  rcases (what_i_know a₁ a₂ a₃ a₄ a₅ a₆ a₇ a₈ a₉ Hsolved) with ⟨H1,H2m,H4z,H5g,H6v,H8g,H9g⟩,
+  rcases Hsolved with ⟨h₁,h₂,h₃,h₄,h₅,h₆,h₇,h₈,h₉,h₁₀,h₁₁,h₁₂,h₁₃,h₁₄,h₁₅,h₁₆,HV,HG,HZ⟩,
+  cases a₁;cases H1,
+--  rw H2m at *,clear H2m,
+--  rw H5g at *,clear H5g,
+
+  cases h₂, cases h₁₆,cases h₄,cases h₅,cases h₈,cases h₉,
+  -- h₆ h₁₁ h₁₃ also useless
+  clear h₆,
+  clear h₁₁,
+  clear h₁₃,
+  revert a₂,revert a₃,revert a₄,revert a₅,revert a₆,revert a₇,revert a₈,revert a₉,
+  sorry,
+--  exact dec_trivial,
+end
 
 lemma equations_so_far (a₁ a₂ a₃ a₄ a₅ a₆ a₇ a₈ a₉ : square) 
   (H1 : a₁ = vampire)
@@ -186,6 +210,7 @@ lemma equations_so_far (a₁ a₂ a₃ a₄ a₅ a₆ a₇ a₈ a₉ : square)
   (H4 : ¬ a₄ = zombie)
   (H5 : ¬ a₅ = ghost)
   (H6 : ¬ a₆ = vampire)
+  (H7 : ¬ a₇ = zombie)
   (H8 : ¬ a₈ = ghost)
   (H9 : ¬ a₉ = ghost) : 
 is_solved a₁ a₂ a₃ a₄ a₅ a₆ a₇ a₈ a₉ :=
@@ -224,10 +249,13 @@ begin
   split,swap,
   split,swap,
   split,swap,
+  repeat {sorry},
 end 
 
 -- final boss
-theorem unique_solution : ∃! (a₁ a₂ a₃ a₄ a₅ a₆ a₇ a₈ a₉ : square),
-  is_solved a₁ a₂ a₃ a₄ a₅ a₆ a₇ a₈ a₉ := begin
-  sorry 
+theorem unique_solution : ∃ (a₁ a₂ a₃ a₄ a₅ a₆ a₇ a₈ a₉ : square),
+  (is_solved a₁ a₂ a₃ a₄ a₅ a₆ a₇ a₈ a₉ ∧ ∀ b₁ b₂ b₃ b₄ b₅ b₆ b₇ b₈ b₉, 
+     is_solved b₁ b₂ b₃ b₄ b₅ b₆ b₇ b₈ b₉ → 
+       a₁ = b₁ ∧ a₂ = b₂ ∧ a₃ = b₃ ∧ a₄ = b₄ ∧ a₅ = b₅ ∧ a₆ = b₆ ∧ a₇ = b₇ ∧ a₈ = b₈ ∧ a₉ = b₉) := begin
+  exact dec_trivial,
 end
