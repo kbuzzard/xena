@@ -5,6 +5,8 @@ Author : Kevin Buzzard
 Tested with lean 3.4.1 and mathlib from September 2018.
 -/
 
+import data.real.basic
+
 definition quadroots {x : ℝ} : x ^ 2 - 3 * x + 2 = 0 ↔ x = 1 ∨ x = 2 := sorry
 
 -- for proof see https://github.com/kbuzzard/xena/tree/master/M1F/problem_bank/PB0101/PB0101.lean
@@ -13,13 +15,13 @@ definition quadroots {x : ℝ} : x ^ 2 - 3 * x + 2 = 0 ↔ x = 1 ∨ x = 2 := so
 
 -- part (a) -- delete one of these and prove the other.
 
-theorem PB0101a_is_T : ∀ x : ℝ, x ^ 2 - 3 * x + 2 = 0 → x = 1 := sorry
-theorem PB0101a_is_F : ¬ (∀ x : ℝ, x ^ 2 - 3 * x + 2 = 0 → x = 1) := sorry
+theorem M1F_Sheet1_Q1a_is_T : ∀ x : ℝ, x ^ 2 - 3 * x + 2 = 0 → x = 1 := sorry
+theorem M1F_Sheet1_Q1a_is_F : ¬ (∀ x : ℝ, x ^ 2 - 3 * x + 2 = 0 → x = 1) := sorry
 
 -- part (b) etc etc.
 
-theorem PB0101b_is_T : ∀ x : ℝ, x = 1 → x ^ 2 - 3 * x + 2 = 0 := sorry
-theorem PB0101b_is_F : ¬ (∀ x : ℝ, x = 1 → x ^ 2 - 3 * x + 2 = 0) := sorry
+theorem M1F_Sheet1_Q1b_is_T : ∀ x : ℝ, x = 1 → x ^ 2 - 3 * x + 2 = 0 := sorry
+theorem M1F_Sheet1_Q1b_is_F : ¬ (∀ x : ℝ, x = 1 → x ^ 2 - 3 * x + 2 = 0) := sorry
 
 -- part (c)
 
