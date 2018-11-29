@@ -8,9 +8,9 @@ I had never used CoCalc before, so first I had to get up to speed with that. I f
 
 Once I had read this tutorial and set things up, if I logged into CoCalc I could see a "Project" called `M1F` (the name of my course) and within this project I had a file called `M1F_2018.course` which is some sort of course administration file where I can add and delete students and so on. Also within this project I had a directory called "Assignments" which is where I'm going to put the homework. I will refer to me, and this account, as the "instructor" account.
 
-I had also created a fake testing account with a second email address, running ni a second browser, just to make sure things worked. I'll call this account the "student" account.
+I had also created a fake testing account with a second email address, running in a second browser, just to make sure things worked. I'll call this account the "student" account.
 
---
+---
 
 Now here is a complete walkthrough of an instructor setting Lean homework to a student. Here are the desiderata.
 
