@@ -3,7 +3,10 @@ M1F Problem Bank PB0101, solution
 Author : Kevin Buzzard
 -/
 
-import xenalib.M1F.PB0101
+import data.real.basic
+
+import xenalib.quadroots -- quadroots {x : ℝ} : x ^ 2 - 3 * x + 2 = 0 ↔ x = 1 ∨ x = 2
+
 
 -- part (a): this is false.
 
@@ -13,7 +16,7 @@ begin
 -- We're going to prove this by contradiction.
 -- Let's let H1 be our false hypothesis,
 
-intro H1,
+  intro H1,
 
 -- Now H1 is "for all x, x^2-3x+2=0 implies x=1", and we need to get a contradiction.
 -- By the way, if you're using lean to read this file, you
@@ -28,7 +31,7 @@ intro H1,
 -- a real number x to the assertion that x ^ 2 - 3 * x + 2 = 0 → x = 1, and we
 -- evaluate this function at x = 2.
 
-have H2 := H1 2,
+  have H2 := H1 2,
 
 -- Now H2 is the statement 2 ^ 2 - 3 * 2 + 2 = 0 → 2 = 1
 
@@ -36,8 +39,11 @@ have H2 := H1 2,
 -- implies something which is false. So that's going to
 -- be our contradiction. 
 
-revert H2,
-norm_num,
+  revert H2,
+
+-- the goal now only involves basic logic and numbers (no variables).
+
+  norm_num, -- this tactic solves such goals.
 end
 
 -- End M1F Sheet 1 Q1 part (a)
@@ -60,7 +66,7 @@ end
 
 -- End M1F Sheet 1 Q1 part (b)
 
--- M1F Sheet 1 Q1 part (c) is false and this follows from part (a)
+-- M1F Sheet 1 Q1 part (c) is false.
 
 theorem m1f_sheet01_q01c_is_F : ¬ (∀ x : ℤ, x^2 - 3*x + 2 = 0 ↔ x=1) := 
 
@@ -76,7 +82,7 @@ begin
   -- now H2 is a false numerical hypothesis 
   -- H2 : 2 ^ 2 - 3 * 2 + 2 = 0 ↔ 2 = 1
 
-  revert H2,
+  revert H2, -- now the goal is just logic and numbers.
   norm_num,
 end
 

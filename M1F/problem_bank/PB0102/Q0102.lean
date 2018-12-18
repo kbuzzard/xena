@@ -3,7 +3,7 @@ M1F 2017-18 Sheet 1 Question 2
 Author : Kevin Buzzard
 -/
 
-variables P Q R S : Prop -- A "Prop" is a proposition, that is, a true/false statement.
+variables P Q R : Prop -- A "Prop" is a proposition, that is, a true/false statement.
 
 -- Sheet 1 Q2. Prove one result and delete the other.
 
