@@ -1,8 +1,10 @@
 M1F Problem Bank
 ----------------
 
-This is a collection of M1F questions, many of which are formalised in Lean. It's all being moved from Xena to a standalone lean project at https://github.com/ImperialCollegeLondon/M1F_example_sheets
+Here is some preliminary work on some M1F questions written a long time ago.
 
-Many thanks to Elliott Macneil for his help with all this.
+It's all being moved from this repo to a standalone lean project at https://github.com/ImperialCollegeLondon/M1F_example_sheets .
 
-Kevin Buzzard, September 2018.
+In the process of writing this I realised that formalising M1F problem sheets was not a good way to learn how to do mathematics in Lean, so I also started
+
+https://github.com/kbuzzard/mathematics-in-lean

@@ -1,0 +1,1 @@
+This is some very poor (in general) Lean code which I wrote as a beginner when trying to learn how to prove basic mathematical results in Lean. It is an attempt to do many of the example sheet questions from my undergraduate course M1F. In retrospect, I suspect that this is not the best way to start learning Lean, but it was the way I learnt the basics.
