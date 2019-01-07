@@ -1,0 +1,9 @@
+Conclusion: constructive logic is cool, but there's some stuff you can't actually 
+*do* with it!
+
+What can you do with it?
+
+I believe Gonthier and his team proved the Feit-Thompson odd-order theorem using
+only constructive logic!
+
+But doing some other kinds of maths is hopeless, I believe.
