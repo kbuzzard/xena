@@ -1,3 +1,7 @@
+THIS IS DEPRECATED
+
+SEE VERSION IN REPO THAT ABHI AND I HAVE
+
 import analysis.real
 import tactic.norm_num
 import xenalib.decimal_expansions
