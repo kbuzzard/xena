@@ -22,10 +22,13 @@ protected def add : pos_num → pos_num → pos_num
 
 instance : has_add pos_num := ⟨pos_num.add⟩
 
+-- The equation compiler splits up the definition of add above
+-- into the nine cases anyway, so the first two below aren't refl.
 lemma succ_eq_add_one (a : pos_num) : succ a = a + 1 := by cases a;refl
 lemma succ_eq_one_add (a : pos_num) : succ a = 1 + a := by cases a;refl
 lemma one_add_eq_add_one (a : pos_num) : 1 + a = a + 1 := by cases a;refl
 
+-- this is the base case for add_assoc'
 theorem add_assoc'' (a : pos_num) : a + one + one = a + (one + one) :=
 begin
   cases a with d d,
@@ -37,6 +40,7 @@ begin
   }
 end
 
+-- this is the base case for add_assoc
 theorem add_assoc' (a b : pos_num) : a + b + 1 = a + (b + 1) :=
 begin
   revert a,
