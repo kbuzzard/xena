@@ -6,6 +6,10 @@
 
 -- Xena. Prove a theorem. Write a function.
 
+--------------------------------------------------------------
+
+import tactic.interactive -- only needed if you want Floris' rintro on the last line
+
 namespace xena
 
 class A := (n : ℕ)
@@ -51,5 +55,9 @@ begin
   unfold A.n at h,
   cases h,
 end
+
+-- Thanks to Floris van Doorn for showing me this very pretty proof
+-- (although )
+theorem thanks_to_Floris_van_Doorn : d1 ≠ d2 := by rintro ⟨⟩
 
 end xena
