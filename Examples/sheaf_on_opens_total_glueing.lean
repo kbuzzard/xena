@@ -7,7 +7,7 @@ import algebra.ring -- for is_ring_hom
 
 open lattice
 
-universes u v
+universes v u
 
 structure presheaf (α : Type u) [semilattice_inf α] :=
 (F     : α → Type v)
@@ -214,6 +214,7 @@ end equiv
 
 -- should be in mathlib
 
+#check semilattice_inf.Sup
 namespace opens
 
 def Union {I : Type*} (s : I →α) :α :=
