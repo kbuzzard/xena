@@ -265,17 +265,29 @@ namespace thing
 
 -- thing is a structure, complete_lattice is a class
 
-def canonical1.to_fun (α : Type u) : lattice.complete_lattice α → thing α :=
-λ X, by resetI; exact { inf := _,
+--#print lattice.complete_lattice
+/-
+Mario:
+  complete_lattice <- bounded_lattice <- lattice, order_top, order_bot and lattice <- semilattice_sup, semilattice_inf <- partial order
+Lean:
+  class complete_lattice (α : Type u) extends bounded_lattice α, has_Sup α, has_Inf α :=
+
+-/
+def canonical1.to_fun (α : Type u) 
+[bounded_lattice α] [has_Sup α] [has_Inf α]
+[X : lattice.complete_lattice α] : thing α :=
+begin resetI; exact { inf := _,
   le := X.le,
-  le_refl := _,
+  le_refl := X.le_refl,
   le_trans := _,
   le_antisymm := _,
-  inf_le_left := _,
+  inf_le_left := X.inf_le_left,
   inf_le_right := _,
   le_inf := _,
   supr := _,
-  le_supr := _ }
+  le_supr := _ },
+  repeat {sorry},
+  end
 #exit
 def canonical1 (α : Type u) : _root_.equiv (lattice.complete_lattice α) (thing α) :=
 { to_fun := λ X, { 
