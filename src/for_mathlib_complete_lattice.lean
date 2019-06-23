@@ -7,6 +7,10 @@ universes u v
 
 open lattice
 
+def lattice.complete_lattice.supr {α : Type u} {ι : Sort v} [_inst_1 : has_Sup α] :
+ (ι → α) → α
+:= lattice.supr
+
 def lattice.complete_lattice.le_supr {α : Type u} {ι : Sort v} [complete_lattice α] (s : ι → α) (i : ι) :
     s i ≤ lattice.supr s := lattice.le_supr s i
 
