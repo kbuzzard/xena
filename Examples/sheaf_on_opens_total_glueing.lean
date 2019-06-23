@@ -261,6 +261,46 @@ lattice.le_supr :
 
 namespace thing
 
+-- structure thing (α : Type u) extends semilattice_inf α :=
+
+#print semilattice_inf
+/-
+@[class]
+structure lattice.semilattice_inf : Type u → Type u
+fields: ...
+-/
+
+#print notation ⊓ -- lattice.has_inf.inf at 70
+
+
+-- class semilattice_inf (α : Type u) extends has_inf α, partial_order α :=
+
+def canonical2.to_fun (α : Type u) 
+[bounded_lattice α] [has_Sup α] [has_Inf α]
+[X : lattice.complete_lattice α] : semilattice_inf α :=
+begin 
+  letI : has_inf α := by apply_instance,
+  letI : partial_order α := by apply_instance,
+  exactI { inf := _,
+  le := _,
+  le_refl := X.le_refl,
+  le_trans := _,
+  le_antisymm := _,
+  inf_le_left := _,
+  inf_le_right := _,
+  le_inf := _ }
+end
+#exit
+{ inf := _,
+  le := _,
+  lt := _,
+  le_refl := _,
+  le_trans := _,
+  lt_iff_le_not_le := _,
+  le_antisymm := _,
+  inf_le_left := _,
+  inf_le_right := _,
+  le_inf := _ }
 --#where
 
 -- thing is a structure, complete_lattice is a class
@@ -273,18 +313,21 @@ Lean:
   class complete_lattice (α : Type u) extends bounded_lattice α, has_Sup α, has_Inf α :=
 
 -/
+
+--def lattice.complete_lattice.supr := sorry
 def canonical1.to_fun (α : Type u) 
 [bounded_lattice α] [has_Sup α] [has_Inf α]
 [X : lattice.complete_lattice α] : thing α :=
-begin resetI; exact { inf := _,
+begin resetI,
+  exact { inf := _,
   le := X.le,
   le_refl := X.le_refl,
-  le_trans := _,
-  le_antisymm := _,
+  le_trans := X.le_trans,
+  le_antisymm := X.le_antisymm,
   inf_le_left := X.inf_le_left,
-  inf_le_right := _,
-  le_inf := _,
-  supr := _,
+  inf_le_right := X.inf_le_right,
+  le_inf := X.le_inf,
+  supr := X.supr,
   le_supr := _ },
   repeat {sorry},
   end
