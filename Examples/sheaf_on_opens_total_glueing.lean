@@ -1,13 +1,19 @@
 import order.lattice -- for lattice.semilattice_inf
 import order.bounds -- for is_lub
 import algebra.ring -- for is_ring_hom
+import topology.opens -- only for the conjecture that i need precisely opens α
 --import sheaves.sheaf
 --  import sheaves.covering.covering
   -- import sheaves.presheaf
+import data.equiv.basic
 
-open lattice
+import for_mathlib_complete_lattice
+
+--open lattice
 
 universes v u
+
+open lattice
 
 structure presheaf (α : Type u) [semilattice_inf α] :=
 (F     : α → Type v)
@@ -129,15 +135,15 @@ theorem res_comp (F : sheaf_on_opens α U) (V1 : α) (HV1 : V1 ≤ U)
   F.res V2 HV2 V3 HV3 H23 (F.res V1 HV1 V2 HV2 H12 f) = F.res V1 HV1 V3 HV3 (le_trans H23 H12) f :=
 (F.to_presheaf.Hcomp' _ _ _ _ _ f).symm
 
-def res_subset (F : sheaf_on_opens α U) (V :α) (HVU : V ≤ U) : sheaf_on_opens α V :=
+def res_subset (F : sheaf_on_opens α U) (V : α) (HVU : V ≤ U) : sheaf_on_opens α V :=
 F
 
-theorem eval_res_subset (F : sheaf_on_opens α U) (V :α) (HVU : V ≤ U) (W :α) (HWV : W ≤ V) :
+theorem eval_res_subset (F : sheaf_on_opens α U) (V : α) (HVU : V ≤ U) (W : α) (HWV : W ≤ V) :
   eval (res_subset F V HVU) W HWV = eval F W (le_trans HWV HVU) := rfl
 
 structure morphism (F : sheaf_on_opens.{v} α U) (G : sheaf_on_opens.{w} α U) : Type (max u v w) :=
 (map : ∀ V ≤ U, F.eval V H → G.eval V H)
-(commutes : ∀ (V :α) (HV : V ≤ U) (W :α) (HW : W ≤ U) (HWV : W ≤ V) (x),
+(commutes : ∀ (V : α) (HV : V ≤ U) (W : α) (HW : W ≤ U) (HWV : W ≤ V) (x),
   map W HW (F.res V HV W HW HWV x) = G.res V HV W HW HWV (map V HV x))
 
 namespace morphism
@@ -168,17 +174,17 @@ ext $ λ V HV x, rfl
   (η.comp ξ).comp χ = η.comp (ξ.comp χ) :=
 rfl
 
-def res_subset {F : sheaf_on_opens.{v} α U} {G : sheaf_on_opens.{w} α U} (η : F.morphism G) (V :α) (HVU : V ≤ U) :
+def res_subset {F : sheaf_on_opens.{v} α U} {G : sheaf_on_opens.{w} α U} (η : F.morphism G) (V : α) (HVU : V ≤ U) :
   (F.res_subset V HVU).morphism (G.res_subset V HVU) :=
 { map := λ W HWV, η.map W (le_trans HWV HVU),
   commutes := λ S HSV T HTV, η.commutes S (le_trans HSV HVU) T (le_trans HTV HVU) }
 
 @[simp] lemma comp_res_subset {F : sheaf_on_opens.{v} α U} {G : sheaf_on_opens.{w} α U} {H : sheaf_on_opens.{u₁} α U}
-  (η : G.morphism H) (ξ : F.morphism G) (V :α) (HVU : V ≤ U) :
+  (η : G.morphism H) (ξ : F.morphism G) (V : α) (HVU : V ≤ U) :
   (η.res_subset V HVU).comp (ξ.res_subset V HVU) = (η.comp ξ).res_subset V HVU :=
 rfl
 
-@[simp] lemma id_res_subset {F : sheaf_on_opens.{v} α U} (V :α) (HVU : V ≤ U) :
+@[simp] lemma id_res_subset {F : sheaf_on_opens.{v} α U} (V : α) (HVU : V ≤ U) :
   (morphism.id F).res_subset V HVU = morphism.id (F.res_subset V HVU) :=
 rfl
 
@@ -205,24 +211,91 @@ by rw [morphism.comp_assoc, ← e₂.2.comp_assoc, e₂.3, morphism.id_comp, e�
 by rw [morphism.comp_assoc, ← e₁.1.comp_assoc, e₁.4, morphism.id_comp, e₂.4]⟩
 
 def res_subset {F : sheaf_on_opens.{v} α U} {G : sheaf_on_opens.{w} α U} (e : equiv F G)
-  (V :α) (HVU : V ≤ U) : equiv (F.res_subset V HVU) (G.res_subset V HVU) :=
+  (V : α) (HVU : V ≤ U) : equiv (F.res_subset V HVU) (G.res_subset V HVU) :=
 ⟨e.1.res_subset V HVU, e.2.res_subset V HVU,
 by rw [morphism.comp_res_subset, e.3, morphism.id_res_subset],
 by rw [morphism.comp_res_subset, e.4, morphism.id_res_subset]⟩
 
 end equiv
 
+#check @lattice.le_supr
+-- Reid's idea about using complete lattices from this point.
+/-
+** TODO **
+#check @lattice.supr
+supr : Π {α : Type u_1} {ι : Sort u_2} [_inst_1 : has_Sup α], (ι → α) → α
+
+Why not
+
+supr : Π {α : Type u_1} [_inst_1 : has_Sup α] {ι : Sort u_2}, (ι → α) → α
+-/
+
+def complete_lattice.supr (α : Type u) (ι : Sort v) [X : complete_lattice α] :=
+  @lattice.supr α ι _ -- Grumpy old mathematician observes that stupid polymorphism
+                      -- makes me have to fill in more stuff
+
+theorem complete_lattice.subset_Union [X : complete_lattice α] {I : Type} (s : I → α) (i : I) : s i ≤ supr s :=
+complete_lattice.le_supr s i
+
+--def complete_lattice.Union : Π {I : Type 37}, (I → α) → α
+--#check complete_lattice.supr -- fails
+/-- thing I need -/
+structure thing (α : Type u) extends semilattice_inf α :=
+(supr {ι : Sort v} (s : ι → α) : α)
+(le_supr {ι : Sort v} : ∀ (s : ι → α) (i : ι), s i ≤ supr s)
+/- hey -- that just *forced* me to make `thing.le_supr` have inputs in the following order:
+
+thing.le_supr : ∀ {α : Type u_2} (c : thing α) {ι : Sort u_1} (s : ι → α) (i : ι), s i ≤ c.supr s
+
+But 
+
+lattice.le_supr :
+  ∀ {α : Type u_1} {ι : Sort u_2} [_inst_1 : lattice.complete_lattice α] (s : ι → α) (i : ι),
+    s i ≤ lattice.supr s
+-/
+#check @thing.le_supr
+namespace thing
+
+-- thing is a structure, complete_lattice is a class
+def canonical1 (α : Type u) : _root_.equiv (lattice.complete_lattice α) (thing α) :=
+{ to_fun := λ X, { 
+    inf := _,
+    le := X.le,
+    le_refl := X.le_refl,
+    le_trans := X.le_trans,
+    le_antisymm := X.le_antisymm,
+    inf_le_left := X.inf_le_left,
+    inf_le_right := X.inf_le_right,
+    le_inf := X.le_inf,
+    supr := λ I, @lattice.supr α I (by resetI; apply_instance), -- bit of an effort!
+    le_supr := λ ι, @lattice.complete_lattice.le_supr _ ι (by resetI; apply_instance),--==s i ≤ lattice.supr s@lattice.complete_lattice.le_supr ,--==lattice.complete_lattice.le_supr},--begin sorry, end,
+  },inv_fun := sorry,
+  left_inv := sorry,
+  right_inv := sorry }
+#exit
+
+#print canonical1.le
+
+_root_.equiv (thing α) (topological_space.opens (thing.Union α )) :=
+{ to_fun := begin
+    rintro ⟨SLIα,U,sU⟩,
+
+  end,
+  inv_fun := _,
+  left_inv := _,
+  right_inv := _ }
+
 -- should be in mathlib
 
-#check semilattice_inf.Sup
+#check semilattice_inf
 namespace opens
 
-def Union {I : Type*} (s : I →α) :α :=
+def Union {I : Type*} (s : I → α) : α :=
 ⟨set.Union (λ i, (s i).1), is_open_Union (λ i, (s i).2)⟩
 
-variables {I : Type*} (s : I →α)
+variables {I : Type*} (s : I → α)
 
-theorem subset_Union : ∀ (s : I →α) (i : I), s i ≤ Union s :=
+theorem subset_Union : ∀ (s : I → α) (i : I), s i ≤ Union s :=
 -- why does lattice.le_supr need complete lattice?
 λ s i x hx, set.mem_Union.2 ⟨i, hx⟩
 
@@ -275,7 +348,7 @@ inter_Union_right _ _
 
 end opens
 
-def glue {I : Type*} (S : I →α) (F : Π (i : I), sheaf_on_opens.{v} α (S i))
+def glue {I : Type*} (S : I → α) (F : Π (i : I), sheaf_on_opens.{v} α (S i))
   (φ : Π (i j : I),
     equiv ((F i).res_subset ((S i) ∩ (S j)) (set.inter_subset_left _ _)) ((F j).res_subset ((S i) ∩ (S j)) (set.inter_subset_right _ _)))
   (Hφ1 : ∀ i, φ i i = equiv.refl (F i))
@@ -329,7 +402,7 @@ def glue {I : Type*} (S : I →α) (F : Π (i : I), sheaf_on_opens.{v} α (S i))
   locality := sorry,
   gluing := sorry }
 
-def universal_property (I : Type*) (S : I →α) (F : Π (i : I), sheaf_on_opens.{v} α (S i))
+def universal_property (I : Type*) (S : I → α) (F : Π (i : I), sheaf_on_opens.{v} α (S i))
   (φ : Π (i j : I),
     equiv ((F i).res_subset ((S i) ∩ (S j)) (set.inter_subset_left _ _)) ((F j).res_subset ((S i) ∩ (S j)) (set.inter_subset_right _ _)))
   (Hφ1 : ∀ i, φ i i = equiv.refl (F i))
