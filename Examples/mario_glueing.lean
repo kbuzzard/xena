@@ -115,6 +115,24 @@ end
   comp U (comp U η ξ) χ = comp U η (comp U ξ χ) :=
 rfl
 
+def res_subset {F : presheaf_on_opens U} {G : presheaf_on_opens U}
+  (η : morphism U F G) (V : α) (HVU : V ≤ U) :
+  morphism V (res_subset U F V HVU) (res_subset U G V HVU) :=
+{ map := λ W, begin exact morphism.map η ⟨W.val, _⟩ end, 
+  commutes := λ S T, commutes η ⟨S.val, le_trans S.property HVU⟩
+   ⟨T.val, le_trans T.property HVU⟩ }
+
+@[simp] lemma comp_res_subset {F : presheaf_on_opens U} {G : presheaf_on_opens U} {H : presheaf_on_opens U}
+  (η : morphism U G H) (ξ : morphism U F G) (V : α) (HVU : V ≤ U) :
+  comp _ (res_subset _ η V HVU) (res_subset _ ξ V HVU)
+  = res_subset _ (comp _ η ξ) V HVU :=
+rfl
+
+@[simp] lemma id_res_subset {F : presheaf_on_opens U} (V : α) (HVU : V ≤ U) :
+  morphism.res_subset _ (morphism.id U F) V HVU
+  = morphism.id V (semilattice_inf.opens.res_subset U F V HVU) :=
+rfl
+
 end morphism
 
 /-- semilattice_inf.opens.equiv, equiv for sheaves on an "open subset" of α -/
@@ -141,20 +159,41 @@ by rw [morphism.comp_assoc, ← morphism.comp_assoc U e₁.1, e₁.4, morphism.i
 -- up to here
 #check @res_subset -- might be useful
 
+--#check (@semilattice_inf.opens.equiv α _ U F G).to_fun
+--.to_fun.commutes
+
 def res_subset {F : presheaf_on_opens U} {G : presheaf_on_opens U} (e : equiv U F G)
   (V : α) (HVU : V ≤ U) : equiv V (res_subset U F V HVU) (res_subset U G V HVU) :=
-{ to_fun := { map := λ W x, begin exact e.to_fun.map ⟨W.val, _⟩ x end, 
-    commutes := λ W1 W2 H21 x, begin dsimp, sorry end},--simp, convert e.to_fun.commutes, simp,  end},--e.to_fun.commutes},
-  inv_fun := sorry,
-  left_inv := sorry,
-  right_inv := sorry }
---⟨res_subset U F V HVU, e.2.res_subset V HVU,
---by rw [morphism.comp_res_subset, e.3, morphism.id_res_subset],
---by rw [morphism.comp_res_subset, e.4, morphism.id_res_subset]⟩
+{ to_fun := morphism.res_subset U e.1 V HVU, 
+
+--{ map := λ W x, begin exact e.to_fun.map ⟨W.val, _⟩ x end, 
+--    commutes := λ W1 W2 H21 x, 
+--    by
+--      convert 
+--        e.to_fun.commutes
+--          ⟨W1.val, le_trans W1.property HVU⟩
+--          ⟨W2.val, le_trans W2.property HVU⟩
+--          H21 x,
+--  }
+  inv_fun := morphism.res_subset _ e.2 V HVU,
+--  { map := λ W x, begin exact e.inv_fun.map ⟨W.val, _⟩ x end, 
+--    commutes := λ W1 W2 H21 x, 
+--    by
+--      convert 
+--        e.inv_fun.commutes
+--          ⟨W1.val, le_trans W1.property HVU⟩
+--          ⟨W2.val, le_trans W2.property HVU⟩
+--          H21 x,
+--  }
+  left_inv := begin 
+    rw morphism.comp_res_subset U,
+    rw e.3, 
+    rw morphism.id_res_subset
+  end,
+  right_inv := by rw [morphism.comp_res_subset, e.4, morphism.id_res_subset]}
 
 end equiv
 
--- I've failed to do res_subset and I think that as a result glue is horrible 
 #exit
 
 def glue {I : Type*} (S : I → α) (F : Π (i : I), presheaf_on_opens (S i))
@@ -177,7 +216,6 @@ def glue {I : Type*} (S : I → α) (F : Π (i : I), presheaf_on_opens (S i))
       (le_inf (le_trans (inf_le_left)
     (inf_le_left)) (le_trans inf_le_left inf_le_right))) :
   presheaf_on_opens (lattice.complete_lattice.supr S) :=
-{ F :=
   { F := λ W, { f : Π i, (F i).eval ((S i) ∩ W) (set.inter_subset_left _ _) //
       ∀ i j, (φ i j).1.map ((S i) ∩ (S j) ∩ W) (set.inter_subset_left _ _)
         ((F i).res ((S i) ∩ W) _ _ (le_trans (set.inter_subset_left _ _) (set.inter_subset_left _ _))
@@ -216,9 +254,7 @@ def glue {I : Type*} (S : I → α) (F : Π (i : I), presheaf_on_opens (S i))
     Hid := begin
       sorry
     end,
-    Hcomp := sorry },
-  locality := sorry,
-  gluing := sorry }
+    Hcomp := sorry }
 
 def universal_property_Kevin_wants (I : Type u) (S : I → α)
   (F : Π (i : I), presheaf_on_opens (S i))
