@@ -11,6 +11,7 @@ import tactic.where -- cool debugging tool
 
 -- this is the only non-mathlib import. Should that stuff be in mathlib
 -- or not? If not then feel free to rewrite the below.
+-- In the Xena project this import is in src/
 import for_mathlib_complete_lattice
 
 --open lattice
@@ -263,6 +264,19 @@ namespace thing
 --#where
 
 -- thing is a structure, complete_lattice is a class
+
+def canonical1.to_fun (α : Type u) : lattice.complete_lattice α → thing α :=
+λ X, by resetI; exact { inf := _,
+  le := X.le,
+  le_refl := _,
+  le_trans := _,
+  le_antisymm := _,
+  inf_le_left := _,
+  inf_le_right := _,
+  le_inf := _,
+  supr := _,
+  le_supr := _ }
+#exit
 def canonical1 (α : Type u) : _root_.equiv (lattice.complete_lattice α) (thing α) :=
 { to_fun := λ X, { 
     inf := _,
@@ -275,14 +289,14 @@ def canonical1 (α : Type u) : _root_.equiv (lattice.complete_lattice α) (thing
     le_inf := X.le_inf,
     supr := λ I, @lattice.supr α I (by resetI; apply_instance), -- bit of an effort!
     le_supr := λ ι, @lattice.complete_lattice.le_supr _ ι (by resetI; apply_instance),--==s i ≤ lattice.supr s@lattice.complete_lattice.le_supr ,--==lattice.complete_lattice.le_supr},--begin sorry, end,
-  },inv_fun := λ Y, { sup := _,
+  },inv_fun := λ Y, by exact { sup := _,
   le := Y.le,
   lt := _,
   le_refl := _,
   le_trans := _,
   lt_iff_le_not_le := Y.lt_iff_le_not_le,
   le_antisymm := _,
-  le_sup_left := sorry, -- I hate it when sorry is underlined
+  le_sup_left := begin convert Y.le_sup_left, sorry end--sorry, -- I hate it when sorry is underlined
   le_sup_right := _,
   sup_le := _,
   inf := _,
@@ -299,7 +313,7 @@ def canonical1 (α : Type u) : _root_.equiv (lattice.complete_lattice α) (thing
   Sup_le := _,
   Inf_le := _,
   le_Inf := _ },
-  left_inv := sorry,
+  left_inv := λ X, _,
   right_inv := sorry }
 #exit
 
