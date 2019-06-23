@@ -218,8 +218,6 @@ by rw [morphism.comp_res_subset, e.4, morphism.id_res_subset]⟩
 
 end equiv
 
-#check @lattice.le_supr
--- Reid's idea about using complete lattices from this point.
 /-
 ** TODO **
 #check @lattice.supr
