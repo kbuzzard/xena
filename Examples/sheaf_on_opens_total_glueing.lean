@@ -225,6 +225,7 @@ by rw [morphism.comp_res_subset, e.4, morphism.id_res_subset]⟩
 
 end equiv
 
+end sheaf_on_opens
  /-
 ** TODO **
 #check @lattice.supr
@@ -239,12 +240,14 @@ def complete_lattice.supr (α : Type u) (ι : Sort v) [X : complete_lattice α] 
   @lattice.supr α ι _ -- Grumpy old mathematician observes that stupid polymorphism
                       -- makes me have to fill in more stuff
 
-theorem complete_lattice.subset_Union [X : complete_lattice α] {I : Type} (s : I → α) (i : I) : s i ≤ supr s :=
-complete_lattice.le_supr s i
+theorem complete_lattice.subset_Union (α : Type u) [X : complete_lattice α] {I : Type} (s : I → α) (i : I) :
+  s i ≤ supr s :=
+lattice.complete_lattice.le_supr s i
 
 --def complete_lattice.Union : Π {I : Type 37}, (I → α) → α
 --#check complete_lattice.supr -- fails
 /-- thing I need -/
+
 structure thing (α : Type u) extends semilattice_inf α :=
 (supr {ι : Sort v} (s : ι → α) : α)
 (le_supr {ι : Sort v} : ∀ (s : ι → α) (i : ι), s i ≤ supr s)
@@ -261,34 +264,103 @@ lattice.le_supr :
 
 namespace thing
 
+-- Debugging starts here.
+
 -- structure thing (α : Type u) extends semilattice_inf α :=
 
-#print semilattice_inf
+-- #print semilattice_inf
 /-
+/-- A `semilattice_inf` is a meet-semilattice, that is, a partial order
+  with a meet (a.k.a. glb / greatest lower bound, inf / infimum) operation
+  `⊓` which is the greatest element smaller than both factors. -/
+class semilattice_inf (α : Type u) extends has_inf α, partial_order α :=
+(inf_le_left : ∀ a b : α, a ⊓ b ≤ a)
+(inf_le_right : ∀ a b : α, a ⊓ b ≤ b)
+(le_inf : ∀ a b c : α, a ≤ b → a ≤ c → a ≤ b ⊓ c)
+
 @[class]
 structure lattice.semilattice_inf : Type u → Type u
 fields: ...
 -/
 
-#print notation ⊓ -- lattice.has_inf.inf at 70
+-- #print notation ⊓ -- lattice.has_inf.inf at 70
 
-
+-- #check semilattice_inf
 -- class semilattice_inf (α : Type u) extends has_inf α, partial_order α :=
 
+--#where 
+
+/-
+structure thing (α : Type u) extends semilattice_inf α :=
+(supr {ι : Sort v} (s : ι → α) : α)
+(le_supr {ι : Sort v} : ∀ (s : ι → α) (i : ι), s i ≤ supr s)
+-/
+--#print semilattice_inf
+-- it's a class
+
+example (α : Type u) [bounded_lattice α] [has_Sup α] [has_Inf α] [lattice.complete_lattice α] :
+  semilattice_inf α := by apply_instance
+
+-- #print lattice.complete_lattice
+/-
+class complete_lattice (α : Type u) extends bounded_lattice α, has_Sup α, has_Inf α :=
+(le_Sup : ∀s, ∀a∈s, a ≤ Sup s)
+(Sup_le : ∀s a, (∀b∈s, b ≤ a) → Sup s ≤ a)
+(Inf_le : ∀s, ∀a∈s, Inf s ≤ a)
+(le_Inf : ∀s a, (∀b∈s, a ≤ b) → a ≤ Inf s)
+-/
+set_option pp.structure_instances true
 def canonical2.to_fun (α : Type u) 
-[bounded_lattice α] [has_Sup α] [has_Inf α]
-[X : lattice.complete_lattice α] : semilattice_inf α :=
+[lattice.complete_lattice α] : thing.{v} α :=
+begin
+--let this : semilattice_inf α := by apply_instance,
+refine { inf := semilattice_inf.inf, 
+         le := semilattice_inf.le,
+         le_refl := semilattice_inf.le_refl,
+         le_trans := semilattice_inf.le_trans,
+         le_antisymm := semilattice_inf.le_antisymm,
+  --       inf_le_inf := semilattice_inf.inf_le_inf,
+         inf_le_left := semilattice_inf.inf_le_left,
+         inf_le_right := semilattice_inf.inf_le_right,
+         le_inf := semilattice_inf.le_inf,
+          -- the rest are not from semilattice namespace
+         le_supr := λ (ι : Sort v) s, begin convert lattice.complete_lattice.le_supr s, convert rfl end,--convert rfl using 0, congr', ext, convert iff.rfl, ext, convert iff.rfl, ext, convert iff.rfl, sorry end,
+         supr := λ ι s, lattice.complete_lattice.supr s,
+         },
+end
+
+#exit
+def canonical2.inv_fun (α : Type u) 
+[lattice.complete_lattice α] : thing.{v} α :=
+begin
+
+
+#exit
+begin
+  
+  sorry
+end
+#exit
+  apply ..X,
+{ supr := λ ι s, lattice.complete_lattice.supr,--∀ {ι : Sort v} (s : ι → α), α := λ ι s, lattice.complete_lattice.supr,
+  le_supr {ι : Sort v} : ∀ (s : ι → α) (i : ι), s i ≤ supr s := sorry}
+
+#exit
+-- by apply_instance #exit
+-- semilattice_inf
 begin 
   letI : has_inf α := by apply_instance,
   letI : partial_order α := by apply_instance,
-  exactI { inf := _,
+  exactI { inf := X.inf,
   le := _,
   le_refl := X.le_refl,
-  le_trans := _,
+  le_trans := begin convert X.le_trans, ext, convert iff.rfl, ext, sorry end,
   le_antisymm := _,
-  inf_le_left := X.inf_le_left,
+  -- TODO : convert docstring does not mention 
+  inf_le_left := begin convert X.inf_le_left, convert rfl, convert rfl, sorry end,
   inf_le_right := _,
-  le_inf := _ }
+  le_inf := _ },
+  repeat {sorry}
 end
 #exit
 { inf := _,
