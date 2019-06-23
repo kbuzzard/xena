@@ -9,6 +9,8 @@ import data.equiv.basic
 
 import tactic.where -- cool debugging tool 
 
+-- this is the only non-mathlib import. Should that stuff be in mathlib
+-- or not? If not then feel free to rewrite the below.
 import for_mathlib_complete_lattice
 
 --open lattice
