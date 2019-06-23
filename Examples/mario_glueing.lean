@@ -154,19 +154,29 @@ def res_subset {F : presheaf_on_opens U} {G : presheaf_on_opens U} (e : equiv U 
 
 end equiv
 
+-- I've failed to do res_subset and I think that as a result glue is horrible 
 #exit
 
-def glue {I : Type*} (S : I → α) (F : Π (i : I), sheaf_on_opens.{v} α (S i))
+def glue {I : Type*} (S : I → α) (F : Π (i : I), presheaf_on_opens (S i))
   (φ : Π (i j : I),
-    equiv ((F i).res_subset ((S i) ∩ (S j)) (set.inter_subset_left _ _)) ((F j).res_subset ((S i) ∩ (S j)) (set.inter_subset_right _ _)))
-  (Hφ1 : ∀ i, φ i i = equiv.refl (F i))
+    equiv ((S i) ⊓ (S j)) 
+      (res_subset (S i) (F i) ((S i) ⊓ (S j)) inf_le_left)
+      (res_subset (S j) (F j) ((S i) ⊓ (S j)) inf_le_right))
+  (Hφ1 : ∀ i, φ i i = equiv.refl (S i ⊓ S i) (res_subset (S i) (F i) ((S i) ⊓ (S i)) inf_le_left))
   (Hφ2 : ∀ i j k,
-    ((φ i j).res_subset ((S i) ∩ (S j) ∩ (S k)) (set.inter_subset_left _ _)).trans
-      ((φ j k).res_subset ((S i) ∩ (S j) ∩ (S k)) (set.subset_inter (le_trans (set.inter_subset_left _ _)
-       (set.inter_subset_right _ _)) (set.inter_subset_right _ _))) =
-    (φ i k).res_subset ((S i) ∩ (S j) ∩ (S k)) (set.subset_inter (le_trans (set.inter_subset_left _ _)
-    (set.inter_subset_left _ _)) (set.inter_subset_right _ _))) :
-  sheaf_on_opens.{max u v} α (opens.Union S) :=
+    equiv.trans ((S i) ⊓ (S j) ⊓ (S k))
+      (equiv.res_subset ((S i) ⊓ (S j)) (φ i j) ((S i) ⊓ (S j) ⊓ (S k)) (inf_le_left))
+      (equiv.res_subset ((S j) ⊓ (S k)) (φ j k) ((S i) ⊓ (S j) ⊓ (S k))
+        (show (S i) ⊓ (S j) ⊓ (S k) ≤ (S j) ⊓ (S k), from begin 
+        exact le_inf (le_trans (inf_le_left) (inf_le_right)) (inf_le_right)
+        end))
+       -- (le_inf (le_trans (inf_le_left)
+       --(inf_le_right)) (inf_le_right))
+     =
+    equiv.res_subset ((S i) ⊓ (S k)) (φ i k) ((S i) ⊓ (S j) ⊓ (S k))
+      (le_inf (le_trans (inf_le_left)
+    (inf_le_left)) (le_trans inf_le_left inf_le_right))) :
+  presheaf_on_opens (lattice.complete_lattice.supr S) :=
 { F :=
   { F := λ W, { f : Π i, (F i).eval ((S i) ∩ W) (set.inter_subset_left _ _) //
       ∀ i j, (φ i j).1.map ((S i) ∩ (S j) ∩ W) (set.inter_subset_left _ _)
