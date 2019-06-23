@@ -7,6 +7,8 @@ import topology.opens -- only for the conjecture that i need precisely opens α
   -- import sheaves.presheaf
 import data.equiv.basic
 
+import tactic.where -- cool debugging tool 
+
 import for_mathlib_complete_lattice
 
 --open lattice
@@ -104,6 +106,7 @@ structure sheaf_of_rings (α : Type u) [semilattice_inf α] extends sheaf α :=
 [ring : ∀ U, ring (F U)]
 [ring_hom : ∀ U V h, is_ring_hom (res U V h)]
 
+--#where
 
 universes w u₁ v₁
 
@@ -190,6 +193,7 @@ rfl
 
 end morphism
 
+-- #where
 structure equiv (F : sheaf_on_opens.{v} α U) (G : sheaf_on_opens.{w} α U) : Type (max u v w) :=
 (to_fun : morphism F G)
 (inv_fun : morphism G F)
@@ -218,7 +222,7 @@ by rw [morphism.comp_res_subset, e.4, morphism.id_res_subset]⟩
 
 end equiv
 
-/-
+ /-
 ** TODO **
 #check @lattice.supr
 supr : Π {α : Type u_1} {ι : Sort u_2} [_inst_1 : has_Sup α], (ι → α) → α
@@ -251,8 +255,10 @@ lattice.le_supr :
   ∀ {α : Type u_1} {ι : Sort u_2} [_inst_1 : lattice.complete_lattice α] (s : ι → α) (i : ι),
     s i ≤ lattice.supr s
 -/
-#check @thing.le_supr
+
 namespace thing
+
+--#where
 
 -- thing is a structure, complete_lattice is a class
 def canonical1 (α : Type u) : _root_.equiv (lattice.complete_lattice α) (thing α) :=
@@ -267,7 +273,30 @@ def canonical1 (α : Type u) : _root_.equiv (lattice.complete_lattice α) (thing
     le_inf := X.le_inf,
     supr := λ I, @lattice.supr α I (by resetI; apply_instance), -- bit of an effort!
     le_supr := λ ι, @lattice.complete_lattice.le_supr _ ι (by resetI; apply_instance),--==s i ≤ lattice.supr s@lattice.complete_lattice.le_supr ,--==lattice.complete_lattice.le_supr},--begin sorry, end,
-  },inv_fun := sorry,
+  },inv_fun := λ Y, { sup := _,
+  le := Y.le,
+  lt := _,
+  le_refl := _,
+  le_trans := _,
+  lt_iff_le_not_le := Y.lt_iff_le_not_le,
+  le_antisymm := _,
+  le_sup_left := sorry, -- I hate it when sorry is underlined
+  le_sup_right := _,
+  sup_le := _,
+  inf := _,
+  inf_le_left := _,
+  inf_le_right := _,
+  le_inf := _,
+  top := _,
+  le_top := _,
+  bot := _,
+  bot_le := _,
+  Sup := _,
+  Inf := _,
+  le_Sup := _,
+  Sup_le := _,
+  Inf_le := _,
+  le_Inf := _ },
   left_inv := sorry,
   right_inv := sorry }
 #exit
