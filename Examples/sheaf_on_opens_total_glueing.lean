@@ -286,7 +286,7 @@ begin
   le_refl := X.le_refl,
   le_trans := _,
   le_antisymm := _,
-  inf_le_left := _,
+  inf_le_left := X.inf_le_left,
   inf_le_right := _,
   le_inf := _ }
 end
