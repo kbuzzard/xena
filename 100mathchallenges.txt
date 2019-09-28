@@ -1,0 +1,59 @@
+1) Define a Dedekind domain.
+
+2) Prove that every ideal of the integers of a Dedekind domain factorises uniquely into prime ideals.
+
+3) Define the class group of a Dedekind domain.
+
+4) Define a number field.
+
+5) Define a global field.
+
+6) Define the integers of a global field.
+
+7) Prove that the integers of a global field are a Dedekind domain.
+
+8) Prove that the class group of a global field is finite.
+
+9) Define the zeta function of a global field.
+
+10) Prove that the zeta function of a global field has a meromorphic extension to the complex numbers.
+
+11) State the analytic class number formula.
+
+12) Prove the analytic class number formula.
+
+***
+
+13) Define group cohomology.
+
+14) Prove spectral sequence.
+
+15) Prove long exact sequence of terms of low degree.
+
+14) Define profinite group cohomology for discrete G-modules.
+
+15) 
+
+Greenberg-Wiles.
+
+
+
+
+3a) Define an elliptic curve over a field k.
+
+3b) Define the group structure on the k-points of an elliptic curve, proving that it is a group.
+
+3c) Prove that if k is a number field then the group of k-points of an elliptic curve are finitely-generated. Wait -- this is really hard. 
+
+3d) 
+
+Prove that every ideal of the integers of a Dedekind domain factorises uniquely into prime ideals.
+
+Prove that the class group of a global field is finite.
+
+Define the inertia and higher ramification groups for an algebraic extension of a local field.
+
+
+
+***
+
