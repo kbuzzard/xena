@@ -2,14 +2,29 @@
 
 Problem Sheet 1, October 2019.
 
-Translated from pdf into Lean by Kevin Buzzard 
+This is a Lean file. It can be read with the Lean theorem prover.
+
+You can work on this file online at 
+https://tinyurl.com/Lean-M40001-Sheet1
+
+or you can install Lean and its maths library following the
+instructions at
+https://github.com/leanprover-community/mathlib
+
+There are advantages to installing Lean on your own computer
+(for example it's faster), but it's a lot more hassle than
+just using it online.
+
+In the below, delete "sorry" and replace it with some
+tactics which prove the result.
+
 -/
 
--- This is a Lean file. It can be read with the Lean theorem prover.
--- You can try Lean online at 
-/-
-Question 1. Let P and Q be Propositions (that is, true/false statements).
+/- Question 1. 
+
+Let P and Q be Propositions (that is, true/false statements).
 Prove that P ∧ Q → Q ∧ P. 
+
 -/
 
 lemma question_one (P Q : Prop) : P ∧ Q → Q ∧ P :=
@@ -17,7 +32,8 @@ begin
   sorry
 end
 /-
-For question 2, comment out one option using -- (or just delete it)
+
+For question 2, comment out one option (or just delete it)
 and prove the other one.
 -/
 
@@ -45,7 +61,9 @@ begin
   sorry
 end
 
-/- Say P, Q and R are propositions, and we know:
+/- Question 3.
+
+Say P, Q and R are propositions, and we know:
 1) if Q is true then P is true
 2) If Q is false then R is false.
 
@@ -70,7 +88,7 @@ begin
   sorry
 end
 
-/-
+/- Question 4.
 
    Your friend is thinking of three true-false statements P, Q and R,
    and they tell you the following facts:
@@ -94,11 +112,14 @@ begin
   sorry
 end
 
-/-
+/- Question 5.
+
   Say that for every integer n we have a proposition P n.
   Say we know P n → P (n + 8) for all n, and
   P n → P (n -3) for all n. Prove that the P n are either
   all true, or all false. 
+
+This question is harder than the others.
 -/
 lemma question_5 (P : ℤ → Prop) (h8 : ∀ n, P n → P (n + 8)) (h3 : ∀ n, P n → P (n - 3)) :
 (∀ n, P n) ∨ (∀ n, ¬ (P n)) :=
