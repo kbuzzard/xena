@@ -1,4 +1,4 @@
-import algebra.group data.set data.equiv
+import algebra.group data.set data.equiv.basic
 
 def is_add_group_hom {α : Type*} {β : Type*} [add_group α] [add_group β] (f : α → β) : Prop :=
 @is_group_hom (multiplicative α) (multiplicative β) _ _ f

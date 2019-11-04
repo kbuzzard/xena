@@ -4,25 +4,9 @@ universes u v
 
 open lattice
 
-variables {α : Type u} [semilattice_inf α]
-
-variable (U : α)
-
---#print notation →⊓
---#check @semilattice_inf_hom
-
-/-
-class semilattice_inf (α : Type u) extends has_inf α, partial_order α :=
-(inf_le_left : ∀ a b : α, a ⊓ b ≤ a)
-(inf_le_right : ∀ a b : α, a ⊓ b ≤ b)
-(le_inf : ∀ a b c : α, a ≤ b → a ≤ c → a ≤ b ⊓ c)
--/
-
---#where
+variables {α : Type u} [semilattice_inf α] (U : α)
 
 namespace semilattice_inf.opens 
-
---#print has_inf.inf
 
 def inf {α : Type u} [semilattice_inf α] (U : α) ( a b : {V // V <= U}) : {V // V <= U} := 
 ⟨a.val ⊓ b.val, le_trans inf_le_left a.property⟩
@@ -30,19 +14,11 @@ def inf {α : Type u} [semilattice_inf α] (U : α) ( a b : {V // V <= U}) : {V 
 instance has_inf {α : Type u} [semilattice_inf α] (U : α) :
   has_inf {V // V ≤ U} := ⟨inf U⟩
 
-example {α : Type u} [semilattice_inf α] (U : α) :
-  has_inf {V // V ≤ U} := by apply_instance
-
-example {α : Type u} [semilattice_inf α] (U : α) :
-  partial_order {V // V ≤ U} := by apply_instance
-
 instance {α : Type u} [semilattice_inf α] (U : α) :
   semilattice_inf {V // V ≤ U} :=
 { inf_le_left := λ a b, inf_le_left,
-  inf := λ a b, ⟨a.1 ⊓ b.1, le_trans inf_le_left a.2⟩,
   inf_le_right := λ a b, inf_le_right,
-  le_inf := λ a b c, le_inf,
-  ..subtype.partial_order _ }
+  le_inf := λ a b c, le_inf}
 
 def presheaf_on_opens (U : α) := presheaf {V // V ≤ U}
 

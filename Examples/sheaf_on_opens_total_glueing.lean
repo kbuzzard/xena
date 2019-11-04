@@ -101,13 +101,8 @@ def gluing (F : presheaf α) :=
 
 end presheaf
 
-structure sheaf (α : Type u) [semilattice_inf α] extends presheaf α :=
-(locality : to_presheaf.locality)
-(gluing   : to_presheaf.gluing)
 
-structure sheaf_of_rings (α : Type u) [semilattice_inf α] extends sheaf α :=
-[ring : ∀ U, ring (F U)]
-[ring_hom : ∀ U V h, is_ring_hom (res U V h)]
+
 
 --#where
 
@@ -121,6 +116,14 @@ top space X -> sdemilattice_inf α
 
 -- open topological_space
 
+
+structure sheaf (α : Type u) [semilattice_inf α] extends presheaf α :=
+(locality : to_presheaf.locality)
+(gluing   : to_presheaf.gluing)
+
+structure sheaf_of_rings (α : Type u) [semilattice_inf α] extends sheaf α :=
+[ring : ∀ U, ring (F U)]
+[ring_hom : ∀ U V h, is_ring_hom (res U V h)]
 def sheaf_on_opens (α : Type u) [semilattice_inf α] (U : α) : Type (max u (v+1)) :=
 sheaf.{u v} α
 
@@ -196,7 +199,7 @@ rfl
 
 end morphism
 
--- #where
+#where
 structure equiv (F : sheaf_on_opens.{v} α U) (G : sheaf_on_opens.{w} α U) : Type (max u v w) :=
 (to_fun : morphism F G)
 (inv_fun : morphism G F)
@@ -264,6 +267,9 @@ lattice.le_supr :
 
 namespace thing
 
+instance (α : Type u) (Y : thing α) : semilattice_inf α := thing.to_semilattice_inf Y
+-- example (α : Type u) (Y : thing α) : semilattice_inf α := by apply_instance -- fails
+
 -- Debugging starts here.
 
 -- structure thing (α : Type u) extends semilattice_inf α :=
@@ -329,11 +335,106 @@ refine { inf := semilattice_inf.inf,
          },
 end
 
-#exit
-def canonical2.inv_fun (α : Type u) 
-[lattice.complete_lattice α] : thing.{v} α :=
-begin
+--#check complete_lattice
+/-
+/-- A complete lattice is a bounded lattice which
+  has suprema and infima for every subset. -/
+class complete_lattice (α : Type u) extends bounded_lattice α, has_Sup α, has_Inf α :=
+(le_Sup : ∀s, ∀a∈s, a ≤ Sup s)
+(Sup_le : ∀s a, (∀b∈s, b ≤ a) → Sup s ≤ a)
+(Inf_le : ∀s, ∀a∈s, Inf s ≤ a)
+(le_Inf : ∀s a, (∀b∈s, a ≤ b) → a ≤ Inf s)
+-/
 
+-- lattice α, order_top α, order_bot α
+--#check lattice
+
+/-
+/-- A `semilattice_sup` is a join-semilattice, that is, a partial order
+  with a join (a.k.a. lub / least upper bound, sup / supremum) operation
+  `⊔` which is the least element larger than both factors. -/
+class semilattice_sup (α : Type u) extends has_sup α, partial_order α :=
+(le_sup_left : ∀ a b : α, a ≤ a ⊔ b)
+(le_sup_right : ∀ a b : α, b ≤ a ⊔ b)
+(sup_le : ∀ a b c : α, a ≤ c → b ≤ c → a ⊔ b ≤ c)
+-/
+
+--#print has_sup
+--#print notation ⊔
+
+
+inductive ubool : Type u
+| tt : ubool
+| ff : ubool
+
+-- in thing namespace
+--#check @lattice.complete_lattice.sup
+
+-- there might be a universe issue here
+def sup {α : Type u} [c : complete_lattice α] (Y : thing α) (a b : α) : α :=
+@thing.supr α Y ubool (@ubool.rec (λ _, α) a b)
+
+instance has_sup (α : Type u) [semilattice_inf α] (Y : thing α) : has_sup α :=
+{ sup := λ a b, @thing.supr α Y ubool (@ubool.rec (λ _, α) a b)}
+
+example (α : Type u) [semilattice_inf α] (Y : thing α) : partial_order α := by apply_instance
+
+
+variables (α : Type u) [semilattice_inf α]
+
+--(supr {ι : Sort v} (s : ι → α) : α)
+--(le_supr {ι : Sort v} : ∀ (s : ι → α) (i : ι), s i ≤ supr s)
+
+attribute [instance] thing.to_semilattice_inf
+
+theorem le_sup_left (Y : thing α) : begin 
+-- I need this for the notation
+letI : has_sup α := @thing.has_sup α _ Y,
+resetI,
+exact ∀ (a b : α), a ≤ a ⊔ b end :=
+begin
+  sorry,
+end
+--  intros h a b,
+--  unfold has_sup.sup,
+--  convert Y.le_supr _ _ using 0,
+--  convert rfl using 0,
+--  sorry,
+
+
+-- #print semilattice_sup -- it's a class
+ /-
+ class semilattice_sup (α : Type u) extends has_sup α, partial_order α :=
+(le_sup_left : ∀ a b : α, a ≤ a ⊔ b)
+(le_sup_right : ∀ a b : α, b ≤ a ⊔ b)
+(sup_le : ∀ a b c : α, a ≤ c → b ≤ c → a ⊔ b ≤ c)
+-/
+instance (α : Type u) [H : semilattice_inf α] (Y : thing α) : semilattice_sup α :=
+{ sup := λ a b, @thing.supr α Y bool (@bool.rec (λ _, α) a b),
+  le_sup_left := begin sorry end,-- Y.le_sup_left,
+  le_sup_right := sorry,
+  sup_le := sorry, ..H}
+
+example (α : Type u) [semilattice_inf α] (Y : thing α) : lattice α := 
+begin
+  sorry
+end
+#exit
+example (α : Type u) [semilattice_inf α] (Y : thing α) : order_top α := by apply_instance
+example (α : Type u) [semilattice_inf α] (Y : thing α) : order_bot α := by apply_instance
+instance (α : Type u) [semilattice_inf α] (Y : thing α) : bounded_lattice α :=
+by apply_instance #exit
+lattice.complete_lattice α :=
+
+bounded_lattice α
+--class complete_lattice (α : Type u) extends bounded_lattice α, has_Sup α, has_Inf α :=
+
+
+def canonical2.inv_fun (α : Type u) [semilattice_inf α] (Y : thing α) : lattice.complete_lattice α :=
+begin
+  
+  sorry
+end
 
 #exit
 begin
@@ -572,6 +673,8 @@ def glue {I : Type*} (S : I → α) (F : Π (i : I), sheaf_on_opens.{v} α (S i)
   locality := sorry,
   gluing := sorry }
 
+def mario_belief (s : set α) (F : Π (i : I), sheaf_on_opens.{v} α (S i)) 
+
 def universal_property (I : Type*) (S : I → α) (F : Π (i : I), sheaf_on_opens.{v} α (S i))
   (φ : Π (i j : I),
     equiv ((F i).res_subset ((S i) ∩ (S j)) (set.inter_subset_left _ _)) ((F j).res_subset ((S i) ∩ (S j)) (set.inter_subset_right _ _)))
@@ -582,6 +685,12 @@ def universal_property (I : Type*) (S : I → α) (F : Π (i : I), sheaf_on_open
     (φ i k).res_subset ((S i) ∩ (S j) ∩ (S k)) (set.subset_inter (le_trans (set.inter_subset_left _ _) (set.inter_subset_left _ _)) (set.inter_subset_right _ _))) :
 ∀ i : I, equiv (res_subset (glue S F φ Hφ1 Hφ2) (S i) $ opens.subset_Union S i) (F i) := sorry
 
+/- questions:
+
+1) Can you glue presheaves of types? And prove the universal property for sets?
+2) Cah you glue sheaves of types? And prove the universal property for sets?
+3) Can you glue sheaves of rings? And prove the universal property for sets?
+4) What about proving the universal property for types?
 -- You are the winner if you get this far
 
 end sheaf_on_opens

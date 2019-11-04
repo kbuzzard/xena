@@ -1,25 +1,23 @@
-/- Integers mod 37
+-- Integers mod 37
 
-  A demonstration of how to use equivalence relations and equivalence classes in Lean.
+-- a demonstration of how to use equivalence relations and equivalence classes in Lean.
 
-  We define the "congruent mod 37" relation on integers, prove it is an equivalence
-  relation, define Zmod37 to be the equivalence classes, and put a ring structure on
-  the quotient.
+-- We define the "congruent mod 37" relation on integers,
+-- prove it is an equivalence relation, define Zmod37 to be the equivalence classes,
+-- and put a ring structure on the quotient.
 
--/
--- this import is helpful for some intermediate calculation
+-- this is just so I can cheat when proving multiplication is well-defined mod 37
 import tactic.ring
 
--- Definition of the equivalence relation
-definition cong_mod37 (a b : ℤ) : Prop := ∃ (k : ℤ), k * 37 = b - a
+definition cong_mod37 (a b : ℤ) := ∃ (k : ℤ), k * 37 = b - a
 
 -- Now check it's an equivalence reln!
 
 theorem cong_mod_refl : reflexive (cong_mod37) :=
 begin
   intro x,
-  -- to prove cong_mod37 x x we just observe that k = 0 will do.
-  use (0:ℤ), -- this is k
+  -- to prove cong_mod37 x x we just observe that k=0 will do.
+  existsi (0:ℤ), -- this is k
   simp,
 end
 
@@ -30,7 +28,7 @@ begin
   cases H with k Hk,
   -- Hk : k * 37 = (b - a)
   -- Goal is to find an integer k' with k' * 37 = a - b  
-  use -k,
+  existsi -k,
   simp [Hk],
 end
 
@@ -39,13 +37,13 @@ begin
   intros a b c Hab Hbc,
   cases Hab with k Hk,
   cases Hbc with l Hl,
-  -- Hk : k*37 = b - a, and Hl : l*37 = c - b
-  -- Goal : m * 37 = c - a
-  use (k+l),
+  -- k*37 = b - a, l*37 = c - b
+  -- need to solve m*37 = c - a
+  existsi (k+l),
   simp [add_mul,Hk,Hl],
 end
 
--- so we've now seen a general technique for proving a ≈ b -- use (the k that works)
+-- so we've now seen a general technique for proving a ≈ b -- existsi (the k that works)
 
 theorem cong_mod_equiv : equivalence (cong_mod37) :=
 ⟨cong_mod_refl,cong_mod_symm,cong_mod_trans⟩
@@ -60,14 +58,12 @@ definition reduce_mod37 : ℤ → Zmod37 := quot.mk (cong_mod37)
 
 -- now a little bit of basic interface
 
--- Natural map from ℤ to ℤmod37
 instance coe_int_Zmod37 : has_coe ℤ (Zmod37) := ⟨reduce_mod37⟩
 
--- Notation for 0 and 1
 instance : has_zero (Zmod37) := ⟨reduce_mod37 0⟩
 instance : has_one (Zmod37) := ⟨reduce_mod37 1⟩
+instance : inhabited (Zmod37) := ⟨0⟩
 
--- Add basic facts about 0 and 1 to the set of simp facts
 @[simp] theorem of_int_zero : (0 : (Zmod37))  = reduce_mod37 0 := rfl 
 @[simp] theorem of_int_one : (1 : (Zmod37))  = reduce_mod37 1 := rfl 
 
@@ -84,7 +80,7 @@ begin
   -- goal is ⟦a₁ + a₂⟧ = ⟦b₁ + b₂⟧
   apply quotient.sound,
   -- goal now a₁ + a₂ ≈ b₁ + b₂, and we know how to do these.
-  use (m+n),
+  existsi (m+n),
   simp [add_mul,Hm,Hn]
 end 
 
@@ -144,7 +140,7 @@ instance : add_comm_group (Zmod37)  :=
       apply quotient.sound, -- works because 0 + ⟦a⟧ is by definition ⟦0⟧ + ⟦a⟧ which is by definition ⟦0 + a⟧
       -- goal is now 0 + a ≈ a
       -- here's the way we used to do it.
-      use (0 : ℤ),
+      existsi (0 : ℤ),
       simp,
       -- but there are tricks now, which I'll show you with add_zero and add_assoc.
     end),
@@ -167,7 +163,7 @@ instance : add_comm_group (Zmod37)  :=
       cases (quot.exists_rep abar) with a Ha,
       rw [←Ha],
       apply quot.sound,
-      use (0:ℤ),
+      existsi (0:ℤ),
       simp,
     end,
   -- but really all proofs should just look something like this

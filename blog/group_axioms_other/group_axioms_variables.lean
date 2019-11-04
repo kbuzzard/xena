@@ -1,7 +1,8 @@
 -- do I use a section? What even is a section?
 -- so I use a namespace? What would a sensible convention be?
 -- I don't care about junk like imports at the beginning of files
-import data.equiv
+import data.equiv.basic
+
 namespace xena
 
 -- This file is for undergraduate mathematicians who want to see the 
@@ -46,6 +47,7 @@ intro a,
 end 
 
 -- thoughts about canonical isomorphism
-theorem group'_canonically_isomorphic_to_group (G : Type) : equiv (group' G) [group G] := sorry
+theorem group'_canonically_isomorphic_to_group (G : Type) :
+equiv (group' G) (group G) := sorry
 
 end xena
