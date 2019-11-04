@@ -31,7 +31,7 @@ lemma Fun.transportable (α : Type u) : (transportable (Fun α)) :=
     by cases e1; cases e2; refl }
 
 theorem prod.ext' {α β : Type*} {p q : α × β} (H1 : p.1 = q.1) (H2 : p.2 = q.2) : p = q :=
-prod.ext.2 ⟨H1, H2⟩
+prod.ext H1 H2
 
 def Prod : Type u → Type v → Type (max u v) := λ α β, α × β
 lemma Prod.transportable (α : Type u) : (transportable (Prod α)) :=
@@ -77,12 +77,12 @@ lemma Aut.transportable : (transportable Aut) :=
 
 definition prod_group (G : Type u) (H : Type v) [HG : group G] [HH : group H] : group (G × H) :=
 { mul := λ ⟨g1,h1⟩ ⟨g2,h2⟩, ⟨g1 * g2,h1 * h2⟩,
-  mul_assoc := λ ⟨g1,h1⟩ ⟨g2,h2⟩ ⟨g3,h3⟩,prod.ext.2 ⟨mul_assoc _ _ _,mul_assoc _ _ _⟩, 
+  mul_assoc := λ ⟨g1,h1⟩ ⟨g2,h2⟩ ⟨g3,h3⟩,prod.ext (mul_assoc _ _ _) (mul_assoc _ _ _), 
   one := ⟨HG.one,HH.one⟩,
-  one_mul := λ ⟨g,h⟩, prod.ext.2 ⟨one_mul _,one_mul _⟩,
-  mul_one := λ ⟨g,h⟩, prod.ext.2 ⟨mul_one _,mul_one _⟩,
+  one_mul := λ ⟨g,h⟩, prod.ext (one_mul _) (one_mul _),
+  mul_one := λ ⟨g,h⟩, prod.ext (mul_one _) (mul_one _),
   inv := λ ⟨g,h⟩, ⟨group.inv g,group.inv h⟩,--begin end,--λ ⟨g,h⟩, ⟨HG.inv g,HH.inv h⟩,
-  mul_left_inv := λ ⟨g,h⟩, prod.ext.2 ⟨mul_left_inv g,mul_left_inv h⟩
+  mul_left_inv := λ ⟨g,h⟩, prod.ext (mul_left_inv g) (mul_left_inv h)
 }
 
 -- I can prove that if G is can iso to G', and H to H', then the diagram commutes?

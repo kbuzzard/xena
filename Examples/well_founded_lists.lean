@@ -2,9 +2,11 @@ import data.equiv.basic
 
 namespace wf
 
+-- general well-founded trees
 inductive W (L : Type) (A : L → Type) : Type
 | Node : ∀ (lbl : L), (A lbl → W) → W
 
+-- model of nat as well-founded tree with nodes labelled by bool
 def nat := W bool (λ b, bool.rec empty unit b)
 
 def list (L : Type) :=
@@ -38,3 +40,20 @@ example : equiv nat wf.nat :=
     }
   end
 }
+
+example (L : Type) : equiv (list L) (wf.list L) :=
+{ to_fun := λ l, list.rec_on l (wf.W.Node none empty.elim) $ λ t m IH, wf.W.Node (some t) $ λ s, IH,
+  inv_fun := λ w, wf.W.rec_on w $ λ ol, option.cases_on ol
+    (λ _ _, list.nil) (λ l h1 h2, list.cons l $ h2 ()),
+  left_inv := begin
+    intro l,
+    induction l with e l h, refl,
+    dsimp, congr',
+  end,
+  right_inv := begin
+    intro w,
+    induction w with ol H1 H2,
+    cases ol,
+      dsimp, congr', ext x, cases x,
+    dsimp, congr', ext a, convert (H2 a)
+  end }

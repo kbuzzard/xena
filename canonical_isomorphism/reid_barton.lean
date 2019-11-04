@@ -1,5 +1,5 @@
-import data.equiv
-import analysis.topology.topological_space
+import data.equiv.basic
+import topology.basic
 
 universes u v w
 

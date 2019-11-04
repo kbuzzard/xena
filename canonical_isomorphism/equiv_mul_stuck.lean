@@ -1,3 +1,4 @@
+import tactic.interactive
 universe zfc_u 
 variables {α β : Type zfc_u}
 
@@ -41,17 +42,8 @@ definition equiv_mul {α β : Type zfc_u} : equiv' α β → equiv' (has_mul α)
     funext,
     simp [E.ij,E.ji], -- got there in the end
   end,
-  ji := -- I can't even do this in term mode so I just copy out the entire tactic mode proof again.
- λ g, begin 
-    cases g, -- aargh why do I struggle
-    suffices :  (λ (b1 b2 : β), E.i (E.j (g (E.i (E.j b1)) (E.i (E.j b2))))) = (λ b1 b2, g b1 b2),
-      by rw this,
-    funext,
-    simp [E.ij,E.ji], -- got there in the end
-  end, -- didn't I just write that?
+  ji := -- term mode (because i'm a year older)
+ λ ⟨g⟩, by simp [E.ij,E.ji]
 }
-
-
-#print has_mul.mul
 
 end zfc 

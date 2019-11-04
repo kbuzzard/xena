@@ -33,7 +33,7 @@ theorem eta (z : ℂ) : (⟨z.re, z.im⟩ : ℂ) = z := by cases z with x y; ref
 -- Now we should prove the extensionality lemma for complex numbers;
 -- two complex numbers are equal if and only if their real and imaginary
 -- parts are equal. One way is trivial; here's the other way.
-theorem ext (z w : ℂ) (Hre : re z = re w) (Him : im z = im w) :
+@[extensionality] theorem ext (z w : ℂ) (Hre : re z = re w) (Him : im z = im w) :
 z = w := 
 begin
   cases w with x y,
@@ -134,6 +134,92 @@ a * (b + c) = a * b + a * c := by apply ext; simp; ring
 instance : comm_ring ℂ :=
 by refine { zero := 0, add := (+), neg := has_neg.neg, one := 1, mul := (*), ..};
 { intros, apply ext; simp; ring }
+
+def conj (z : ℂ) : ℂ := ⟨z.re, -z.im⟩
+
+noncomputable def inv (z : ℂ) : ℂ :=
+  ⟨z.re*(z.re*z.re+z.im*z.im)⁻¹, -z.im*(z.re*z.re+z.im*z.im)⁻¹⟩
+
+noncomputable instance : has_inv ℂ := ⟨complex.inv⟩
+
+example : zero_ne_one_class ℝ := by apply_instance
+
+example : (0 : ℝ) ≠ (1 : ℝ) := zero_ne_one_class.zero_ne_one ℝ
+
+--set_option pp.numerals false
+instance : zero_ne_one_class ℂ := { 
+  zero := 0,
+  one := 1,
+  zero_ne_one := begin
+    intro h,
+    apply zero_ne_one_class.zero_ne_one ℝ,
+    show (0 : ℂ).re = (1 : ℂ).re,
+    rw h,
+  end }
+
+lemma norm_sq_ne_zero_of_ne_zero {x y : ℝ} (h : (⟨x, y⟩ : ℂ) ≠ 0) : x * x + y * y ≠ 0 :=
+begin
+  intro h2,
+  apply h,
+  ext,
+    dsimp,
+    exact eq_zero_of_mul_self_add_mul_self_eq_zero h2,
+  rw add_comm at h2,
+  exact eq_zero_of_mul_self_add_mul_self_eq_zero h2,
+end
+
+theorem mul_inv_cancel {z : ℂ} (hz : z ≠ 0) : z * z⁻¹ = 1 :=
+begin
+  cases z with x y,
+  unfold has_inv.inv inv,
+  dsimp,
+  ext;dsimp,
+  { rw ←mul_assoc,
+    rw neg_mul_eq_neg_mul,
+    rw ←mul_assoc,
+    rw neg_mul_neg,
+    rw ←add_mul,
+    apply div_self,
+    apply norm_sq_ne_zero_of_ne_zero,
+    assumption,
+  },
+  { ring,
+  }
+end
+
+theorem inv_mul_cancel {z : ℂ} (hz : z ≠ 0) : z⁻¹ * z = 1 := (mul_comm z z⁻¹) ▸ mul_inv_cancel hz
+
+/-
+(has_decidable_eq : decidable_eq α)
+(inv_zero : inv zero = zero)
+(mul_inv_cancel : ∀ {a : α}, a ≠ 0 → a * a⁻¹ = 1)
+(inv_mul_cancel : ∀ {a : α}, a ≠ 0 → a⁻¹ * a = 1)
+-/
+noncomputable instance : field ℂ :=
+begin
+  refine { 
+    inv := has_inv.inv,
+    zero_ne_one := zero_ne_one_class.zero_ne_one _,
+    mul_inv_cancel := λ _, mul_inv_cancel,
+    inv_mul_cancel := λ _, inv_mul_cancel,
+    ..complex.comm_ring,
+    ..},
+end
+
+noncomputable instance : discrete_field ℂ :=
+begin
+  refine {..complex.field, ..},
+    intros x y,
+    apply classical.prop_decidable,
+  show (0 : ℂ) ⁻¹ = 0,
+  ext,
+    refine zero_mul _,
+  dsimp,
+  unfold has_inv.inv inv,
+  dsimp,
+  rw neg_zero,
+  rw zero_mul,      
+end
 
 end complex
 

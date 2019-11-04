@@ -1,7 +1,7 @@
 -- Questions by Johan Commelin
 -- Solutions by Kenny Lau, with minor additions and tinkering by Kevin Buzzard
 
-import data.equiv
+import data.equiv.basic
 
 universes u v w
 
@@ -36,9 +36,6 @@ lemma Fun.transportable (α : Type u) : (transportable (Fun α)) :=
   on_refl  := λ β, equiv.ext _ _ $ λ f, rfl,
   on_trans := λ β γ δ e1 e2, equiv.ext _ _ $ λ f, funext $ λ x,
     by cases e1; cases e2; refl }
-
-theorem prod.ext' {α β : Type*} {p q : α × β} (H1 : p.1 = q.1) (H2 : p.2 = q.2) : p = q :=
-prod.ext.2 ⟨H1, H2⟩
 
 def Prod : Type u → Type v → Type (max u v) := λ α β, α × β
 lemma Prod.transportable (α : Type u) : (transportable (Prod α)) :=
@@ -91,8 +88,8 @@ lemma Const'.transportable : (transportable Const) := {
   on_trans := λ α β γ Hαβ Hβγ,by congr
   }  
 -- level 2
-def Fun : Type u → Type v → Type (max u v) := λ α β, α → β
-lemma Fun.transportable (α : Type u) : (transportable (Fun α)) := {
+def Fun' : Type u → Type v → Type (max u v) := λ α β, α → β
+lemma Fun'.transportable (α : Type u) : (transportable (Fun α)) := {
     on_equiv := λ β γ Hβγ,⟨
         λ f a,Hβγ (f a),
         λ f a,Hβγ.symm (f a),
@@ -103,8 +100,8 @@ lemma Fun.transportable (α : Type u) : (transportable (Fun α)) := {
     on_trans := λ β γ δ Hβγ Hγδ,by congr
 }
 -- level 3
-def Prod : Type u → Type v → Type (max u v) := λ α β, α × β
-lemma Prod.transportable (α : Type u) : (transportable (Prod α)) := {
+def Prod' : Type u → Type v → Type (max u v) := λ α β, α × β
+lemma Prod'.transportable (α : Type u) : (transportable (Prod α)) := {
 on_equiv := λ β γ Hβγ,⟨λ ⟨a,b⟩,⟨a,Hβγ b⟩,λ ⟨a,c⟩,⟨a,Hβγ.symm c⟩,λ f,begin funext,simp,end,sorry⟩,
 on_refl := λ α,sorry,
 on_trans := λ α β γ Hαβ Hβγ,sorry
@@ -112,18 +109,18 @@ on_trans := λ α β γ Hαβ Hβγ,sorry
 
 
 
-lemma Swap.transportable (α : Type u) : (transportable (Swap α)) := sorry
+lemma Swap'.transportable (α : Type u) : (transportable (Swap α)) := sorry
 
 
 -- And then we can define
-def Hom1 (α : Type u) : Type v → Type (max u v) := λ β, α → β
-def Hom2 (β : Type v) : Type u → Type (max u v) := λ α, α → β
-def Aut : Type u → Type u := λ α, α → α
+def Hom1' (α : Type u) : Type v → Type (max u v) := λ β, α → β
+def Hom2' (β : Type v) : Type u → Type (max u v) := λ α, α → β
+def Aut' : Type u → Type u := λ α, α → α
 
 -- And hopefully automagically derive
-lemma Hom1.transportable (α : Type u) : (transportable (Hom1 α)) := sorry
-lemma Hom2.transportable (β : Type v) : (transportable (Hom1 β)) := sorry
-lemma Aut.transportable (α : Type u) : (transportable Aut) := sorry
+lemma Hom1'.transportable (α : Type u) : (transportable (Hom1 α)) := sorry
+lemma Hom2'.transportable (β : Type v) : (transportable (Hom1 β)) := sorry
+lemma Aut'.transportable (α : Type u) : (transportable Aut) := sorry
 
 -- If we have all these in place...
 -- A bit of magic might actually be able to derive `group.transportable` on line 11.

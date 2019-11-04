@@ -1,4 +1,4 @@
-import data.equiv
+import data.equiv.basic
 universes u v y z
 def αu (X Y : Type u) := X → Y 
 def αuv (X : Type u) (Y : Type v) := X → Y
@@ -25,7 +25,9 @@ definition u_uv' {X : Type*} {Y : Type*} : equiv (αu X Y) (αuv X Y) :=
   right_inv := λ x,rfl,
 }
 
-definition u_uv'' {X : Type u} {Y : Type v} : equiv.{max u v} (αu (ulift X) (ulift Y)) (αuv X Y) := 
-sorry
-
+definition u_uv'' {X : Type u} {Y : Type v} : equiv (αu.{max u v} (ulift.{v u} X) (ulift.{u v} Y)) (αuv X Y) := 
+{ to_fun := λ f, _,
+  inv_fun := λ f, f,
+  left_inv := _,
+  right_inv := _ }
 #print ulift 

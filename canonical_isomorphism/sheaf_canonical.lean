@@ -1,4 +1,4 @@
-import data.equiv
+import data.equiv.basic
 -- recall the interface for equiv:
 -- C : equiv α β;
 -- the function is C, the function the other way is C.symm, which is also the equiv the other way

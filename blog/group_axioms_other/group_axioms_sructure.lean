@@ -11,20 +11,21 @@
 -- one : G := 1
 -- inv : G → G := λ a, a⁻¹
 
-class has_group_notation (G : Type) extends has_mul G, has_one G, has_inv G
+class has_group_notation (G : Type)
+  extends has_mul G, has_one G, has_inv G
 
 class group' (G : Type) extends has_group_notation G :=
 (mul_assoc : ∀ (a b c : G), a * b * c = a * (b * c))
 (one_mul : ∀ (a : G), 1 * a = a)
 (mul_left_inv : ∀ (a : G), a⁻¹ * a = 1)
 
-variables {G : Type} (group'.G : group' G) [has_group_notation G]  
+variables {G : Type} [group' G]
 -- variables (H : Type) [has_mul H] [has_one H] [has_inv H]
 
 -- We prove left_mul_cancel for group'
 
-open group'
-lemma group'.mul_left_cancel : ∀ (a b c : G), a * b = a * c → b = c := 
+namespace group'
+lemma mul_left_cancel : ∀ (a b c : G), a * b = a * c → b = c := 
 λ a b c Habac,
  calc b = 1 * b         : by rw one_mul
     ... = (a⁻¹ * a) * b : by rw mul_left_inv
