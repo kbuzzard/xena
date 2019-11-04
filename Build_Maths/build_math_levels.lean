@@ -25,7 +25,7 @@ example : two + two = four :=
 begin
 dunfold two,
 dunfold add,
-admit,
+refl,
 end 
 
 
