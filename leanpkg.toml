@@ -1,8 +1,8 @@
 [package]
 name = "xena"
 version = "0.1"
-lean_version = "master"
+lean_version = "3.4.2"
 path = "src"
 
 [dependencies]
-mathlib = {git = "https://github.com/leanprover/mathlib", rev = "585645937ee940ea5934e7e754af532567f79858"}
+mathlib = {git = "https://github.com/leanprover/mathlib", rev = "2e35a7aaa548010a35c5fe6b766aaa9151cc74d7"}
