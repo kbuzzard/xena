@@ -4,7 +4,7 @@ If you have played through the [natural number game](http://wwwf.imperial.ac.uk/
 
 Challenge 1: [the composite of injective functions is injective](https://tinyurl.com/LeanMathsChallenge01). Here's [the solution](https://tinyurl.com/LeanMathsChallengeSolution01).
 
-Challenge 2: coming on 15th Dec.
+Challenge 2: coming on or before 15th Dec (pester me on Twitter if you want it before then, it's already written)
 
 
 ### Stuck?
