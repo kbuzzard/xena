@@ -1,11 +1,10 @@
 ## Maths challenges for the Lean curious
 
-If you have played through the [natural number game](http://wwwf.imperial.ac.uk/~buzzard/xena/natural_number_game/) and are wondering what other mathematics can be done in Lean, you might want to try some of these challenges. I will try and post around one per week.
+If you have played through the [natural number game](http://wwwf.imperial.ac.uk/~buzzard/xena/natural_number_game/) and are wondering what other mathematics can be done in Lean, you might want to try some of these challenges. I will try and post a few per week.
 
-Challenge 1: [the composite of injective functions is injective](https://tinyurl.com/LeanMathsChallenge01). Here's [the solution](https://tinyurl.com/LeanMathsChallengeSolution01).
+Challenge 1 (9/12/19): [the composite of injective functions is injective](https://tinyurl.com/LeanMathsChallenge01). There's [hints](https://github.com/kbuzzard/xena/blob/master/Maths_Challenges/hints/challenge01.md) and [the solution](https://tinyurl.com/LeanMathsChallengeSolution01).
 
-Challenge 2: coming on or before 15th Dec (pester me on Twitter if you want it before then, it's already written)
-
+Challenge 2 (12/12/19): [a set of reals has at most one supremum](https://tinyurl.com/leanchallenge2). There's [hints]() and [the solution](https://tinyurl.com/leanchallenge02solution)
 
 ### Stuck?
 
