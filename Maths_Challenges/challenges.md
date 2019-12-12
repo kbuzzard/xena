@@ -4,7 +4,7 @@ If you have played through the [natural number game](http://wwwf.imperial.ac.uk/
 
 Challenge 1 (9/12/19): [the composite of injective functions is injective](https://tinyurl.com/LeanMathsChallenge01). There's [hints](https://github.com/kbuzzard/xena/blob/master/Maths_Challenges/hints/challenge01.md) and [the solution](https://tinyurl.com/LeanMathsChallengeSolution01).
 
-Challenge 2 (12/12/19): [a set of reals has at most one supremum](https://tinyurl.com/leanchallenge2). There's [hints]() and [the solution](https://tinyurl.com/leanchallenge02solution)
+Challenge 2 (12/12/19): [a set of reals has at most one supremum](https://tinyurl.com/leanchallenge2). There's [hints](https://github.com/kbuzzard/xena/blob/master/Maths_Challenges/hints/challenge02.md) and [the solution](https://tinyurl.com/leanchallenge02solution).
 
 ### Stuck?
 
