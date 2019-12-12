@@ -44,8 +44,36 @@ end sesq_form
 
 open sesq_form
 
+noncomputable theory
+
 variables (V : Type*) [add_comm_group V] [module ℂ V] (H : sesq_form ℂ V complex.conj_anti_equiv) (HS : is_Hermitian S)
 
+--definition E.bilin (v w : V) : ℝ := (H v w).im
+definition S.bilin (v w : V) : ℝ := (H v w).re
+
+def module_of_module {R : Type*} [comm_ring R] {S : Type} [comm_ring S]
+(f : ring_hom R S) {V : Type*} [add_comm_group V] [module S V] : module R V :=
+{ smul := λ r v, (f r) • v,
+  one_smul := λ v, show (f 1) • v = v, by rw f.map_one; exact one_smul S v,
+  mul_smul := λ x y v, begin convert mul_smul (f x) (f y) v, rw ←f.map_mul, refl, end,
+  smul_add := λ r, smul_add (f r),
+  smul_zero := λ r, smul_zero (f r),
+  add_smul := λ r s v, begin convert add_smul (f r) (f s) v, rw ←f.map_add, refl, end,
+  zero_smul := λ v, begin dsimp, convert zero_smul S v, exact f.map_zero, end }
+
+def real.to_complex.ring_hom : ring_hom ℝ ℂ := --by refine_struct {to_fun := coe}; simp #exit
+{ to_fun := coe,
+  map_one' := by simp,
+  map_mul' := by simp,
+  map_zero' := by simp,
+  map_add' := by simp }
+
+instance real.vector_space_of_complex.vecgtor_space: module ℝ V := module_of_module real.to_complex.ring_hom
+def E : bilin_form ℝ V := { bilin := λ v w, (H v w).im,
+  bilin_add_left := by simp [H.sesq_add_left],
+  bilin_smul_left := _,
+  bilin_add_right := _,
+  bilin_smul_right := _ }
 
 -- Def of E
 -- E alternating
