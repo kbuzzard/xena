@@ -158,7 +158,7 @@ def id {α : Type*} [semilattice_inf α] : α →⊓ α :=
 
 def comp {α β γ : Type*} [semilattice_inf α] [semilattice_inf β] [semilattice_inf γ]
   (g : β →⊓ γ) (f : α →⊓ β) : α →⊓ γ :=
-⟨g ∘ f, monotone_comp f.mono g.mono, λ a b, by simp⟩
+⟨g ∘ f, monotone.comp g.mono f.mono, λ a b, by simp⟩
 
 end semilattice_inf_hom
 
