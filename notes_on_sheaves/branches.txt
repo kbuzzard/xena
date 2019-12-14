@@ -1,0 +1,6 @@
+sheaf-2
+sheaf-old
+sheaf
+sheaves -- this is Scott Morrison summer 2019.
+
+opposites:what's going on? Why is the op there? What's wrong with making the category associated to one top space the one where Hom(V,U)=U \subseteq V

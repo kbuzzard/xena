@@ -8,3 +8,11 @@ M1F/problem_bank/solns*
 M1F/problem_bank/exsht*
 M1F/problem_bank/*/*.log
 M1F/problem_bank/*/*.aux
+/scratch/*
+*.aux
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.vrb
