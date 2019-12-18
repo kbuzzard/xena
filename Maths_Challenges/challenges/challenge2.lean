@@ -4,6 +4,7 @@ namespace challenges
 
 -- basic definitions
 def upper_bounds (S : set ℝ) : set ℝ := { b | ∀s ∈ S, s ≤ b }
+def lower_bounds (S : set ℝ) : set ℝ := { b | ∀s ∈ S, b ≤ s }
 def is_least (S : set ℝ) (l : ℝ) : Prop := l ∈ S ∧ l ∈ lower_bounds S
 def is_lub (S : set ℝ) (l : ℝ) : Prop := is_least (upper_bounds S) l
 
