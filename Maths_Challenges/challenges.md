@@ -8,6 +8,9 @@ Challenge 2 (12/12/19): [a set of reals has at most one supremum](https://tinyur
 
 Challenge 3 (18/12/19) : [two add two isn't five](https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2Fkbuzzard%2Fxena%2Fmaster%2FMaths_Challenges%2Fchallenges%2Fchallenge3.lean). There's [hints](https://github.com/kbuzzard/xena/blob/master/Maths_Challenges/hints/challenge03.md) and [the solution](https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2Fkbuzzard%2Fxena%2Fmaster%2FMaths_Challenges%2Fsolutions%2Fsolution3.lean).
 
+Challenge 4 (20/12/19) : [If (g o f) is surjective then so is g](https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2Fkbuzzard%2Fxena%2Fmaster%2FMaths_Challenges%2Fchallenges%2Fchallenge04.lean). There's [hints](https://github.com/kbuzzard/xena/blob/master/Maths_Challenges/hints/challenge04.md) and [the solution](https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2Fkbuzzard%2Fxena%2Fmaster%2FMaths_Challenges%2Fsolutions%2Fsolution04.lean).
+
+
 ### Stuck?
 
 If you don't want to look at the solution but have questions, you can ask questions in the `#new members` stream on the [Lean Zulip Chat](https://leanprover.zulipchat.com/#narrow/stream/113489-new-members) (login required, real names preferred, be nice).
