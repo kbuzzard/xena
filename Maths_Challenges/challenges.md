@@ -6,7 +6,7 @@ Challenge 1 (9/12/19): [the composite of injective functions is injective](https
 
 Challenge 2 (12/12/19): [a set of reals has at most one supremum](https://tinyurl.com/leanmathschallenge002). There's [hints](https://github.com/kbuzzard/xena/blob/master/Maths_Challenges/hints/challenge02.md) and [the solution](https://tinyurl.com/leanmathschallengesolution002).
 
-Challenge 3 (18/12/19) : [two add two isn't five](https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2Fkbuzzard%2Fxena%2Fmaster%2FMaths_Challenges%2Fchallenges%2Fchallenge3.lean). There's [hints](https://github.com/kbuzzard/xena/blob/master/Maths_Challenges/hints/challenge03.md) and [the solution](https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2Fkbuzzard%2Fxena%2Fmaster%2FMaths_Challenges%2Fsolutions%2Fsolution3.lean)
+Challenge 3 (18/12/19) : [two add two isn't five](https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2Fkbuzzard%2Fxena%2Fmaster%2FMaths_Challenges%2Fchallenges%2Fchallenge3.lean). There's [hints](https://github.com/kbuzzard/xena/blob/master/Maths_Challenges/hints/challenge03.md) and [the solution](https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2Fkbuzzard%2Fxena%2Fmaster%2FMaths_Challenges%2Fsolutions%2Fsolution3.lean).
 
 ### Stuck?
 
