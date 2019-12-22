@@ -1,3 +1,5 @@
+Things which we should get into mathlib!
+
 Number fields.
 --------------
 
@@ -85,3 +87,25 @@ Elliptic curves
 
 30) State the conjecture asserting that the L-function has holomorphic continuation to the complex plane. State the Birch and Swinnerton-Dyer conjecture for elliptic curves over the rational numbers.
 
+Algebra
+-------
+
+31) Eigenspaces and generalised eigenspaces.
+
+32) Structure theorem for finitely-generated modules over a PID.
+
+33) Jordan decomposition
+
+------------------------------------
+
+Also some chores (from Chris Hughes)
+
+- zmod - requiring a pnat is a superfluous assumption, it should be refactored so we can quotient by zero. Also, zmodp should take a nat.primes and not a hypothesis hp : p.prime so there is no need for two types.
+
+- GCD domain - Currently integrated with normalisation domain, but there should be a version without this since there are GCD domains that do not have a normalisation function. Maybe GCD domains are just pointless though. [KB indeed can't (yet) see the point of these things]
+
+- Bundled Homs - refactor ideals, subgroups etc to use bundled Homs.
+
+- mv polynomials - degree lemmas, integral domain etc, everything relevant on polynomials should be done for mv polynomials.
+
+- finset.Icc, list.Icc, finset.Ioc etc.
