@@ -10,6 +10,7 @@ Challenge 3 (18/12/19) : [two add two isn't five](https://leanprover-community.g
 
 Challenge 4 (20/12/19) : [If (g o f) is surjective then so is g](https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2Fkbuzzard%2Fxena%2Fmaster%2FMaths_Challenges%2Fchallenges%2Fchallenge04.lean). There's [hints](https://github.com/kbuzzard/xena/blob/master/Maths_Challenges/hints/challenge04.md) and [the solution](https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2Fkbuzzard%2Fxena%2Fmaster%2FMaths_Challenges%2Fsolutions%2Fsolution04.lean).
 
+Challenge 5 (23/12/19) : [The sum of the first n positive odd numbers is n^2](https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2Fkbuzzard%2Fxena%2Fmaster%2FMaths_Challenges%2Fchallenges%2Fchallenge05.lean). There's [hints](https://github.com/kbuzzard/xena/blob/master/Maths_Challenges/hints/challenge05.md) and [the solution](https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2Fkbuzzard%2Fxena%2Fmaster%2FMaths_Challenges%2Fsolutions%2Fsolution05.lean).
 
 ### Stuck?
 
