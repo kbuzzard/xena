@@ -1,0 +1,3 @@
+prove \sub is a partial order
+
+friends/pals?
