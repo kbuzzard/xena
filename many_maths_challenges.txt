@@ -96,6 +96,13 @@ Algebra
 
 33) Jordan decomposition
 
+Algebraic Topology
+------------------
+
+34) Define homology groups H_n(X;R), cohomology groups H^n(X;R)
+and homotopy groups pi_n(X) of a topological space.
+
+
 ------------------------------------
 
 Also some chores (from Chris Hughes)
