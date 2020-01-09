@@ -21,67 +21,67 @@ Number fields.
 
 10) Define the regulator of a number field.
 
-10) State the analytic class number formula.
+11) State the analytic class number formula.
 
-11) Prove the analytic class number formula.
+12) Prove the analytic class number formula.
 
-12) Do everything for global function fields.
+13) Do everything for global function fields.
 
 Group cohomology.
 -----------------
 
-13) Define group cohomology.
+14) Define group cohomology.
 
-14) Prove the Hochschild-Serre spectral sequence.
+15) Prove the Hochschild-Serre spectral sequence.
 
-15) Prove the long exact sequence of terms of low degree.
+16) Prove the long exact sequence of terms of low degree.
 
-16) Define profinite group cohomology for discrete G-modules.
+17) Define profinite group cohomology for discrete G-modules.
 
 Galois theory
 -------------
 
-17) State the fundamental theorem of Galois theory for finite normal separable extensions of fields.
+18) State the fundamental theorem of Galois theory for finite normal separable extensions of fields.
 
-18) Prove the fundamental theorem of Galois theory.
+19) Prove the fundamental theorem of Galois theory.
 
-19) State and prove the version for algebraic normal separable extensions of possibly infinite degree.
+20) State and prove the version for algebraic normal separable extensions of possibly infinite degree.
 
 Local Fields
 ------------
 
-22) Set up the basic theory of fields complete with respect to a discrete valuation (integer ring, uniformiser, PID, finite extensions, extension of valuation)
+21) Set up the basic theory of fields complete with respect to a discrete valuation (integer ring, uniformiser, PID, finite extensions, extension of valuation)
 
-23) Set up the basic theory of Galois groups of finite extensions of p-adic fields (Frobenius elements, inertia groups, higher ramification groups, lower numbering, upper numbering)
+22) Set up the basic theory of Galois groups of finite extensions of p-adic fields (Frobenius elements, inertia groups, higher ramification groups, lower numbering, upper numbering)
 
 Galois cohomology
 -----------------
 
-20) Define the algebraic closure of a field.
+23) Define the algebraic closure of a field.
 
-21) State local Tate duality.
+24) State local Tate duality.
 
-22) Prove local Tate duality.
+25) Prove local Tate duality.
 
-23) State the global duality theorems (Greenberg-Wiles etc).
+26) State the global duality theorems (Greenberg-Wiles etc).
 
-24) Formalise proofs of all the theorems in Milne's book "arithmetic duality theorems".
+27) Formalise proofs of all the theorems in Milne's book "arithmetic duality theorems".
 
 Harmonic analysis
 -----------------
 
-25) Prove the Pontrjagin duality theorem.
+28) Prove the Pontrjagin duality theorem.
 
 Elliptic curves
 ---------------
 
-26) Define an elliptic curve over a field k.
+29) Define an elliptic curve over a field k.
 
-27) Define the group structure on the k-points of an elliptic curve, proving that it is a group.
+30) Define the group structure on the k-points of an elliptic curve, proving that it is a group.
 
-28) Prove that if k is a number field then the group of k-points of an elliptic curve are finitely-generated.
+31) Prove that if k is a number field then the group of k-points of an elliptic curve are finitely-generated.
 
-29) Define the L-function of an elliptic curve over a number field, proving it converges for Re(s) sufficiently large.
+32) Define the L-function of an elliptic curve over a number field, proving it converges for Re(s) sufficiently large.
 
-30) State the conjecture asserting that the L-function has holomorphic continuation to the complex plane. State the Birch and Swinnerton-Dyer conjecture for elliptic curves over the rational numbers.
+33) State the conjecture asserting that the L-function has holomorphic continuation to the complex plane. State the Birch and Swinnerton-Dyer conjecture for elliptic curves over the rational numbers.
 
