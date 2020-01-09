@@ -1,9 +1,11 @@
-# Hints for challenge 6.
+# Hints for challenge 7.
 
-`#print equivalence` will tell you Lean's definition of an equivalence relation.
+So something funny is going on with this one.
 
-If you write write `#check ne_empty` and then hold down `ctrl` and hit `space`, you will see the names of all the theorems which have `ne_empty` in their name. You might want to do this because the goal is to prove that a set is Not Equal to the EMPTY set. Alternatively you can [search the docs](https://leanprover-community.github.io/mathlib_docs/data/set/basic.html)! That's a link to the basic interface for sets. An example of something useful you'll find there is the theorem `ne_empty_iff_exists_mem`.
+It *looks* like the question is asking whether there exists a rational number whose reciprocal is zero. Any mathematician will of course tell you that no such rational number exists. However things are not so simple. The Lean symbol `/` does *not* mean what a mathematician means when they talk about division. For reasons connected to type theory, it is more convenient to define functions like division on **every input**, and to let them return "junk" values (typically 0) in situation where a mathematician would not dream of defining them, for example when considering `1 / 0`. As a mathematician I would prefer it if that division symbol had some little asterisk next to it indicating that it is not actual division, but an extension of mathematicians division to all of (rationals)^2, giving junk values when the denominator is zero.
 
+You can type `#eval (1 : ℚ) / 0` to see which junk value Lean assigns to the meaningless division of 1 by zero.
 
+So what is happening here is that even though the Lean formalisation looks like it is asking "is there a rational number whose reciprocal is zero", this is not actually what the question says.
 
-
+One has to be aware of this situation in formalisation. If Lean says it has proved some statement, there is still the issue of deciding whether that statement faithfully corresponds to the idea the statement-writer is trying to formalise.
