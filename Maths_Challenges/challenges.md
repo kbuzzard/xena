@@ -16,7 +16,7 @@ Challenge 6 (28/12/19) : [An equivalence class for an equivalence relation is no
 
 Challenge 7 (9/1/20) : [Is there a rational number whose reciprocal is zero](https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2Fkbuzzard%2Fxena%2Fmaster%2FMaths_Challenges%2Fchallenges%2Fchallenge07.lean)? There's [hints](https://github.com/kbuzzard/xena/blob/master/Maths_Challenges/hints/challenge07.md) and [the solution](https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2Fkbuzzard%2Fxena%2Fmaster%2FMaths_Challenges%2Fsolutions%2Fsolution07.lean).
 
-
+Challenge 8 (14/1/20) : [(ghk^{-1})^{-1}=kh^{-1}g^{-1} in a group](https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2Fkbuzzard%2Fxena%2Fmaster%2FMaths_Challenges%2Fchallenges%2Fchallenge08.lean). There's [hints](https://github.com/kbuzzard/xena/blob/master/Maths_Challenges/hints/challenge08.md) and [the solution](https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2Fkbuzzard%2Fxena%2Fmaster%2FMaths_Challenges%2Fsolutions%2Fsolution08.lean).
 
 ### Stuck?
 
