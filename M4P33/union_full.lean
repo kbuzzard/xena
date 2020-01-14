@@ -1,6 +1,6 @@
 /-
-DO NOT READ THE FIRST 128 LINES OF THIS FILE IF YOU ARE A BEGINNER.
-There is 128 lines of boilerplate. Start at line 128.
+DO NOT READ THE FIRST 127 LINES OF THIS FILE IF YOU ARE A BEGINNER.
+There is 127 lines of boilerplate. The lecture starts at line 128.
 -/
 
 import data.mv_polynomial
@@ -182,7 +182,7 @@ Martin Orr's lecture notes at https://homepages.warwick.ac.uk/staff/Martin.Orr/2
 algebraic geometry, algebraic variety
 -/
 
--- end of docstring; code starts here. 
+-- end of docs; code starts here. 
 
 -- We're proving theorems about affine algebraic sets so the names of the theorems
 -- should start with "affine_algebraic_set".
