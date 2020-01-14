@@ -1,6 +1,7 @@
 /-
-DO NOT READ THE FIRST 127 LINES OF THIS FILE IF YOU ARE A BEGINNER.
-There is 127 lines of boilerplate. The lecture starts at line 128.
+DO NOT READ THE FIRST 128 LINES OF THIS FILE IF YOU ARE A BEGINNER.
+There is 128 lines of boilerplate. The lecture starts at line 129.
+Currently the file takes something like a minute to compile! I'm looking into it.
 -/
 
 import data.mv_polynomial
