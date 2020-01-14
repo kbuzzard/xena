@@ -1,6 +1,6 @@
 /-
-DO NOT READ THE FIRST 128 LINES OF THIS FILE IF YOU ARE A BEGINNER.
-There is 128 lines of boilerplate. The lecture starts at line 129.
+DO NOT READ THE FIRST 119 LINES OF THIS FILE IF YOU ARE A BEGINNER.
+There is 119 lines of boilerplate. The lecture starts at line 120.
 Currently the file takes something like a minute to compile! I'm looking into it.
 -/
 
@@ -14,20 +14,11 @@ about them.
 
 ## Important definitions
 
-* `affine_algebraic_set k` -- the type of affine algebraic sets over the field `k`.
-
-## Notation
-
-None as yet -- do we need 𝔸ⁿ for affine n-space?
-
-## Implementation notes
-
-Much, but not all, of this file assumes that `k` is algebraically closed.
-Remark: analysis/complex/polynomial.lean contains proof that ℂ is alg closed.
+* `affine_algebraic_set k n` -- the type of affine algebraic subsets of kⁿ.
 
 ## References
 
-Martin Orr's lecture notes!
+Martin Orr's lecture notes https://homepages.warwick.ac.uk/staff/Martin.Orr/2017-8/alg-geom/
 
 ## Tags
 
@@ -50,7 +41,7 @@ variable {n : ℕ}
 
 /-- The set of zeros in kⁿ of a function f ∈ k[X₁, X₂, ..., Xₙ] -/
 def zeros (f : mv_polynomial (fin n) k) : set (fin n → k) :=
-{x | f.eval x = 0}
+{x | f.eval x = 0} -- I just want to write f(x) = 0 really
 
 /-- x is in the zeros of f iff f(x) = 0 -/
 @[simp] lemma mem_zeros (f : mv_polynomial (fin n) k) (x : fin n → k) :
