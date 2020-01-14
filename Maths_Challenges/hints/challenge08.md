@@ -15,8 +15,8 @@ To find out what this lemma is called, go into the begin/end block and type
 
 `rw mul_inv`
 
-and then hold down Ctrl and press the space bar. You will be presented with a list of possible completions, and you can move up and down the list with the arrow keys to find a lemma which looks useful.
+and then hold down Ctrl and press the space bar. You will be presented with a list of possible completions, and you can move up and down the list with the arrow keys to find a lemma which looks useful, which in this case is `mul_inv_rev`.
 
-What do you think the lemma (a^{-1})^{-1} = a is called?
+What do you think the lemma (a^{-1})^{-1} = a is called? Guess, and then try.
 
 
