@@ -1,4 +1,4 @@
-# Hints for challenge 8.
+# Hints for challenge 9.
 
 This came up in the course I'm teaching this term.
 Recall that `set.subset.antisymm` is the theorem
