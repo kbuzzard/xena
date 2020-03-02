@@ -102,6 +102,17 @@ Algebraic Topology
 34) Define homology groups H_n(X;R), cohomology groups H^n(X;R)
 and homotopy groups pi_n(X) of a topological space.
 
+Representation Theory
+---------------------
+
+35) Define a representation of a group over a field (or perhaps even a ring or semiring)
+
+36) Maschke's theorem, Schur's Lemma.
+
+37) Basic representation theory of finite groups (e.g. irreducible characters form a basis of class functions on the group)
+
+38) Extension to compact Lie groups.
+
 
 ------------------------------------
 
