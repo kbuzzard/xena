@@ -1,7 +1,10 @@
 import tactic -- tactic mode
 open function
 
-example (X Y Z : Type) (f : X → Y) (g : Y → Z) :
+variables (X Y Z : Type) (f : X → Y) (g : Y → Z)
+
+/-- The composite of two injective functions is injective. -/
+theorem injective_comp :
   injective f ∧ injective g → injective (g ∘ f) :=
 begin
   -- assume f and g are injective. We want to prove g ∘ f is injective.
