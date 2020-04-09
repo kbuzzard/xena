@@ -27,4 +27,4 @@ If you don't want to look at the solution but have questions, you can ask questi
 Here are the Lean files for the [questions](https://github.com/kbuzzard/xena/tree/master/Maths_Challenges/challenges) and
 [solutions](https://github.com/kbuzzard/xena/tree/master/Maths_Challenges/solutions).
 
-Link to this page: [tinyurl.com/LeanMathsChallenges](tinyurl.com/LeanMathsChallenges)
+Link to this page: [tinyurl.com/LeanMathsChallenges](https://tinyurl.com/LeanMathsChallenges)
