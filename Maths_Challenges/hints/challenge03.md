@@ -4,7 +4,7 @@ So the goal is to prove that the real number 2 + 2 isn't 5. You don't want to do
 
 There is a special mathlib tactic which is designed to prove things like this. It can handle extremely large integers, rational numbers and real numbers. Instead of struggling with goals like this, you just have to know the tactic to use.
 
-A big list of the tactics available to users is [here](https://leanprover-community.github.io/mathlib_docs/tactics.html), and it hopefully is not too hard to sopt the one you want.
+A big list of the tactics available to users is [here](https://leanprover-community.github.io/mathlib_docs/tactics.html), and it hopefully is not too hard to spot the one you want.
 
 
 
