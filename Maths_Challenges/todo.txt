@@ -1,5 +1,0 @@
-prove \sub is a partial order
-
-friends/pals?
-
-even/odd stuff (there's a good import here)
