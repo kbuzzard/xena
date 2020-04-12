@@ -1,0 +1,13 @@
+To run Lean 4 on my laptop:
+
+1) Make sure the line
+
+if [ -e /home/buzzard/.nix-profile/etc/profile.d/nix.sh ]; then . /home/buzzard/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+
+ran at some point (or else you won't have nix-shell)
+
+2) cd to ~/Kha/macro-supplement
+
+3) nix-shell -A lean
+
+4) emacs test.lean
