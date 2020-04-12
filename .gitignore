@@ -16,3 +16,5 @@ M1F/problem_bank/*/*.aux
 *.snm
 *.toc
 *.vrb
+M40002build
+build
