@@ -1,5 +1,6 @@
 import tactic -- tactic mode
-open function
+
+open function -- definition of injective now available
 
 variables (X Y Z : Type)
   (f : X → Y) (g : Y → Z)
@@ -15,6 +16,8 @@ begin
   intros a b hab,
   -- By injectivity of f, it suffices to prove that f(a)=f(b).
   apply f_inj,
-  -- By injectivity of g, and our assumption, we're done.
-  exact g_inj hab
+  -- By injectivity of g, it suffices to prove g(f(a))=g(f(b)).
+  apply g_inj,
+  -- But this is an assumption.
+  assumption
 end
