@@ -496,3 +496,17 @@ theorem mul_conj (z : ℂ) : z * conj z = norm_sq z :=
 sorry
 
 end complex
+
+/-! # Exercise 4 (advanced) 
+
+1) Prove the complex numbers are a field.
+
+2) Prove the complex numbers are an algebraically closed field. 
+
+
+-/
+
+instance : field ℂ := sorry
+
+-- As for it being algebraically closed, [here](https://github.com/leanprover-community/mathlib/blob/3710744/src/analysis/complex/polynomial.lean#L34)
+-- is where it is proved in mathlib.
