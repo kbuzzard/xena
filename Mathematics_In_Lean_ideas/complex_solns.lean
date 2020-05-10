@@ -266,9 +266,7 @@ by refine { zero := 0, add := (+), neg := has_neg.neg, one := 1, mul := (*), ..}
 
 /-! # Coercion 
 
-This is a worked example of how coercions work from the reals to the complexes.
-It's convenient to do this early, and very straightforward.
- I have left in the term mode proofs, with explanations.
+A worked example of how coercions work from the reals to the complexes.
 
 -/
 
@@ -288,8 +286,8 @@ instance : has_coe ℝ ℂ := ⟨λ r, ⟨r, 0⟩⟩
 @[simp, norm_cast] lemma of_real_re (r : ℝ) : (r : ℂ).re = r := rfl
 @[simp, norm_cast] lemma of_real_im (r : ℝ) : (r : ℂ).im = 0 := rfl
 
--- The `simp` tactic will now simplify `re(↑r)` to `r` and `im(↑r)` to `0`.
--- The `norm_cast` tactic might help you if you have proved a general
+-- The `simp` tactic will now simplify `re(↑r)` to `r` and `im(↑r)` to `0`
+-- and the `norm_cast` tactic might help you if you have proved a general
 -- equality about complex numbers but you want it to be about real numbers,
 -- or vice-versa.
 
@@ -348,9 +346,9 @@ end
 lemma smul_re (r : ℝ) (z : ℂ) : (↑r * z).re = r * z.re := by simp -- or by squeeze_simp
 lemma smul_im (r : ℝ) (z : ℂ) : (↑r * z).im = r * z.im := by simp -- or by squeeze_simp
 
-/-! ## Appendix: numerals.
+/-! ## Numerals
 
-If you're not a computer scientist feel free to skip 15 lines down to `I`.
+Feel free to skip 15 lines down to `I` if you are a mathematician.
 
 These last two are to do with the canonical map from numerals into the complexes, e.g. `(23 : ℂ)`.
 Lean stores the numeral in binary. See for example
@@ -362,137 +360,131 @@ set_option pp.numerals false
 @[simp, norm_cast] lemma of_real_bit0 (r : ℝ) : ((bit0 r : ℝ) : ℂ) = bit0 r := ext_iff.2 $ by simp [bit0]
 @[simp, norm_cast] lemma of_real_bit1 (r : ℝ) : ((bit1 r : ℝ) : ℂ) = bit1 r := ext_iff.2 $ by simp [bit1]
 
-/-! 
+-- I find it unbelievable that we have written 331 lines of code about the complex numbers
+-- and we've still never defined i, or j, or I, or $$\sqrt{-1}$$, or whatever it's called. 
+-- Why don't you try this one?
 
-# Exercise 1: I 
+/-! # I -/
 
-I find it unbelievable that we have written 350+ lines of code about the complex numbers
-and we've still never defined i, or j, or I, or $$\sqrt{-1}$$, or whatever it's called. 
-I will supply the definition, Why don't you try making its basic API?
-
-All the proofs below are sorried. You can try them in tactic mode
-by replacing `sorry` with `begin end` and then starting to write 
-tactics in the `begin end` block.
--/
+-- TODO: leave definition, sorry all proofs.
 
 /-- complex.I is the square root of -1 above the imaginary axis -/
 def I : ℂ := ⟨0, 1⟩
 
-@[simp] lemma I_re : I.re = 0 := sorry
-@[simp] lemma I_im : I.im = 1 := sorry
+@[simp] lemma I_re : I.re = 0 := rfl
+@[simp] lemma I_im : I.im = 1 := rfl
 
-@[simp] lemma I_mul_I : I * I = -1 := sorry
+@[simp] lemma I_mul_I : I * I = -1 := ext_iff.2 $ by simp
 
-lemma mk_eq_add_mul_I (a b : ℝ) : complex.mk a b = a + b * I := sorry
+lemma I_ne_zero : (I : ℂ) ≠ 0 := mt (congr_arg im) zero_ne_one.symm
 
-@[simp] lemma re_add_im (z : ℂ) : (z.re : ℂ) + z.im * I = z := sorry
+lemma mk_eq_add_mul_I (a b : ℝ) : complex.mk a b = a + b * I :=
+ext_iff.2 $ by simp
 
--- boss level
-lemma I_ne_zero : (I : ℂ) ≠ 0 := sorry
+@[simp] lemma re_add_im (z : ℂ) : (z.re : ℂ) + z.im * I = z :=
+ext_iff.2 $ by simp
 
-/-! 
+/-! # Complex conjugation -/
 
-# Exercise 2: Complex conjugation
-
-Again I'll give you the definition, you supply the proofs.
-
--/
-
+-- TODO: leave definition, sorry all proofs.
 
 def conj (z : ℂ) : ℂ := ⟨z.re, -z.im⟩
 
-@[simp] lemma conj_re (z : ℂ) : (conj z).re = z.re := sorry
-@[simp] lemma conj_im (z : ℂ) : (conj z).im = -z.im := sorry
+@[simp] lemma conj_re (z : ℂ) : (conj z).re = z.re := rfl
+@[simp] lemma conj_im (z : ℂ) : (conj z).im = -z.im := rfl
 
-@[simp] lemma conj_of_real (r : ℝ) : conj r = r := sorry
+@[simp] lemma conj_of_real (r : ℝ) : conj r = r := ext_iff.2 $ by simp [conj]
 
-@[simp] lemma conj_zero : conj 0 = 0 := sorry
-@[simp] lemma conj_one : conj 1 = 1 := sorry
-@[simp] lemma conj_I : conj I = -I := sorry
+@[simp] lemma conj_zero : conj 0 = 0 := ext_iff.2 $ by simp [conj]
+@[simp] lemma conj_one : conj 1 = 1 := ext_iff.2 $ by simp
+@[simp] lemma conj_I : conj I = -I := ext_iff.2 $ by simp
 
 @[simp] lemma conj_add (z w : ℂ) : conj (z + w) = conj z + conj w :=
-sorry
+ext_iff.2 $ by simp [add_comm]
 
-@[simp] lemma conj_neg (z : ℂ) : conj (-z) = -conj z := sorry
+@[simp] lemma conj_neg (z : ℂ) : conj (-z) = -conj z := rfl
 
-@[simp] lemma conj_neg_I : conj (-I) = I := sorry
+@[simp] lemma conj_neg_I : conj (-I) = I := ext_iff.2 $ by simp
 
 @[simp] lemma conj_mul (z w : ℂ) : conj (z * w) = conj z * conj w :=
-sorry
+ext_iff.2 $ by simp [add_comm]
 
 @[simp] lemma conj_conj (z : ℂ) : conj (conj z) = z :=
-sorry
+ext_iff.2 $ by simp
 
-lemma conj_involutive : function.involutive conj := sorry
+lemma conj_involutive : function.involutive conj := conj_conj
 
-lemma conj_bijective : function.bijective conj := sorry
+lemma conj_bijective : function.bijective conj := conj_involutive.bijective
 
 lemma conj_inj {z w : ℂ} : conj z = conj w ↔ z = w :=
-sorry
+conj_bijective.1.eq_iff
 
 @[simp] lemma conj_eq_zero {z : ℂ} : conj z = 0 ↔ z = 0 :=
-sorry
+by simpa using @conj_inj z 0
 
 lemma eq_conj_iff_real {z : ℂ} : conj z = z ↔ ∃ r : ℝ, z = r :=
-sorry
+⟨λ h, ⟨z.re, ext rfl $ eq_zero_of_neg_eq (congr_arg im h)⟩,
+ λ ⟨h, e⟩, e.symm ▸ rfl⟩
 
 lemma eq_conj_iff_re {z : ℂ} : conj z = z ↔ (z.re : ℂ) = z :=
-sorry
+eq_conj_iff_real.trans ⟨by rintro ⟨r, rfl⟩; simp, λ h, ⟨_, h.symm⟩⟩
 
 theorem add_conj (z : ℂ) : z + conj z = (2 * z.re : ℝ) :=
-sorry
+ext_iff.2 $ by simp [two_mul]
 
 /-- the ring homomorphism complex conjugation -/
 def Conj : ℂ →+* ℂ :=
 { to_fun := conj,
-  map_one' := sorry,
-  map_mul' := sorry,
-  map_zero' := sorry,
-  map_add' := sorry}
+  map_one' := begin ext; simp, end,
+  map_mul' := begin intros, ext; simp end,
+  map_zero' := begin ext; simp end,
+  map_add' := begin intros, ext; simp end}
 
-/-! 
+/-! # Norms -/
 
-# Exercise 3: Norms
-
--/
+-- TODO: leave definition, sorry all proofs.
 
 def norm_sq (z : ℂ) : ℝ := z.re * z.re + z.im * z.im
 
 @[simp] lemma norm_sq_of_real (r : ℝ) : norm_sq r = r * r :=
-sorry
+by simp [norm_sq]
 
-@[simp] lemma norm_sq_zero : norm_sq 0 = 0 := sorry
-@[simp] lemma norm_sq_one : norm_sq 1 = 1 := sorry
-@[simp] lemma norm_sq_I : norm_sq I = 1 := sorry
+@[simp] lemma norm_sq_zero : norm_sq 0 = 0 := by simp [norm_sq]
+@[simp] lemma norm_sq_one : norm_sq 1 = 1 := by simp [norm_sq]
+@[simp] lemma norm_sq_I : norm_sq I = 1 := by simp [norm_sq]
 
-lemma norm_sq_nonneg (z : ℂ) : 0 ≤ norm_sq z := sorry
+lemma norm_sq_nonneg (z : ℂ) : 0 ≤ norm_sq z :=
+add_nonneg (mul_self_nonneg _) (mul_self_nonneg _)
 
 @[simp] lemma norm_sq_eq_zero {z : ℂ} : norm_sq z = 0 ↔ z = 0 :=
-sorry
+⟨λ h, ext
+  (eq_zero_of_mul_self_add_mul_self_eq_zero h)
+  (eq_zero_of_mul_self_add_mul_self_eq_zero $ (add_comm _ _).trans h),
+ λ h, h.symm ▸ norm_sq_zero⟩
 
 @[simp] lemma norm_sq_pos {z : ℂ} : 0 < norm_sq z ↔ z ≠ 0 :=
-sorry
+by rw [lt_iff_le_and_ne, ne, eq_comm]; simp [norm_sq_nonneg]
 
 @[simp] lemma norm_sq_neg (z : ℂ) : norm_sq (-z) = norm_sq z :=
-sorry
+by simp [norm_sq]
 
 @[simp] lemma norm_sq_conj (z : ℂ) : norm_sq (conj z) = norm_sq z :=
-sorry
+by simp [norm_sq]
 
 @[simp] lemma norm_sq_mul (z w : ℂ) : norm_sq (z * w) = norm_sq z * norm_sq w :=
-sorry
+by dsimp [norm_sq]; ring
 
 lemma norm_sq_add (z w : ℂ) : norm_sq (z + w) =
   norm_sq z + norm_sq w + 2 * (z * conj w).re :=
-sorry
+by dsimp [norm_sq]; ring
 
 lemma re_sq_le_norm_sq (z : ℂ) : z.re * z.re ≤ norm_sq z :=
-sorry
+le_add_of_nonneg_right (mul_self_nonneg _)
 
 lemma im_sq_le_norm_sq (z : ℂ) : z.im * z.im ≤ norm_sq z :=
-sorry
+le_add_of_nonneg_left (mul_self_nonneg _)
 
 theorem mul_conj (z : ℂ) : z * conj z = norm_sq z :=
-sorry
+ext_iff.2 $ by simp [norm_sq, mul_comm, sub_eq_neg_add, add_comm]
 
 end complex
