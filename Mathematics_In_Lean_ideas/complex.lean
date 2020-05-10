@@ -8,12 +8,12 @@ and prove that the complex numbers are a commutative ring.
 We then do a slightly more computer-sciency worked development of the
 natural inclusion from the reals to the complexes. 
 
-There are then a bunch of exercises, which can be solved in term mode
-or tactic mode. . 
-a lot of stuff we don't need for this one precise result. As an appendix
-We leave as exercises
-the API extraction for the stuff we skipped, namely the following
-complex conjugation and the norm function.
+There are then a bunch of API-building exercises, which can be solved in term mode
+or tactic mode. The first is `I`, the second is complex conjugation,
+and the third is the "squared norm" function. 
+
+There is then a speculative last exercise on harder properties
+of the complexes.
 -/
 
 -- We will assume that the real numbers are a field.
@@ -509,4 +509,5 @@ end complex
 instance : field ℂ := sorry
 
 -- As for it being algebraically closed, [here](https://github.com/leanprover-community/mathlib/blob/3710744/src/analysis/complex/polynomial.lean#L34)
--- is where it is proved in mathlib.
+-- is where it is proved in mathlib. The mathlib proof was written by Chris Hughes, a mathematics
+-- undergraduate at Imperial College London.
