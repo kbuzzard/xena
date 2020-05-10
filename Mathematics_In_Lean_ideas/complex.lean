@@ -158,7 +158,71 @@ theorem ext_iff {z w : ℂ} : z = w ↔ z.re = w.re ∧ z.im = w.im :=
 -- define the structure first; the zero, one, addition and multiplication
 -- on the complexes. 
 
--- KILL COERCION
+-- KILL COERCION -- does it compile?
+
+
+
+-- Let's define the zero complex number. Once we have done this we will be
+-- able to talk about (0 : ℂ).
+
+instance : has_zero ℂ := ⟨⟨0, 0⟩⟩
+
+-- and let's prove its basic properties, all of which are true by definition,
+-- and then tag them with the appropriate attributes.
+@[simp] lemma zero_re : (0 : ℂ).re = 0 := rfl
+@[simp] lemma zero_im : (0 : ℂ).im = 0 := rfl
+
+
+-- Now let's do the same thing for 1.
+
+instance : has_one ℂ := ⟨⟨1, 0⟩⟩ 
+
+@[simp] lemma one_re : (1 : ℂ).re = 1 := rfl
+@[simp] lemma one_im : (1 : ℂ).im = 0 := rfl
+
+-- Now let's define addition
+
+instance : has_add ℂ := ⟨λ z w, ⟨z.re + w.re, z.im + w.im⟩⟩
+
+-- and state and tag its basic properties
+
+@[simp] lemma add_re (z w : ℂ) : (z + w).re = z.re + w.re := rfl
+@[simp] lemma add_im (z w : ℂ) : (z + w).im = z.im + w.im := rfl
+
+-- It is a theorem that the canonical map from ℝ to ℂ commutes with addition.
+-- We should prove this and tag it appropriately.
+
+
+instance : has_neg ℂ := ⟨λ z, ⟨-z.re, -z.im⟩⟩
+
+@[simp] lemma neg_re (z : ℂ) : (-z).re = -z.re := rfl
+@[simp] lemma neg_im (z : ℂ) : (-z).im = -z.im := rfl
+
+instance : has_mul ℂ := ⟨λ z w, ⟨z.re * w.re - z.im * w.im, z.re * w.im + z.im * w.re⟩⟩
+
+@[simp] lemma mul_re (z w : ℂ) : (z * w).re = z.re * w.re - z.im * w.im := rfl
+@[simp] lemma mul_im (z w : ℂ) : (z * w).im = z.re * w.im + z.im * w.re := rfl
+
+
+
+
+
+
+
+
+
+instance : comm_ring ℂ :=
+by refine { zero := 0, add := (+), neg := has_neg.neg, one := 1, mul := (*), ..};
+   { intros, apply ext_iff.2; split; simp; ring }
+
+
+-- end
+
+-- Exercises
+
+-- This is a little natural-number game.
+
+/-! # Coercion -/
 
 -- The first thing we should do is to define the
 -- canonical map from ℝ to ℂ. Instead of making it a definition, we will
@@ -187,37 +251,8 @@ instance : has_coe ℝ ℂ := ⟨λ r, ⟨r, 0⟩⟩
 -- beyond this file then they should be using Lean's complex numbers anyway,
 -- where everything is tagged correctly.
 
--- Let's define the zero complex number. Once we have done this we will be
--- able to talk about (0 : ℂ).
-
-instance : has_zero ℂ := ⟨(0 : ℝ)⟩
-
--- and let's prove its basic properties, all of which are true by definition,
--- and then tag them with the appropriate attributes.
-@[simp] lemma zero_re : (0 : ℂ).re = 0 := rfl
-@[simp] lemma zero_im : (0 : ℂ).im = 0 := rfl
 @[simp, norm_cast] lemma of_real_zero : ((0 : ℝ) : ℂ) = 0 := rfl
-
-
--- Now let's do the same thing for 1.
-
-instance : has_one ℂ := ⟨(1 : ℝ)⟩
-
-@[simp] lemma one_re : (1 : ℂ).re = 1 := rfl
-@[simp] lemma one_im : (1 : ℂ).im = 0 := rfl
 @[simp, norm_cast] lemma of_real_one : ((1 : ℝ) : ℂ) = 1 := rfl
-
--- Now let's define addition
-
-instance : has_add ℂ := ⟨λ z w, ⟨z.re + w.re, z.im + w.im⟩⟩
-
--- and state and tag its basic properties
-
-@[simp] lemma add_re (z w : ℂ) : (z + w).re = z.re + w.re := rfl
-@[simp] lemma add_im (z w : ℂ) : (z + w).im = z.im + w.im := rfl
-
--- It is a theorem that the canonical map from ℝ to ℂ commutes with addition.
--- We should prove this and tag it appropriately.
 
 example (r s : ℝ) : ((r + s : ℝ) : ℂ) = r + s :=
 begin
@@ -228,47 +263,19 @@ begin
   simp
 end
 
--- It is not hard to prove this in tactic mode.
+-- It is not hard to prove this in term mode and also various other things which a 
+-- mathematician would not give a monkeys about.
 @[simp, norm_cast] lemma of_real_add (r s : ℝ) : ((r + s : ℝ) : ℂ) = r + s := ext_iff.2 $ by simp
 
 @[simp, norm_cast] lemma of_real_bit0 (r : ℝ) : ((bit0 r : ℝ) : ℂ) = bit0 r := ext_iff.2 $ by simp [bit0]
 @[simp, norm_cast] lemma of_real_bit1 (r : ℝ) : ((bit1 r : ℝ) : ℂ) = bit1 r := ext_iff.2 $ by simp [bit1]
 
-instance : has_neg ℂ := ⟨λ z, ⟨-z.re, -z.im⟩⟩
-
-@[simp] lemma neg_re (z : ℂ) : (-z).re = -z.re := rfl
-@[simp] lemma neg_im (z : ℂ) : (-z).im = -z.im := rfl
 @[simp, norm_cast] lemma of_real_neg (r : ℝ) : ((-r : ℝ) : ℂ) = -r := ext_iff.2 $ by simp
 
-instance : has_mul ℂ := ⟨λ z w, ⟨z.re * w.re - z.im * w.im, z.re * w.im + z.im * w.re⟩⟩
-
-@[simp] lemma mul_re (z w : ℂ) : (z * w).re = z.re * w.re - z.im * w.im := rfl
-@[simp] lemma mul_im (z w : ℂ) : (z * w).im = z.re * w.im + z.im * w.re := rfl
 @[simp, norm_cast] lemma of_real_mul (r s : ℝ) : ((r * s : ℝ) : ℂ) = r * s := ext_iff.2 $ by simp
 
 lemma smul_re (r : ℝ) (z : ℂ) : (↑r * z).re = r * z.re := by simp
 lemma smul_im (r : ℝ) (z : ℂ) : (↑r * z).im = r * z.im := by simp
-
-
-
-
-
-
-
-instance : comm_ring ℂ :=
-by refine { zero := 0, add := (+), neg := has_neg.neg, one := 1, mul := (*), ..};
-   { intros, apply ext_iff.2; split; simp; ring }
-
-
--- end
-
--- Exercises
-
-/-!
-
-Maybe omit the of_real stuff?
-
--/
 
 /-! # of_real -/
 
@@ -278,8 +285,12 @@ Maybe omit the of_real stuff?
 @[simp] theorem of_real_eq_zero {z : ℝ} : (z : ℂ) = 0 ↔ z = 0 := of_real_inj
 theorem of_real_ne_zero {z : ℝ} : (z : ℂ) ≠ 0 ↔ z ≠ 0 := not_congr of_real_eq_zero
 
+-- we are 287 pages in, we have proved the complex numbers are a ring
+-- and we still haven't defined i, or j, or I, or whatever it's called.
+
 /-! # I -/
 
+/-- complex.I is the square root of -1 above the imaginary axis -/
 def I : ℂ := ⟨0, 1⟩
 
 @[simp] lemma I_re : I.re = 0 := rfl
@@ -390,3 +401,4 @@ end complex
 
 -- todo: finish documenting comm ring proof, sorry all the proofs of the lemmas in conj,
 -- ask user to prove that conj is a ring iso.
+
