@@ -71,6 +71,8 @@ example (z : ℂ) : re(z) = z.re := rfl
 
 /-! # Mathematical trivialities -/
 
+/-! ## The first triviality -/
+
 -- We start with some facts about complex numbers which are so obvious that we do not
 -- often explicitly state them. The first is that if z is a complex number, then
 -- the complex number with real part re(z) and imaginary part im(z) is equal to z.
@@ -97,7 +99,14 @@ end
 -- and `dsimp` was unnecessary -- the two sides of the equation 
 -- were definitionally equal.
 
--- It's important we give this theorem a name, because we want `simp`
+@[simp] theorem eta : ∀ z : ℂ, complex.mk z.re z.im = z
+| ⟨x, y⟩ := rfl
+
+/-! ### Digression on `simp` -/
+
+-- It's important we give this theorem a name (and we called it `eta`
+-- because that's what computer scientists call lemmas of this form).
+-- The reason it's important is that we want `simp`
 -- to be able to use it. In short, the `simp` tactic tries to solve
 -- goals of the form A = B, when `refl` doesn't work (i.e. the goals are
 -- not definitionally equal) but when any mathematician would be able
@@ -112,8 +121,8 @@ end
 -- It proves `A = B` when, and only when, it can do it by applying 
 -- its "simplification rules", where a simplification rule is simply a proof
 -- of a theorem of the form `A = B` and `B` is simpler than `A`.  
-@[simp] theorem eta : ∀ z : ℂ, complex.mk z.re z.im = z
-| ⟨x, y⟩ := rfl
+
+/-! ## The second triviality -/
 
 -- The second triviality is the assertion that two complex numbers
 -- with the same and imaginary parts are equal. Again this is not
