@@ -60,6 +60,25 @@ namespace Hilbert_Basis_Theorem
 noncomputable def coeff (n : ℕ) : (polynomial R) →ₗ[R] R := 
 finsupp.lapply n -- I used `library_search` to find this
 
+example (n : ℕ) (f : polynomial R) : polynomial.coeff f n = coeff R n f := rfl
+
+example (S : Type) [comm_ring S] [algebra R S] (s : S) : S →ₗ[R] S :=
+algebra.lmul_left R S s
+
+open polynomial
+
+/-- The coefficient of X^{a+b} in X^a*F equals the coefficient of X^b in f -/
+lemma coeff_X_pow_mul (a b : ℕ) : (coeff R (a + b)).comp (algebra.lmul_left _ _ (X^a)) = coeff R b
+:=
+begin
+  ext f,
+  show polynomial.coeff (X^a * f) (a + b) = polynomial.coeff f b,
+  rw [mul_comm, add_comm],
+  apply coeff_mul_X_pow,
+end
+
+-- lemma above takes a long time to compile for some reason
+
 -- R-submodules of R[X] are a lattice, so there is hopefully a theory
 -- of Infs
 noncomputable instance foo :
@@ -128,16 +147,6 @@ def ideal.to_submodule (S : Type) [comm_ring S] [algebra R S] (I : ideal S) :
   zero := I.zero_mem,
   add := λ x y, I.add_mem,
   smul := sorry} -- needs doing!
-  
-  -- λ r s h, begin
-  --   change (s ∈ (I : set S)) at h,
-  --   change (r • s ∈ (I : set S)),
-  --   -- this is so annoying!
-  --   set XYZ := ((@submodule.smul_mem S S _ _ _ I s (algebra.of_id R S r) h)) with XYZ_def,
-  --   --change (((algebra.of_id R S) r • s) ∈ I) at XYZ,
-  --   convert XYZ,
-  --   repeat {sorry}
-  --   end}
 
 -- What does is_noetherian_ring mean?
 
@@ -160,7 +169,30 @@ variable (I : ideal (polynomial R))
 lemma In_mono : monotone (In I) := 
 λ _ _ hab, inf_le_inf_right _ (M_mono R hab)
 
+example (A B C D : Prop) (h1 : A ↔ C) (h2 : B ↔ D) : (A ∧ B) ↔ (C ∧ D) := by library_search
+
+-- mathlib?
+lemma polynomial.degree_lt_iff_coeff_zero (f : polynomial R) (n : ℕ) : degree f < n ↔ ∀ m, n ≤ m → coeff f m = 0 :=
+begin
+  
+end
+
+lemma In_def (f : polynomial R) (n : ℕ) : f ∈ In I n ↔ f ∈ I ∧ degree f < n :=
+begin
+  unfold In,
+  rw and.comm,
+  rw submodule.mem_inf,
+  apply and_congr,
+  { unfold M,
+    rw coeff_eq_zero_of_degree_lt,
+    sorry},
+  { refl}
+end
+
+
 end In
+
+#check submodule.map
 
 theorem Hilbert_Basis_Theorem' 
   (R : Type) [comm_ring R] (hR : is_noetherian_ring R) :
@@ -195,6 +227,19 @@ begin
     have Jn_mono : monotone Jn,
     { intros a b hab,
       -- Multiplication by X^i is a map M R n → M R (n + i)
+      -- Iₐ → I_b given by multiplication by X^{b-a}
+      rw le_iff_exists_add at hab,
+      rcases hab with ⟨c, hbc⟩,
+      rw add_comm at hbc,
+      rw hbc, clear hbc, -- `cases hbc` would have been nicer
+      rw hJn,
+      dsimp,
+      rw ←coeff_X_pow_mul R c a,
+      rw submodule.map_comp,
+      apply submodule.map_mono,
+      intros f hf,
+
+      -- I think I need `coeff R a+c = coeff R a ∘ (multn by X^c) : R-module homs R[X] → R
       sorry
     },
 
