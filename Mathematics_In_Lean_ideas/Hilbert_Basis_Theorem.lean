@@ -91,26 +91,24 @@ def M (n : ℕ) := ⨅ (n : ℕ), linear_map.ker (coeff R n)
 example (R : Type) [comm_ring R] (M : Type) [add_comm_group M] [module R M]
   (N : submodule R M) (m : M) : m ∈ N ↔ m ∈ (N : set M) := by library_search
 --set_option pp.all true
+
 -- If S is an R-algebra, how come an ideal of S is an R-submodule of S?
 def ideal.to_submodule (S : Type) [comm_ring S] [algebra R S] (I : ideal S) :
   submodule R S :=
 { carrier := I,
   zero := I.zero_mem,
   add := λ x y, I.add_mem,
-  smul := λ r s h, begin
-    change (s ∈ (I : set S)) at h,
-    change (r • s ∈ (I : set S)),
-    -- this is so annoying!
-    set XYZ := ((@submodule.smul_mem S S _ _ _ I s (algebra.of_id R S r) h)) with XYZ_def,
-    change (((algebra.of_id R S) r • s) ∈ I) at XYZ,
-    convert XYZ,
-    repeat {sorry}
-    end}
---by library_search 
---by suggest comes up with `subalgebra.to_submodule` but it's not that
---by hint
-#exit
-sorry
+  smul := sorry}
+  
+  -- λ r s h, begin
+  --   change (s ∈ (I : set S)) at h,
+  --   change (r • s ∈ (I : set S)),
+  --   -- this is so annoying!
+  --   set XYZ := ((@submodule.smul_mem S S _ _ _ I s (algebra.of_id R S r) h)) with XYZ_def,
+  --   --change (((algebra.of_id R S) r • s) ∈ I) at XYZ,
+  --   convert XYZ,
+  --   repeat {sorry}
+  --   end}
 
 theorem Hilbert_Basis_Theorem' 
   (R : Type) [comm_ring R] (hR : is_noetherian_ring R) :
