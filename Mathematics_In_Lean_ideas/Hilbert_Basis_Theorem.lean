@@ -65,7 +65,7 @@ finsupp.lapply n -- I used `library_search` to find this
 noncomputable instance foo :
   lattice (submodule R (polynomial R)) := by apply_instance
 
-#check has_Inf.Inf
+--#check has_Inf.Inf
 
 /- 
 TODO: add to docs.
@@ -83,32 +83,38 @@ lemma vanishing_ideal_Union {ι : Sort*} (t : ι → set (prime_spectrum R)) :
 -/
 
 -- want: kernel of an R-mod hom M →ₗ N is an R-submodule of M
-#check linear_map.ker
+--#check linear_map.ker
 /-- Define the R-submodule M_n of R[X] to be polys of degree less than n -/
-def M (n : ℕ) := infi (λ j : {j : ℕ // n ≤ j}, linear_map.ker (coeff R j))
+def M (n : ℕ) := Inf (set.image (λ j, linear_map.ker (coeff R j)) {j : ℕ | n ≤ j})
 -- Example: M 0 is {0}, M 1 is the constant polys R.
+
+--old def M (n : ℕ) := infi (λ j : {j : ℕ // n ≤ j}, linear_map.ker (coeff R j))
 
 example : complete_lattice (ideal R) := by apply_instance
 
 -- failing to use `\Glb` notation
 lemma infi_mono (X Y : Type) (L : Type) [complete_lattice L] (f : X → Y) (g : Y → L) :
-  infi (g ∘ f) ≤ infi g :=
+  infi g ≤ infi (g ∘ f) :=
 begin
-  
+  apply infi_le_infi2,
+  intro x,
+  use (f x),
 end
-
 
 -- We need a lemma saying that M is monotone, i.e. M j ⊆ M (j + k)
 
-#check infi
-#check Inf_le_Inf
-#check Inf_eq_infi
+--@[mono] 
 lemma M_mono : monotone (M R) :=
 begin
   intros a b hab,
   -- I want to prove that ⨅ of some set of submodules is ⊆ of an ⨅ of a bigger set
   unfold M,
-  
+  refine Inf_le_Inf _,
+  rintros _ ⟨i, hi, rfl⟩,
+  use i,
+  split,
+  { exact le_trans hab hi},
+  { refl}
 end
 
 -- I an ideal of R[X], I want that n ↦ Jₙ is monotonic
@@ -135,13 +141,24 @@ def ideal.to_submodule (S : Type) [comm_ring S] [algebra R S] (I : ideal S) :
 
 -- What does is_noetherian_ring mean?
 
-#check is_noetherian_ring
+--#check is_noetherian_ring
 
-example (R : Type) [comm_ring R] (hR : is_noetherian_ring R) (I : ideal R) : I.fg :=
-begin
-  apply hR.noetherian,
-end
+-- example (R : Type) [comm_ring R] (hR : is_noetherian_ring R) (I : ideal R) : I.fg :=
+-- begin
+--   apply hR.noetherian,
+-- end
 
+section In
+
+variable {R}
+
+-- the submodule of elements of an ideal with degree at most n
+def In (I : ideal (polynomial R)) (n : ℕ) : submodule R (polynomial R) := ((M R n) ⊓ (ideal.to_submodule R _ I))
+
+variable (I : ideal (polynomial R))
+
+lemma In_mono : monotone (In I) := sorry
+#exit
 
 theorem Hilbert_Basis_Theorem' 
   (R : Type) [comm_ring R] (hR : is_noetherian_ring R) :
@@ -171,6 +188,7 @@ begin
   -/
     -- need that n ↦ Iₙ is monotonic (a ≤ b → Iₐ ≤ Ib)
     set In : ∀ (n : ℕ), submodule R (polynomial R) := λ n, ((M R n) ⊓ (ideal.to_submodule R _ I)) with HIn,
+
     set Jn : ∀ (n : ℕ), ideal R := λ (n : ℕ), submodule.map (coeff R n) (In n) with hJn,
 
     -- J_n are an increasing collection of ideals of R.
