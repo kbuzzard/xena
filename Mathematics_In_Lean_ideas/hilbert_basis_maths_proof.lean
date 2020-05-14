@@ -1,4 +1,7 @@
-/-
+/-!
+
+# Hilbert basis theorem
+
 All rings are commutative and have a 1; all morphisms of rings send 1 to 1.
 
 A commutative ring is said to be *Noetherian* if all ideals
