@@ -171,11 +171,33 @@ lemma In_mono : monotone (In I) :=
 
 example (A B C D : Prop) (h1 : A ↔ C) (h2 : B ↔ D) : (A ∧ B) ↔ (C ∧ D) := by library_search
 
+#check le_degree_of_ne_zero
+#check finsupp.mem_support_iff
+
+open_locale classical
+
+lemma aux {f : polynomial R} (n : ℕ) (h : ∀ m, n ≤ m → polynomial.coeff f m = 0) : degree f < n :=
+if hf0 : f = 0
+  then by simp [hf0, with_bot.bot_lt_coe]
+  else lt_of_not_ge (λ hfn, mt leading_coeff_eq_zero.1 hf0 (h (nat_degree f) (with_bot.coe_le_coe.1 (by simpa only [ge, degree_eq_nat_degree hf0] using hfn))))
+
 -- mathlib?
-lemma polynomial.degree_lt_iff_coeff_zero (f : polynomial R) (n : ℕ) : degree f < n ↔ ∀ m, n ≤ m → coeff f m = 0 :=
+lemma degree_lt_iff_coeff_zero (f : polynomial R) (n : ℕ) :
+  degree f < n ↔ ∀ m, n ≤ m → polynomial.coeff f m = 0 :=
 begin
-  
+  --rw finsupp.mem_support_iff,
+  split,
+  { intros hfn m hmn,
+    apply coeff_eq_zero_of_degree_lt,
+    apply lt_of_lt_of_le hfn,
+    simp [hmn]},
+  { intro h,
+--    have meh : polynomial.coeff f n ≠ 0 → ↑n ≤ degree f := le_degree_of_ne_zero,
+    -- meh contra says : deg(f) < m → coeff f m = 0
+    apply aux n h}
 end
+
+#check linear_map.mem_ker
 
 lemma In_def (f : polynomial R) (n : ℕ) : f ∈ In I n ↔ f ∈ I ∧ degree f < n :=
 begin
@@ -184,15 +206,15 @@ begin
   rw submodule.mem_inf,
   apply and_congr,
   { unfold M,
-    rw coeff_eq_zero_of_degree_lt,
-    sorry},
+    rw degree_lt_iff_coeff_zero,
+    convert submodule.mem_infi (λ (j : {j : ℕ | n ≤ j}), (coeff R j).ker),
+    { ext, simp},
+    { ext, simp [linear_map.mem_ker], congr'}},
   { refl}
 end
 
 
 end In
-
-#check submodule.map
 
 theorem Hilbert_Basis_Theorem' 
   (R : Type) [comm_ring R] (hR : is_noetherian_ring R) :
@@ -238,8 +260,9 @@ begin
       rw submodule.map_comp,
       apply submodule.map_mono,
       intros f hf,
-
-      -- I think I need `coeff R a+c = coeff R a ∘ (multn by X^c) : R-module homs R[X] → R
+      show f ∈ In I (c + a),
+      rw In_def,
+      -- use hf
       sorry
     },
 
