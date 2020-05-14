@@ -84,12 +84,35 @@ lemma vanishing_ideal_Union {ι : Sort*} (t : ι → set (prime_spectrum R)) :
 
 -- want: kernel of an R-mod hom M →ₗ N is an R-submodule of M
 #check linear_map.ker
-/-- Define the R-submodule M_n of R[X] to be polys of degree at most n -/
-def M (n : ℕ) := ⨅ (n : ℕ), linear_map.ker (coeff R n)
+/-- Define the R-submodule M_n of R[X] to be polys of degree less than n -/
+def M (n : ℕ) := infi (λ j : {j : ℕ // n ≤ j}, linear_map.ker (coeff R j))
+-- Example: M 0 is {0}, M 1 is the constant polys R.
 
--- set S = submodule S S
-example (R : Type) [comm_ring R] (M : Type) [add_comm_group M] [module R M]
-  (N : submodule R M) (m : M) : m ∈ N ↔ m ∈ (N : set M) := by library_search
+example : complete_lattice (ideal R) := by apply_instance
+
+-- failing to use `\Glb` notation
+lemma infi_mono (X Y : Type) (L : Type) [complete_lattice L] (f : X → Y) (g : Y → L) :
+  infi (g ∘ f) ≤ infi g :=
+begin
+  
+end
+
+
+-- We need a lemma saying that M is monotone, i.e. M j ⊆ M (j + k)
+
+#check infi
+#check Inf_le_Inf
+#check Inf_eq_infi
+lemma M_mono : monotone (M R) :=
+begin
+  intros a b hab,
+  -- I want to prove that ⨅ of some set of submodules is ⊆ of an ⨅ of a bigger set
+  unfold M,
+  
+end
+
+-- I an ideal of R[X], I want that n ↦ Jₙ is monotonic
+
 --set_option pp.all true
 
 -- If S is an R-algebra, how come an ideal of S is an R-submodule of S?
@@ -98,7 +121,7 @@ def ideal.to_submodule (S : Type) [comm_ring S] [algebra R S] (I : ideal S) :
 { carrier := I,
   zero := I.zero_mem,
   add := λ x y, I.add_mem,
-  smul := sorry}
+  smul := sorry} -- needs doing!
   
   -- λ r s h, begin
   --   change (s ∈ (I : set S)) at h,
@@ -146,13 +169,14 @@ begin
     Proof. Define J_n to be the ideal pr_n (Mₙ ∩ I)
 
   -/
+    -- need that n ↦ Iₙ is monotonic (a ≤ b → Iₐ ≤ Ib)
     set In : ∀ (n : ℕ), submodule R (polynomial R) := λ n, ((M R n) ⊓ (ideal.to_submodule R _ I)) with HIn,
     set Jn : ∀ (n : ℕ), ideal R := λ (n : ℕ), submodule.map (coeff R n) (In n) with hJn,
 
     -- J_n are an increasing collection of ideals of R.
     have Jn_mono : monotone Jn,
     { intros a b hab,
-      -- currently switching to Twitch     ************* <- this
+      -- Multiplication by X^i is a map M R n → M R (n + i)
       sorry
     },
 
