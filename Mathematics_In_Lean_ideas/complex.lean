@@ -8,12 +8,12 @@ and prove that the complex numbers are a commutative ring.
 We then do a slightly more computer-sciency worked development of the
 natural inclusion from the reals to the complexes. 
 
-There are then a bunch of exercises, which can be solved in term mode
-or tactic mode. . 
-a lot of stuff we don't need for this one precise result. As an appendix
-We leave as exercises
-the API extraction for the stuff we skipped, namely the following
-complex conjugation and the norm function.
+There are then a bunch of API-building exercises, which can be solved in term mode
+or tactic mode. The first is `I`, the second is complex conjugation,
+and the third is the "squared norm" function. 
+
+There is then a speculative last exercise on harder properties
+of the complexes.
 -/
 
 -- We will assume that the real numbers are a field.
@@ -71,6 +71,8 @@ example (z : ℂ) : re(z) = z.re := rfl
 
 /-! # Mathematical trivialities -/
 
+/-! ## The first triviality -/
+
 -- We start with some facts about complex numbers which are so obvious that we do not
 -- often explicitly state them. The first is that if z is a complex number, then
 -- the complex number with real part re(z) and imaginary part im(z) is equal to z.
@@ -97,7 +99,14 @@ end
 -- and `dsimp` was unnecessary -- the two sides of the equation 
 -- were definitionally equal.
 
--- It's important we give this theorem a name, because we want `simp`
+@[simp] theorem eta : ∀ z : ℂ, complex.mk z.re z.im = z
+| ⟨x, y⟩ := rfl
+
+/-! ### Digression on `simp` -/
+
+-- It's important we give this theorem a name (and we called it `eta`
+-- because that's what computer scientists call lemmas of this form).
+-- The reason it's important is that we want `simp`
 -- to be able to use it. In short, the `simp` tactic tries to solve
 -- goals of the form A = B, when `refl` doesn't work (i.e. the goals are
 -- not definitionally equal) but when any mathematician would be able
@@ -112,8 +121,8 @@ end
 -- It proves `A = B` when, and only when, it can do it by applying 
 -- its "simplification rules", where a simplification rule is simply a proof
 -- of a theorem of the form `A = B` and `B` is simpler than `A`.  
-@[simp] theorem eta : ∀ z : ℂ, complex.mk z.re z.im = z
-| ⟨x, y⟩ := rfl
+
+/-! ## The second triviality -/
 
 -- The second triviality is the assertion that two complex numbers
 -- with the same and imaginary parts are equal. Again this is not
@@ -496,3 +505,18 @@ theorem mul_conj (z : ℂ) : z * conj z = norm_sq z :=
 sorry
 
 end complex
+
+/-! # Exercise 4 (advanced) 
+
+1) Prove the complex numbers are a field.
+
+2) Prove the complex numbers are an algebraically closed field. 
+
+
+-/
+
+instance : field ℂ := sorry
+
+-- As for it being algebraically closed, [here](https://github.com/leanprover-community/mathlib/blob/3710744/src/analysis/complex/polynomial.lean#L34)
+-- is where it is proved in mathlib. The mathlib proof was written by Chris Hughes, a mathematics
+-- undergraduate at Imperial College London.
