@@ -157,8 +157,10 @@ def In (I : ideal (polynomial R)) (n : ℕ) : submodule R (polynomial R) := ((M 
 
 variable (I : ideal (polynomial R))
 
-lemma In_mono : monotone (In I) := sorry
-#exit
+lemma In_mono : monotone (In I) := 
+λ _ _ hab, inf_le_inf_right _ (M_mono R hab)
+
+end In
 
 theorem Hilbert_Basis_Theorem' 
   (R : Type) [comm_ring R] (hR : is_noetherian_ring R) :
@@ -187,9 +189,7 @@ begin
 
   -/
     -- need that n ↦ Iₙ is monotonic (a ≤ b → Iₐ ≤ Ib)
-    set In : ∀ (n : ℕ), submodule R (polynomial R) := λ n, ((M R n) ⊓ (ideal.to_submodule R _ I)) with HIn,
-
-    set Jn : ∀ (n : ℕ), ideal R := λ (n : ℕ), submodule.map (coeff R n) (In n) with hJn,
+    set Jn : ∀ (n : ℕ), ideal R := λ (n : ℕ), submodule.map (coeff R n) (In I n) with hJn,
 
     -- J_n are an increasing collection of ideals of R.
     have Jn_mono : monotone Jn,
