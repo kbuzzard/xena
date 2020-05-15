@@ -37,7 +37,12 @@ is non-empty and each element of X is in precisely one of the subsets.
 NB : this is one of the harder questions here.
 -/
 
-structure partition (X : Type*). -- remove `.`  and fill in -- look at def of equiv above
+structure partition (X : Type*) :=
+(ℱ : set (set X))
+(disjoint : ∀ A B ∈ ℱ, A ≠ B → A ∩ B = ∅)
+(cover : ∀ x : X, ∃ A ∈ ℱ, x ∈ A)
+(nonempty : ∀ A ∈ ℱ, A ≠ ∅)
+
 
 /-
 Equivalence relations are in core Lean -- we don't need any imports.
