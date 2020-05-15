@@ -28,7 +28,7 @@ example (X : Type) : {R : X → X → Prop // equivalence R} ≃ partition X :=
       intro c,
       intro hc,
       cases hc with x hx,
-      rw set.ne_empty_iff_exists_mem,
+      rw set.ne_empty_iff_nonempty,
       use x,
       rw hx,
       exact mem_class R.2 x,
@@ -42,7 +42,7 @@ example (X : Type) : {R : X → X → Prop // equivalence R} ≃ partition X :=
     end,
     Hunique := begin
       intros c d hc hd hcd,
-      rw set.ne_empty_iff_exists_mem at hcd,
+      rw set.ne_empty_iff_nonempty at hcd,
       cases hcd with x hx,
       cases hc with a ha,
       cases hd with b hb,
@@ -98,7 +98,7 @@ example (X : Type) : {R : X → X → Prop // equivalence R} ≃ partition X :=
       { apply P.Hunique c d,
         use hc,
         use hd,
-        rw set.ne_empty_iff_exists_mem,
+        rw set.ne_empty_iff_nonempty,
         use y,
         split,
         use hyc,
@@ -152,7 +152,7 @@ example (X : Type) : {R : X → X → Prop // equivalence R} ≃ partition X :=
         rcases hy with ⟨e, he, hxe, hye⟩,
         convert hye, -- not taught
         refine P_Hunique d e hd he _,
-        rw set.ne_empty_iff_exists_mem,
+        rw set.ne_empty_iff_nonempty,
         use x,
         split;assumption
       },
@@ -166,7 +166,7 @@ example (X : Type) : {R : X → X → Prop // equivalence R} ≃ partition X :=
     { intro hc,
       dsimp,
       have h := P_Hnonempty c hc,
-      rw set.ne_empty_iff_exists_mem at h,
+      rw set.ne_empty_iff_nonempty at h,
       cases h with x hxc,
       use x,
       unfold equivalence_class,
@@ -183,7 +183,7 @@ example (X : Type) : {R : X → X → Prop // equivalence R} ≃ partition X :=
         rcases h with ⟨d, hd, hxd, hyd⟩,
         convert hyd,
         apply P_Hunique c d hc hd,
-        rw set.ne_empty_iff_exists_mem,
+        rw set.ne_empty_iff_nonempty,
         use x,
         split;assumption
       }
