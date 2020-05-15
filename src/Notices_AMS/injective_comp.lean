@@ -1,4 +1,4 @@
-import tactic -- tactic mode
+import tactic -- gives access to many useful tactics
 
 open function -- definition of injective now available
 
