@@ -18,7 +18,7 @@ where `A` and `B` are *exactly the same thing* (or, more precisely, *definitiona
 If your goal is this:
 
 ```
-a b c d : mynat
+a b c d : ℕ
 ⊢ (a + b) * (c + d) = (a + b) * (c + d)
 ```
 
