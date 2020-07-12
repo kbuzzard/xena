@@ -24,7 +24,7 @@ a b c d : ℕ
 
 then
 
-`refl,`
+`refl`
 
 will close the goal and solve the level.
 
@@ -32,7 +32,7 @@ will close the goal and solve the level.
 
 ### Summary
 
-If `h` is a proof of `X = Y` (i.e. `h : X = Y`), then `rw h,` will change
+If `h` is a proof of `X = Y` (i.e. `h : X = Y`), then `rw h` will change
 all `X`s in the goal to `Y`s. Variants: `rw ←h` (changes
 `Y` to `X`) and `rw h at h2` (changes `X` to `Y` in hypothesis
 `h2` instead of the goal).
