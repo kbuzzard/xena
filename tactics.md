@@ -2,8 +2,8 @@
 
 # Contents
 
-1) `refl` (close `X=X` goals)
-2) `rw h` (use a proof `h : X=Y` to change `X`s to `Y`s)
+1) `refl` (close `X = X` goals)
+2) `rw h` (use a proof `h : X = Y` to change `X`s to `Y`s)
 3) `induction` (induction for natural numbers)
 4) `exact h` (close a goal `⊢ P` if `h : P`)
 5) `intro h` (turns `⊢ P → Q` into `h : P, ⊢ Q`)
