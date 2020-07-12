@@ -369,6 +369,7 @@ a b : mynat
 
 a b : mynat
 ⊢ a + 3 = b + 3 → a = b
+```
 
 ## 10) `use`
 
