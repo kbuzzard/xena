@@ -160,7 +160,7 @@ and only if `h` is a term of type `X`, i.e. `h : X`
 
 ### Details
 
-Say $P$, $Q$ and $R$ are types (i.e., what a mathematician
+Say `P`, `Q` and `R` are types (i.e., what a mathematician
 might think of as either sets or propositions),
 and the local context looks like this:
 
@@ -178,16 +178,17 @@ above goal could be solved with
 
 `exact j(h(p)),`
 
-because $j(h(p))$ is easily checked to be a term of type $R$
-(i.e., an element of the set $R$, or a proof of the proposition $R$).
+because `j(h(p))` is easily checked to be a term of type `R`
+(i.e., an element of the set `R`, or a proof of the proposition `R`).
 
 ## 5) `intro`
 
 ### Summary:
 
 `intro p` will turn a goal `⊢ P → Q` into a hypothesis `p : P`
-and goal `⊢ Q`. If `P` and `Q` are sets `intro p` means "let $p$ be an arbitrary element of $P$".
-If `P` and `Q` are propositions then `intro p` says "assume $P$ is true". 
+and goal `⊢ Q`. If `P` and `Q` are sets `intro p` means "let `p` be an arbitrary element of `P`".
+If `P` and `Q` are propositions then `intro p` says "assume `P` is true" (i.e. "let `p` be a
+proof of `P`). 
 
 ### Details
 
@@ -218,7 +219,8 @@ of the set `P` if you think set-theoretically) you need
 to come up with a term of type `Q`, so your first step is
 to choose `p`, an arbitary element of `P`. 
 
-`intro p,` is Lean's way of saying "let $p\in P$ be arbitrary".
+`intro p,` is Lean's way of saying "let `p` be any element of `P`"
+(or more precisely "let `p` be a term of type `P`).
 The tactic `intro p` changes
 
 ```
@@ -238,10 +240,10 @@ course depend on `p`).
 
 ### Example (propositions)
 
-If your goal is an implication $P\implies Q$ then Lean writes
+If your goal is an implication `P` implies `Q` then Lean writes
 this as `⊢ P → Q`, and `intro p,` can be thought of as meaning
-"let $p$ be a proof of $P$", or more informally "let's assume that
-$P$ is true". The goal changes to `⊢ Q` and the hypothesis `p : P`
+"let `p` be a proof of `P`", or more informally "let's assume that
+`P` is true". The goal changes to `⊢ Q` and the hypothesis `p : P`
 appears in the local context.
 
 ## 6) `apply`
@@ -259,10 +261,10 @@ simple: if you are trying to create a term of type `Q`,
 but `h` is a function which turns terms of type `P` into
 terms of type `Q`, then it will suffice to construct a
 term of type `P`. A mathematician might say: "we need
-to construct an element of $Q$, but we have a function $h:P\to Q$
-so it suffices to construct an element of $P$". Or alternatively
-"we need to prove $Q$, but we have a proof $h$ that $P\implies Q$
-so it suffices to prove $P$".
+to construct an element of `Q`, but we have a function `h:P → Q`
+so it suffices to construct an element of `P`". Or alternatively
+"we need to prove `Q`, but we have a proof `h` that `P → Q`
+so it suffices to prove `P`".
 
 
 ## 7) `cases`
