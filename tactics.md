@@ -11,7 +11,7 @@ of the form `X ~ X` where `~` is any reflexive binary relation
 ### Details
 
 The `refl` tactic will close any goal of the form `A = B`
-where `A` and `B` are *exactly the same thing*.
+where `A` and `B` are *exactly the same thing* (or, more precisely, *definitionally equal*)
 
 ### Example:
 
