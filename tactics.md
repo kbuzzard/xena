@@ -1,6 +1,7 @@
 # The ten (or so) basic tactics
 
-## Contents: 
+# Contents
+
 1) `refl` (close `X=X` goals)
 2) `rw h` (use a proof `h : X=Y` to change `X`s to `Y`s)
 3) `induction` (induction for natural numbers)
@@ -12,6 +13,8 @@
 9) `split` (turns `⊢ P ∧ Q` into `⊢ P` and `⊢ Q`)
 10) `use n` (turns `n : X, ∃ (x : X), P x` into `P n`)
 11) `have h : P` (makes a new goal `⊢ P` and adds `h : P` to first goal)
+
+# Details
 
 ## 1) `refl`
 
