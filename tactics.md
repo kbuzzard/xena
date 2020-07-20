@@ -1,5 +1,22 @@
 # The ten (or so) basic tactics
 
+# Contents
+
+1) `refl` (close `X = X` goals)
+2) `rw h` (use a proof `h : X = Y` to change `X`s to `Y`s)
+3) `induction` (induction for natural numbers)
+4) `exact h` (close a goal `⊢ P` if `h : P`)
+5) `intro h` (turns `⊢ P → Q` into `h : P, ⊢ Q`)
+6) `apply h` (turns `h : P → Q, ⊢ Q` into `⊢ P`)
+7) `cases h` (breaks down `h : P ∧ Q` or `h : P ∨ Q`)
+8) `left` and `right` (turns `⊢ P ∨ Q` into `⊢ P` or `⊢ Q`)
+9) `split` (turns `⊢ P ∧ Q` into `⊢ P` and `⊢ Q`; turns `⊢ P ↔ Q` into `⊢ P → Q` and `⊢ Q → P`.
+10) `use n` (turns `n : X, ∃ (x : X), P x` into `P n`)
+11) `have h : P` (makes a new goal `⊢ P` and adds `h : P` to first goal. Popular amongst mathematicians,
+    who are used to arguing forwards in proofs.)
+
+# Details
+
 ## 1) `refl`
 
 ### Summary
@@ -11,20 +28,20 @@ of the form `X ~ X` where `~` is any reflexive binary relation
 ### Details
 
 The `refl` tactic will close any goal of the form `A = B`
-where `A` and `B` are *exactly the same thing*.
+where `A` and `B` are *exactly the same thing* (or, more precisely, *definitionally equal*)
 
 ### Example:
 
 If your goal is this:
 
 ```
-a b c d : mynat
+a b c d : ℕ
 ⊢ (a + b) * (c + d) = (a + b) * (c + d)
 ```
 
 then
 
-`refl,`
+`refl`
 
 will close the goal and solve the level.
 
@@ -32,7 +49,7 @@ will close the goal and solve the level.
 
 ### Summary
 
-If `h` is a proof of `X = Y` (i.e. `h : X = Y`), then `rw h,` will change
+If `h` is a proof of `X = Y` (i.e. `h : X = Y`), then `rw h` will change
 all `X`s in the goal to `Y`s. Variants: `rw ←h` (changes
 `Y` to `X`) and `rw h at h2` (changes `X` to `Y` in hypothesis
 `h2` instead of the goal).
@@ -144,7 +161,7 @@ and only if `h` is a term of type `X`, i.e. `h : X`
 
 ### Details
 
-Say $P$, $Q$ and $R$ are types (i.e., what a mathematician
+Say `P`, `Q` and `R` are types (i.e., what a mathematician
 might think of as either sets or propositions),
 and the local context looks like this:
 
@@ -162,16 +179,17 @@ above goal could be solved with
 
 `exact j(h(p)),`
 
-because $j(h(p))$ is easily checked to be a term of type $R$
-(i.e., an element of the set $R$, or a proof of the proposition $R$).
+because `j(h(p))` is easily checked to be a term of type `R`
+(i.e., an element of the set `R`, or a proof of the proposition `R`).
 
 ## 5) `intro`
 
 ### Summary:
 
 `intro p` will turn a goal `⊢ P → Q` into a hypothesis `p : P`
-and goal `⊢ Q`. If `P` and `Q` are sets `intro p` means "let $p$ be an arbitrary element of $P$".
-If `P` and `Q` are propositions then `intro p` says "assume $P$ is true". 
+and goal `⊢ Q`. If `P` and `Q` are sets `intro p` means "let `p` be an arbitrary element of `P`".
+If `P` and `Q` are propositions then `intro p` says "assume `P` is true" (i.e. "let `p` be a
+proof of `P`). 
 
 ### Details
 
@@ -202,7 +220,8 @@ of the set `P` if you think set-theoretically) you need
 to come up with a term of type `Q`, so your first step is
 to choose `p`, an arbitary element of `P`. 
 
-`intro p,` is Lean's way of saying "let $p\in P$ be arbitrary".
+`intro p,` is Lean's way of saying "let `p` be any element of `P`"
+(or more precisely "let `p` be a term of type `P`).
 The tactic `intro p` changes
 
 ```
@@ -222,10 +241,10 @@ course depend on `p`).
 
 ### Example (propositions)
 
-If your goal is an implication $P\implies Q$ then Lean writes
+If your goal is an implication `P` implies `Q` then Lean writes
 this as `⊢ P → Q`, and `intro p,` can be thought of as meaning
-"let $p$ be a proof of $P$", or more informally "let's assume that
-$P$ is true". The goal changes to `⊢ Q` and the hypothesis `p : P`
+"let `p` be a proof of `P`", or more informally "let's assume that
+`P` is true". The goal changes to `⊢ Q` and the hypothesis `p : P`
 appears in the local context.
 
 ## 6) `apply`
@@ -243,10 +262,10 @@ simple: if you are trying to create a term of type `Q`,
 but `h` is a function which turns terms of type `P` into
 terms of type `Q`, then it will suffice to construct a
 term of type `P`. A mathematician might say: "we need
-to construct an element of $Q$, but we have a function $h:P\to Q$
-so it suffices to construct an element of $P$". Or alternatively
-"we need to prove $Q$, but we have a proof $h$ that $P\implies Q$
-so it suffices to prove $P$".
+to construct an element of `Q`, but we have a function `h:P → Q`
+so it suffices to construct an element of `P`". Or alternatively
+"we need to prove `Q`, but we have a proof `h` that `P → Q`
+so it suffices to prove `P`".
 
 
 ## 7) `cases`
@@ -350,6 +369,7 @@ a b : mynat
 
 a b : mynat
 ⊢ a + 3 = b + 3 → a = b
+```
 
 ## 10) `use`
 
