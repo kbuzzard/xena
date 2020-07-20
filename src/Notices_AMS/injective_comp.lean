@@ -10,8 +10,8 @@ open function
 variables (X Y Z : Type)
   (f : X → Y) (g : Y → Z)
 
--- The composite of two injective
--- functions is injective.
+-- Theorem: if f and g are
+-- injective, then so is g ∘ f.
 theorem injective_comp :
   injective f ∧ injective g →
   injective (g ∘ f) :=
