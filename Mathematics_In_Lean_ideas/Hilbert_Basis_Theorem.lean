@@ -253,20 +253,46 @@ end In
 
 --#check @add_lt_add_right {a b : α}, a < b → ∀ (c : α), a + c < b + c
 
-lemma with_bot_nat.add_lt_add_right {a b : with_bot ℕ} :
-  a < b → ∀ (c : ℕ), a + c < b + c :=
-begin
-  intros hab c,
-  sorry
-end
-
 universe u
-
 def with_bot.cases {X : Type u} (a : with_bot X) :
   a = ⊥ ∨ ∃ b : X, a = b := by cases a; tidy.
 
 def with_bot.bot_ne_some {X : Type u} (a : X) :
   (⊥ : with_bot X) ≠ a.
+
+def with_bot.some_ne_bot {X : Type u} (a : X) :
+  (a : with_bot X) ≠ ⊥.
+
+def with_bot.ne_bot_iff_exists_some {X : Type u} {a : with_bot X} :
+  a ≠ (⊥ : with_bot X) ↔ ∃ b : X, a = b :=
+begin
+  cases with_bot.cases a,
+    subst h,simp [with_bot.bot_ne_some],
+  rcases h with ⟨b, rfl⟩, simp [with_bot.some_ne_bot],
+end
+
+
+lemma with_bot_nat.add_lt_add_right {a b : with_bot ℕ} :
+  a < b → ∀ (c : ℕ), a + c < b + c :=
+begin
+  intros hab c,
+  cases with_bot.cases a,
+    subst h, rw [with_bot.bot_add], rw bot_lt_iff_ne_bot at ⊢ hab,
+    rw with_bot.ne_bot_iff_exists_some at hab ⊢,
+    rcases hab with ⟨b, rfl⟩,
+    use b + c, norm_cast,
+  rcases h with ⟨a, rfl⟩,
+  rcases with_bot.cases b with rfl | ⟨b, rfl⟩,
+    exfalso, apply not_lt_bot hab,
+  norm_cast at hab ⊢,
+  exact add_lt_add_right hab c,
+end
+
+
+
+
+
+
 
 theorem Hilbert_Basis_Theorem' 
   (R : Type) [comm_ring R] (hR : is_noetherian_ring R) :
