@@ -138,15 +138,17 @@ end
 
 -- I an ideal of R[X], I want that n ↦ Jₙ is monotonic
 
---set_option pp.all true
-
 -- If S is an R-algebra, how come an ideal of S is an R-submodule of S?
 def ideal.to_submodule (S : Type) [comm_ring S] [algebra R S] (I : ideal S) :
   submodule R S :=
-{ carrier := I,
-  zero := I.zero_mem,
-  add := λ x y, I.add_mem,
-  smul := sorry} -- needs doing!
+{ carrier := I.carrier,
+  zero_mem' := I.zero_mem,
+  add_mem' := λ a b, I.add_mem,
+    smul_mem' := λ r s h, begin
+      rw algebra.smul_def'' r s,
+      exact I.smul_mem _ h,
+    end,
+}
 
 -- What does is_noetherian_ring mean?
 
@@ -162,17 +164,17 @@ section In
 variable {R}
 
 -- the submodule of elements of an ideal with degree at most n
-def In (I : ideal (polynomial R)) (n : ℕ) : submodule R (polynomial R) := ((M R n) ⊓ (ideal.to_submodule R _ I))
+def I_deg_le (I : ideal (polynomial R)) (n : ℕ) : submodule R (polynomial R) := ((M R n) ⊓ (ideal.to_submodule R _ I))
 
 variable (I : ideal (polynomial R))
 
-lemma In_mono : monotone (In I) := 
+lemma I_deg_le_mono : monotone (I_deg_le I) := 
 λ _ _ hab, inf_le_inf_right _ (M_mono R hab)
 
-example (A B C D : Prop) (h1 : A ↔ C) (h2 : B ↔ D) : (A ∧ B) ↔ (C ∧ D) := by library_search
+example (A B C D : Prop) (h1 : A ↔ C) (h2 : B ↔ D) : (A ∧ B) ↔ (C ∧ D) := and_congr h1 h2
 
-#check le_degree_of_ne_zero
-#check finsupp.mem_support_iff
+--#check le_degree_of_ne_zero
+--#check finsupp.mem_support_iff
 
 open_locale classical
 
@@ -197,11 +199,11 @@ begin
     apply aux n h}
 end
 
-#check linear_map.mem_ker
+--#check linear_map.mem_ker
 
-lemma In_def (f : polynomial R) (n : ℕ) : f ∈ In I n ↔ f ∈ I ∧ degree f < n :=
+lemma I_deg_le.def (f : polynomial R) (n : ℕ) : f ∈ I_deg_le I n ↔ f ∈ I ∧ degree f < n :=
 begin
-  unfold In,
+  unfold I_deg_le,
   rw and.comm,
   rw submodule.mem_inf,
   apply and_congr,
@@ -210,11 +212,61 @@ begin
     convert submodule.mem_infi (λ (j : {j : ℕ | n ≤ j}), (coeff R j).ker),
     { ext, simp},
     { ext, simp [linear_map.mem_ker], congr'}},
-  { refl}
+  { refl }
 end
 
+lemma I_deg_le.def' (f : polynomial R) (n : ℕ) : f ∈ (I_deg_le I n : set (polynomial R)) ↔ f ∈ I ∧ degree f < n :=
+I_deg_le.def I f n
+
+lemma degree_mul_monic {p q : polynomial R} (hq : monic q) :
+  degree (p * q) = degree p + degree q :=
+begin
+  by_cases hp : p = 0,
+    subst hp, simp,
+  rw degree_mul',
+  rw monic.def at hq,
+  rw hq,
+  rw mul_one,
+  intro hp0,
+  apply hp,
+  rw leading_coeff_eq_zero_iff_deg_eq_bot at hp0,
+  rwa degree_eq_bot at hp0,
+end
+
+lemma degree_mul_pow_X {p : polynomial R} {c : ℕ} : 
+degree (p * X ^ c) = degree p + c :=
+begin
+  by_cases hp : p = 0,
+    subst hp, simp,
+  have hc : leading_coeff p ≠ 0,
+  { intro h, apply hp, rw leading_coeff_eq_zero_iff_deg_eq_bot at h,
+    rwa degree_eq_bot at h },
+  letI : nontrivial R := ⟨⟨_, _, hc⟩⟩,
+  convert degree_mul_monic _,
+  symmetry, 
+  rw degree_X_pow,
+  rw monic.def,
+  simp 
+end
 
 end In
+
+--#check @add_lt_add_right {a b : α}, a < b → ∀ (c : α), a + c < b + c
+
+lemma with_bot_nat.add_lt_add_right {a b : with_bot ℕ} :
+  a < b → ∀ (c : ℕ), a + c < b + c :=
+begin
+  intros hab c,
+  sorry
+end
+
+universe u
+
+def with_bot.cases {X : Type u} (a : with_bot X) :
+  a = ⊥ ∨ ∃ b : X, a = b := by cases a; tidy.
+
+def with_bot.bot_ne_some {X : Type u} (a : X) :
+  (⊥ : with_bot X) ≠ a.
 
 theorem Hilbert_Basis_Theorem' 
   (R : Type) [comm_ring R] (hR : is_noetherian_ring R) :
@@ -243,7 +295,7 @@ begin
 
   -/
     -- need that n ↦ Iₙ is monotonic (a ≤ b → Iₐ ≤ Ib)
-    set Jn : ∀ (n : ℕ), ideal R := λ (n : ℕ), submodule.map (coeff R n) (In I n) with hJn,
+    set Jn : ∀ (n : ℕ), ideal R := λ (n : ℕ), submodule.map (coeff R n) (I_deg_le I n) with hJn,
 
     -- J_n are an increasing collection of ideals of R.
     have Jn_mono : monotone Jn,
@@ -251,19 +303,30 @@ begin
       -- Multiplication by X^i is a map M R n → M R (n + i)
       -- Iₐ → I_b given by multiplication by X^{b-a}
       rw le_iff_exists_add at hab,
-      rcases hab with ⟨c, hbc⟩,
-      rw add_comm at hbc,
-      rw hbc, clear hbc, -- `cases hbc` would have been nicer
+      rcases hab with ⟨c, rfl⟩,
+      rw add_comm,
       rw hJn,
       dsimp,
-      rw ←coeff_X_pow_mul R c a,
-      rw submodule.map_comp,
-      apply submodule.map_mono,
-      intros f hf,
-      show f ∈ In I (c + a),
-      rw In_def,
-      -- use hf
-      sorry
+      rintros x ⟨f, hf, rfl⟩,
+      use (X : polynomial R)^c • f,
+      split,
+      { rw I_deg_le.def',
+        split,
+          cases hf with _ hf, 
+          exact submodule.smul_mem _ _ hf,
+        rw algebra.id.smul_eq_mul,
+        rw mul_comm,
+        rw degree_mul_pow_X,
+        rw add_comm,
+        push_cast,
+        rw I_deg_le.def' at hf,
+        cases hf with _ hf,
+        cases with_bot.cases (f.degree) with hd hd,
+          rw hd, simp, norm_cast, rw bot_lt_iff_ne_bot, exact (with_bot.bot_ne_some _).symm,
+        rcases hd with ⟨e, he⟩,
+        rw he at ⊢ hf,
+        apply with_bot_nat.add_lt_add_right hf },
+      { sorry },
     },
 
   /-
@@ -291,7 +354,7 @@ begin
     choose hᵢ ∈ I representing jᵢ
     Let N be max of the degrees of the jᵢ, so J=J_N.
     Now here is a finite set S of generators for I.
-    It's the obviously finite union of the following things
+    It's the obviously finite union /of the following things
     * h's corresponding to generators of
     all the J_n for n ≤ N.
     * The hᵢ from above 
