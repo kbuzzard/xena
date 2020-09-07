@@ -326,7 +326,10 @@ begin
         rcases hd with ⟨e, he⟩,
         rw he at ⊢ hf,
         apply with_bot_nat.add_lt_add_right hf },
-      { sorry },
+      { rw smul_eq_mul,
+        rw mul_comm,
+        rw add_comm,
+        convert polynomial.coeff_mul_X_pow f c a },
     },
 
   /-
