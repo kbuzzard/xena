@@ -375,6 +375,15 @@ begin
   -- Now each of those generators lives in some jᵢ
   -- and I need some N such that they're all in J_N
   -- I have monotonicity of J_n.
+  cases hJ2 with S hS,
+  -- Each of the generators is in J
+  have hS2 : ∀ s : R, s ∈ S → s ∈ J,
+    rw ← hS,
+    apply submodule.subset_span,
+  -- So there's some n such that they're all in J_n
+  rw hJ at hS2,
+  simp only [submodule.mem_supr_of_directed] at hS2,
+  simp_rw submodule.mem_supr_of_directed at hS2,
   
   sorry
     /-
