@@ -376,6 +376,16 @@ begin
   -- and I need some N such that they're all in J_N
   -- I need inclusions J_a ⊆ J_b if a ≤ b
   -- I need monotonicity of J_n.
+  cases hJ2 with S hS,
+  -- Each of the generators is in J
+  have hS2 : ∀ s : R, s ∈ S → s ∈ J,
+    rw ← hS,
+    apply submodule.subset_span,
+  -- So there's some n such that they're all in J_n
+  rw hJ at hS2,
+  simp only [submodule.mem_supr_of_directed] at hS2,
+  simp_rw submodule.mem_supr_of_directed at hS2,
+  
   sorry
     /-
   -- where is my finite set of generators of an ideal of a Noetherian ring?
