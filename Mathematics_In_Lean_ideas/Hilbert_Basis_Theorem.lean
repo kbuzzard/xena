@@ -374,8 +374,8 @@ begin
   have hJ2 : J.fg := is_noetherian.noetherian _,
   -- Now each of those generators lives in some jᵢ
   -- and I need some N such that they're all in J_N
-  -- I need inclusions J_a ⊆ J_b if a ≤ b
-  -- I need monotonicity of J_n.
+  -- I have monotonicity of J_n.
+  
   sorry
     /-
   -- where is my finite set of generators of an ideal of a Noetherian ring?
