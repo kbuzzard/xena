@@ -292,7 +292,7 @@ end
 
 
 
-
+open_locale classical
 
 theorem Hilbert_Basis_Theorem' 
   (R : Type) [comm_ring R] (hR : is_noetherian_ring R) :
@@ -375,11 +375,61 @@ begin
   -- Now each of those generators lives in some jᵢ
   -- and I need some N such that they're all in J_N
   -- I have monotonicity of J_n.
+  -- Say S is a finset of generators for J
   cases hJ2 with S hS,
-  -- Each of the generators is in J
+  -- Each of the terms of S is in J
   have hS2 : ∀ s : R, s ∈ S → s ∈ J,
     rw ← hS,
     apply submodule.subset_span,
+  -- so each is in some Jn (n(s))
+  have hSJ : ∀ s : R, s ∈ S → ∃ n : ℕ, s ∈ Jn n,
+    intros s hs,
+    specialize hS2 s hs,
+    rw hJ at hS2,
+    rw submodule.mem_supr_of_directed at hS2,
+      exact hS2,
+    intros a b, use max a b, split; apply Jn_mono,
+      apply le_max_left,
+    apply le_max_right,
+  
+  -- so we can take some max
+  have hN : ∃ N : ℕ, ∀ (s : R) (hs : s ∈ S), classical.some (hSJ s hs) ≤ N,
+    by_cases hS : S.nonempty,
+    -- obtain?
+      rcases finset.exists_max_image S
+        (λ s, if h : s ∈ S then classical.some (hSJ s h) else 37) hS
+        with ⟨x, hxS, h⟩,
+      use classical.some (hSJ x hxS),
+      intros s hs,
+      convert h s hs,
+        simp_rw dif_pos hs,
+      simp_rw dif_pos hxS,
+    use 37,
+    intros s hs,
+    exfalso,
+    apply hS,
+    exact ⟨s, hs⟩,
+  cases hN with N hN,
+  -- we are finally in a position to write down the generators
+  -- 
+  let Jngens : ℕ → finset R :=
+    λ n : ℕ, classical.some (is_noetherian.noetherian (Jn n)),
+  have Jngens_spec : ∀ n : ℕ, (↑(Jngens n) : set R) ⊆ Jn n,
+    intro n, have hn := classical.some_spec (is_noetherian.noetherian (Jn n)),
+    convert submodule.subset_span, rw hn,
+  -- Jn n is submodule.map something, and so for every x ∈ Jn n,
+  -- there's some f : I_deg_le I n such that coeff R n f = x
+  
+  
+     
+  let auxfun : ℕ → finset (polynomial R) := λ n, finset.image _ _,
+  use finset.bind (finset.range N.succ) (sorry : ℕ → finset (polynomial R)),
+
+  let N := finset.max' (finset.image
+    (λ s, if h : s ∈ S then classical.some (hSJ s h) else 37) S),
+  
+
+
   -- So there's some n such that they're all in J_n
   rw hJ at hS2,
   simp only [submodule.mem_supr_of_directed] at hS2,
