@@ -52,6 +52,21 @@ theorem Hilbert_Basis_Theorem
 
 -/
 
+-- Stuff that should be in mathlib
+
+-- If S is an R-algebra, how come an ideal of S is an R-submodule of S?
+def ideal.to_submodule {S : Type} [comm_ring S] [algebra R S] (I : ideal S) :
+  submodule R S :=
+{ carrier := I.carrier,
+  zero_mem' := I.zero_mem,
+  add_mem' := λ a b, I.add_mem,
+    smul_mem' := λ r s h, begin
+      rw algebra.smul_def'' r s,
+      exact I.smul_mem _ h,
+    end,
+}
+
+
 -- Before we start, some definitions.
 
 namespace Hilbert_Basis_Theorem
@@ -138,17 +153,7 @@ end
 
 -- I an ideal of R[X], I want that n ↦ Jₙ is monotonic
 
--- If S is an R-algebra, how come an ideal of S is an R-submodule of S?
-def ideal.to_submodule (S : Type) [comm_ring S] [algebra R S] (I : ideal S) :
-  submodule R S :=
-{ carrier := I.carrier,
-  zero_mem' := I.zero_mem,
-  add_mem' := λ a b, I.add_mem,
-    smul_mem' := λ r s h, begin
-      rw algebra.smul_def'' r s,
-      exact I.smul_mem _ h,
-    end,
-}
+
 
 -- What does is_noetherian_ring mean?
 
@@ -164,9 +169,12 @@ section In
 variable {R}
 
 -- the submodule of elements of an ideal with degree at most n
-def I_deg_le (I : ideal (polynomial R)) (n : ℕ) : submodule R (polynomial R) := ((M R n) ⊓ (ideal.to_submodule R _ I))
+def I_deg_le (I : ideal (polynomial R)) (n : ℕ) : submodule R (polynomial R) := ((M R n) ⊓ (I.to_submodule R))
 
 variable (I : ideal (polynomial R))
+
+lemma I_deg_le_sub_I (n : ℕ) : I_deg_le I n ≤ ideal.to_submodule R I :=
+inf_le_right
 
 lemma I_deg_le_mono : monotone (I_deg_le I) := 
 λ _ _ hab, inf_le_inf_right _ (M_mono R hab)
@@ -419,22 +427,30 @@ begin
     convert submodule.subset_span, rw hn,
   -- Jn n is submodule.map something, and so for every x ∈ Jn n,
   -- there's some f : I_deg_le I n such that coeff R n f = x
-  
-  
-     
-  let auxfun : ℕ → finset (polynomial R) := λ n, finset.image _ _,
-  use finset.bind (finset.range N.succ) (sorry : ℕ → finset (polynomial R)),
-
-  let N := finset.max' (finset.image
-    (λ s, if h : s ∈ S then classical.some (hSJ s h) else 37) S),
-  
-
-
-  -- So there's some n such that they're all in J_n
-  rw hJ at hS2,
-  simp only [submodule.mem_supr_of_directed] at hS2,
-  simp_rw submodule.mem_supr_of_directed at hS2,
-  
+  have hIn : ∀ (n : ℕ) (x : R) (hx : x ∈ Jn n), ∃ f : polynomial R,
+    f ∈ I_deg_le I n ∧ coeff R n f = x,
+    rintros n h ⟨f, hf, rfl⟩,
+    use [f, hf],
+  let auxfun : ℕ → finset (polynomial R) := λ n, finset.image
+    (λ x, if hx : x ∈ Jn n then classical.some (hIn n x hx) else 0)
+    (Jngens n),
+  have auxfun_spec : ∀ (n : ℕ) (x : R) (hx : x ∈ Jn n), classical.some (hIn n x hx) ∈ _ ∧ _ :=
+    λ n x hx, classical.some_spec (hIn n x hx),
+  use finset.bind (finset.range N.succ) auxfun,
+  apply le_antisymm,
+  { -- easy way
+    rw submodule.span_le,
+    rw finset.coe_bind,
+    apply set.bUnion_subset,
+    intros n hn,
+    intros f hf,
+    change f ∈ auxfun n at hf,
+    rw finset.mem_image at hf,
+    rcases hf with ⟨r, hr, rfl⟩,
+    rw dif_pos, swap, apply Jngens_spec n hr,
+    apply (I_deg_le_sub_I),
+    exact (auxfun_spec n r _).1 },
+  -- main goal
   sorry
     /-
   -- where is my finite set of generators of an ideal of a Noetherian ring?
