@@ -32,7 +32,7 @@ of various pieces of undergraduate level mathematics.
 
 Some of the lean files are in a library called Xena. One could imagine Xena
 as currently studying mathematics at Imperial College London. To find out more
-about her, you could check our her blog at
+about her, you could check out her blog at
 
 https://xenaproject.wordpress.com/
 
