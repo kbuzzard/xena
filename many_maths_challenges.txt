@@ -1,38 +1,24 @@
-Things which we should get into mathlib!
+Things which we should get into mathlib! Last updated 30/11/21.
 
 Number fields.
 --------------
 
-1) Define a Dedekind domain.
+1) Define the zeta function of a number field.
 
-2) Prove that every ideal of the integers of a Dedekind domain factorises uniquely into prime ideals.
+2) Prove that the zeta function of a number field has a meromorphic extension to the complex numbers.
 
-3) Define the class group of a Dedekind domain.
+3) Define the regulator of a number field.
 
-4) Define a number field.
+4) State the analytic class number formula.
 
-5) Define the integers of a number field
+5) Prove the analytic class number formula.
 
-6) Prove that the integers of a number field are a Dedekind domain.
-
-7) Prove that the class group of a number field is finite.
-
-8) Define the zeta function of a number field.
-
-9) Prove that the zeta function of a number field has a meromorphic extension to the complex numbers.
-
-10) Define the regulator of a number field.
-
-11) State the analytic class number formula.
-
-12) Prove the analytic class number formula.
-
-13) Do everything for global function fields.
+6) Do everything for global function fields.
 
 Group cohomology.
 -----------------
 
-1) Define group cohomology [NB I have an MSc student, Shenyang Wu, working on this]
+1) Define group cohomology
 
 2) Prove the Hochschild-Serre spectral sequence.
 
@@ -43,11 +29,11 @@ Group cohomology.
 Galois theory
 -------------
 
-1) State the fundamental theorem of Galois theory for finite normal separable extensions of fields. [NB there are students at Imperial working on this]
+1) Define the topology on an infinite Galois group
 
-2) Prove the fundamental theorem of Galois theory.
+2) State the fundamental theorem of Galois theory for algebraic normal separable extensions of infinite degree.
 
-3) State and prove the version for algebraic normal separable extensions of possibly infinite degree.
+3) Prove it. [note that we have everything for finite Galois groups]
 
 Local Fields
 ------------
@@ -59,15 +45,13 @@ Local Fields
 Galois cohomology
 -----------------
 
-1) Define the algebraic closure of a field. [NB Chris Hughes is working on this and there is some hold-up involving limits which I've never entirely understood]
+1) State local Tate duality.
 
-2) State local Tate duality.
+2) Prove local Tate duality.
 
-3) Prove local Tate duality.
+3) State the global duality theorems (Greenberg-Wiles etc).
 
-4) State the global duality theorems (Greenberg-Wiles etc).
-
-5) Formalise proofs of all the theorems in Milne's book "arithmetic duality theorems".
+4) Formalise proofs of all the theorems in Milne's book "arithmetic duality theorems".
 
 Harmonic analysis
 -----------------
@@ -79,17 +63,16 @@ Harmonic analysis
 Elliptic curves
 ---------------
 
-1) Define an elliptic curve over a field k.
+1) Define the group structure on the k-points of an elliptic curve, proving that it is a group.
 
-2) Define the group structure on the k-points of an elliptic curve, proving that it is a group.
+2) Prove that if k is a number field then the group of k-points of an elliptic curve are finitely-generated.
 
-3) Prove that if k is a number field then the group of k-points of an elliptic curve are finitely-generated.
+3) Define the L-function of an elliptic curve over a number field, proving it converges for Re(s) sufficiently large.
 
-4) Define the L-function of an elliptic curve over a number field, proving it converges for Re(s) sufficiently large.
+4) State the conjecture asserting that the L-function has holomorphic continuation to the complex plane.
 
-5) State the conjecture asserting that the L-function has holomorphic continuation to the complex plane.
-
-6) State the Birch and Swinnerton-Dyer conjecture for elliptic curves over the rational numbers.
+5) State the Birch and Swinnerton-Dyer conjecture for elliptic curves over the rational numbers. [note that Jamie Bell has a preliminary
+version of a lot of this stuff: https://github.com/jamiebell2805/BSD-conjecture/
 
 Algebra
 -------
@@ -110,20 +93,16 @@ Algebraic Topology
 Representation Theory
 ---------------------
 
-1) Define a representation of a group over a field (or perhaps even a ring or semiring)
+1) Schur's Lemma.
 
-2) Maschke's theorem
+2) Basic representation theory of finite groups (e.g. irreducible characters form a basis of class functions on the group)
 
-3) Schur's Lemma.
-
-4) Basic representation theory of finite groups (e.g. irreducible characters form a basis of class functions on the group)
-
-5) Extension to compact Lie groups.
+3) Extension to compact Lie groups.
 
 Modular forms
 -------------
 
-1) Definitions and basic properties.
+1) Definitions and basic properties and examples.
 
 2) Finite-dimensionality of a space of modular forms of fixed level and weight.
 
@@ -131,14 +110,5 @@ Modular forms
 
 4) State Deligne's theorem attaching Galois representations to eigenforms.
 
-------------------------------------
+5) State the modularity theorem (all elliptic curves are modular).
 
-Also some chores (from Chris Hughes)
-
-- GCD domain - Currently integrated with normalisation domain, but there should be a version without this since there are GCD domains that do not have a normalisation function. Maybe GCD domains are just pointless though. [KB indeed can't (yet) see the point of these things]
-
-- Bundled Homs - refactor ideals, subgroups etc to use bundled Homs.
-
-- mv polynomials - degree lemmas, integral domain etc, everything relevant on polynomials should be done for mv polynomials.
-
-- finset.Icc, list.Icc, finset.Ioc etc.
