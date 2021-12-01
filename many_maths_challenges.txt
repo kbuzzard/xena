@@ -83,6 +83,15 @@ Algebra
 
 3) Jordan decomposition
 
+Homological Algebra
+-------------------
+
+1) Definitions of Ext and Tor
+
+2) Long exact sequences
+
+3) Relation to flatness
+
 Algebraic Topology
 ------------------
 
