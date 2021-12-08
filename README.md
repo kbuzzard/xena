@@ -1,5 +1,8 @@
 # Xena
-Lean Library currently studying for a degree at Imperial College 
+
+Note: this is not a functioning Lean repository! This is simply a collection
+of files written by Kevin Buzzard and his students between 2017 and 2019 as we experimented
+with how to teach Lean parts of Imperial College's undergraduate mathematics degree.
 
 # About
 
@@ -19,28 +22,24 @@ Ellen Arlt
 Tudor Ciurca
 Chris Hughes
 Kenny Lau
+Amelia Livingston
 Julian Wykowski
 
 The files are mostly written in a computer language called Lean.
 Lean is an automated proof checker. You can find more information about Lean at
 
-https://leanprover.github.io/
+https://leanprover-community.github.io/
 
 Basically, Lean can understand mathematics, and can check that it
 doesn't have any mistakes in. Most of the files here are Lean verifications
 of various pieces of undergraduate level mathematics.
 
-Some of the lean files are in a library called Xena. One could imagine Xena
-as currently studying mathematics at Imperial College London. To find out more
-about her, you could check our her blog at
+Initially I had imagined
+that this project would turn into a formalisation of chunks of the undergraduate
+degree at Imperial College; however Lean's mathematics library mathlib ultimately
+turned out to fulfill this role. For more about the Xena project, which is
+focussed on teaching mathematicians about formalisation, see
 
 https://xenaproject.wordpress.com/
 
-Vague long term goals:
-
-1) Get many of the example sheet questions and solutions typed up in Lean
-and into a Lean problem bank, hosted here.
-
-2) Type up Lean versions of all the theorems and proofs in the course.
-
-3) Make an "M1F tactic" which attempts M1F problem sheet questions.
+For more about Lean's mathematics library, see https://leanprover-community.github.io/ .
