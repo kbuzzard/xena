@@ -9,4 +9,5 @@ begin
     exact contrapositive P Q,
   intro HnQnP,
   intro HP,
+  cc,
 end
