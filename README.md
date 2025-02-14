@@ -1,8 +1,9 @@
 # Xena
 
 Note: this is not a functioning Lean repository! This is simply a collection
-of files written by Kevin Buzzard and his students between 2017 and 2019 as we experimented
+of Lean 3 files written by Kevin Buzzard and his students between 2017 and 2019 as we experimented
 with how to teach Lean parts of Imperial College's undergraduate mathematics degree.
+Lean 3 is now deprecated and this repo is thus just a historical artefact now.
 
 # About
 
