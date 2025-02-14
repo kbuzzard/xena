@@ -19,12 +19,12 @@ published by Chapman & Hall.
 
 Current student contributors in alphabetical order:
 
-Ellen Arlt
-Tudor Ciurca
-Chris Hughes
-Kenny Lau
-Amelia Livingston
-Julian Wykowski
+Ellen Arlt,
+Tudor Ciurca,
+Chris Hughes,
+Kenny Lau,
+Amelia Livingston,
+Julian Wykowski.
 
 The files are mostly written in a computer language called Lean.
 Lean is an automated proof checker. You can find more information about Lean at
