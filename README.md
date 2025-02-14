@@ -38,8 +38,8 @@ of various pieces of undergraduate level mathematics.
 Initially I had imagined
 that this project would turn into a formalisation of chunks of the undergraduate
 degree at Imperial College; however Lean's mathematics library mathlib ultimately
-turned out to fulfill this role. For more about the Xena project, which is
-focussed on teaching mathematicians about formalisation, see
+turned out to fulfill this role. For more about the Xena project, which during
+the 2017-2019 period was focussed on teaching mathematicians about formalisation, see
 
 https://xenaproject.wordpress.com/
 
